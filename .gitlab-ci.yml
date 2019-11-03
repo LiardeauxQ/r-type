@@ -6,10 +6,18 @@ stages:
   - test
   - deploy
 
-check:
+style:
   stage: check
   script:
-    - cppcheck Client/*.cpp Server/*.cpp Common/*.cpp --verbose --enable=all --inconclusive
+    - clang-format -style=file `find . -name "*.cpp" -o -name "*.hpp"`
+
+static:
+  stage: check
+  script:
+    - cppcheck \
+      --verbose --enable=all --std=c++17 --std=posix --error-exitcode=1 \
+      --inconclusive -I Common/includes -I Server/includes -I Client/includes \
+      Client/**.cpp Server/**.cpp Common/**.cpp
 
 build-gcc:
   stage: build
@@ -17,18 +25,27 @@ build-gcc:
     - mkdir -p build && cd build
     - conan install .. --build=missing
     - cmake ..
-    - cmake --build .
-    # - cmake --build . --target test
-    # - cmake --build . --target memcheck
+    - cmake --build . --target r-type_client
+    - cmake --build . --target r-type_server
+    - cmake --build . --target test_server
+    - cmake --build . --target test_client
+    # - cmake --build . --target memcheck       TODO: Add
     # - cmake --build . --target coverage
   artifacts:
     paths:
       - build/coverage
-
+    
 unit-test:
   stage: test
+  before_script:
+    - mkdir -p build && cd build
+    - conan install .. --build=missing
+    - cmake ..
+    - cmake --build . --target test_server
+    - cmake --build . --target test_client
   script:
-    - ./build/test
+    - ./build/test_server
+    - ./build/test_client
 
 deploy-blih:
     stage: deploy
