@@ -13,8 +13,6 @@ check:
 
 build-gcc:
   stage: build
-  before_script:
-    - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
     - mkdir -p build && cd build
     - conan install .. --build=missing
