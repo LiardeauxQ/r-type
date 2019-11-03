@@ -17,7 +17,7 @@ build-gcc:
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
     - mkdir -p build && cd build
-    - conan install ..
+    - conan install .. --build=missing
     - cmake ..
     - cmake --build .
     - cmake --build . --target test
