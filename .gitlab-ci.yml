@@ -1,4 +1,4 @@
-image: 'afourcat/rtype-ci:latest'
+image: afourcat/rtype-ci:1.0
 
 stages:
   - check
@@ -28,7 +28,7 @@ build-gcc:
     - cmake --build . --target coverage
   artifacts:
     paths:
-      build/coverage
+      - build/coverage
 
 unit-test:
   stage: test
@@ -50,4 +50,3 @@ deploy-blih:
         - git push epitech HEAD:$CI_COMMIT_REF_NAME
         - git config --unset core.sshCommand
         - rm -rf ~/.ssh/epitech
-
