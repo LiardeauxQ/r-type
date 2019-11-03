@@ -10,11 +10,13 @@ style:
   stage: check
   script:
     - clang-format -style=file `find . -name "*.cpp" -o -name "*.hpp"`
+  allow_failure: true
 
 static:
   stage: check
   script:
-    - cppcheck --verbose --enable=all --std=c++17 --std=posix --error-exitcode=1 --inconclusive -I Common/includes -I Server/includes -I Client/includes Client/**.cpp Server/**.cpp Common/**.cpp
+    - cppcheck --verbose --enable=all --error-exitcode=1 --inconclusive -I Common/includes -I Server/includes -I Client/includes Client/**.cpp Server/**.cpp Common/**.cpp
+  allow_failure: true
 
 build-gcc:
   stage: build
