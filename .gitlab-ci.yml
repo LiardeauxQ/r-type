@@ -20,9 +20,9 @@ build-gcc:
     - conan install ..
     - cmake ..
     - cmake --build .
-    - cmake --build . --target test
-    - cmake --build . --target memcheck
-    - cmake --build . --target coverage
+    # - cmake --build . --target test
+    # - cmake --build . --target memcheck
+    # - cmake --build . --target coverage
   artifacts:
     paths:
       - build/coverage
