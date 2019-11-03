@@ -1,5 +1,4 @@
-image:
-  dockerfile: Dockerfile.ci
+image: 'afourcat/rtype-ci:latest'
 
 stages:
   - check
