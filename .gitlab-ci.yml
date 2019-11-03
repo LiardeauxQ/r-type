@@ -9,7 +9,7 @@ stages:
 check:
   stage: check
   script:
-    - cppcheck src/*.cpp --verbose --enable=all --inconclusive
+    - cppcheck Client/*.cpp Server/*.cpp Common/*.cpp --verbose --enable=all --inconclusive
 
 clang-tidy:
   stage: check
