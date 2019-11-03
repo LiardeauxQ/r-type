@@ -43,8 +43,8 @@ unit-test:
     - cmake --build . --target test_server
     - cmake --build . --target test_client
   script:
-    - ./build/test_server
-    - ./build/test_client
+    - ./build/Tests/test_server
+    - ./build/Tests/test_client
 
 deploy-blih:
     stage: deploy
