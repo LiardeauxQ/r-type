@@ -11,14 +11,9 @@ check:
   script:
     - cppcheck Client/*.cpp Server/*.cpp Common/*.cpp --verbose --enable=all --inconclusive
 
-      # clang-tidy:
-      #   stage: check
-      #   script:
-      #     - clang-tidy -warning-as-errors="*" -checks="*"
-
 build-gcc:
   stage: build
-  before-script:
+  before_script:
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
     - mkdir -p build && cd build
@@ -52,3 +47,4 @@ deploy-blih:
         - git push epitech HEAD:$CI_COMMIT_REF_NAME
         - git config --unset core.sshCommand
         - rm -rf ~/.ssh/epitech
+
