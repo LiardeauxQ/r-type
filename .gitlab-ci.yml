@@ -11,10 +11,10 @@ check:
   script:
     - cppcheck Client/*.cpp Server/*.cpp Common/*.cpp --verbose --enable=all --inconclusive
 
-clang-tidy:
-  stage: check
-  script:
-    - clang-tidy -warning-as-errors="*" -checks="*"
+      # clang-tidy:
+      #   stage: check
+      #   script:
+      #     - clang-tidy -warning-as-errors="*" -checks="*"
 
 build-gcc:
   stage: build
