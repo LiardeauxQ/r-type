@@ -7,6 +7,7 @@ project(r-type_server)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+
 # Set compiler arguments
 if (NOT WIN32)
 	if(NOT CMAKE_BUILD_TYPE)
@@ -58,6 +59,8 @@ set(RTYPE_CLIENT
 
 set(RTYPE_COMMON
 )
+
+add_subdirectory(Tests)
 
 add_executable(r-type_client
     ${RTYPE_CLIENT}
