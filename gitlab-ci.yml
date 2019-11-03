@@ -1,0 +1,54 @@
+image:
+  dockerfile: Dockerfile.ci
+
+stages:
+  - check
+  - build
+  - test
+  - deploy
+
+check:
+  stage: check
+  script:
+    - cppcheck src/*.cpp --verbose --enable=all --inconclusive
+
+clang-tidy:
+  stage: check
+  script:
+    - clang-tidy -warning-as-errors="*" -checks="*"
+
+build-gcc:
+  stage: build
+  script:
+    - mkdir -p build && cd build
+    - conan install ..
+    - cmake ..
+    - cmake --build .
+    - cmake --build . --target test
+    - cmake --build . --target memcheck
+    - cmake --build . --target coverage
+  artifacts:
+    paths:
+      build/coverage
+
+unit-test:
+  stage: test
+  script:
+    - ./build/test
+
+deploy-blih:
+    stage: deploy
+    only:
+        - master
+    script:
+        - echo "Pushing to $TARGET_REPO"
+        - mkdir -p ~/.ssh
+        - echo "$SSH_PRIVATE_KEY" > ~/.ssh/epitech
+        - chmod 600 ~/.ssh/epitech
+        - git config core.sshCommand "ssh -o \"StrictHostKeyChecking=no\" -i ~/.ssh/epitech -F /dev/null"
+        - git remote remove epitech || true
+        - git remote add epitech $TARGET_REPO || true
+        - git push epitech HEAD:$CI_COMMIT_REF_NAME
+        - git config --unset core.sshCommand
+        - rm -rf ~/.ssh/epitech
+
