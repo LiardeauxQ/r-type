@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 RUN apk update \
-    && apk add cppcheck doxygen clang cmake gcc valgrind gcovr python3-dev musl-dev
+    && apk add cppcheck doxygen clang cmake gcc valgrind gcovr python3-dev musl-dev bash
 
 RUN python3 -m pip install --upgrade pip
 

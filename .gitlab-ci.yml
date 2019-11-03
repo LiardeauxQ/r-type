@@ -1,4 +1,4 @@
-image: afourcat/rtype-ci:1.0
+image: afourcat/rtype-ci:1.1
 
 stages:
   - check
