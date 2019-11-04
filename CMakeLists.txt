@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14.5)
+cmake_minimum_required(VERSION 3.10.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -6,6 +6,7 @@ project(r-type_client)
 project(r-type_server)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 
 # Set compiler arguments
 if (NOT WIN32)
@@ -58,6 +59,8 @@ set(RTYPE_CLIENT
 
 set(RTYPE_COMMON
 )
+
+add_subdirectory(Tests)
 
 add_executable(r-type_client
     ${RTYPE_CLIENT}

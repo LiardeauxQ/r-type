@@ -1,0 +1,64 @@
+image: afourcat/rtype-ci:1.3
+
+stages:
+  - check
+  - build
+  - test
+  - deploy
+
+style:
+  stage: check
+  script:
+    - clang-format -style=file `find . -name "*.cpp" -o -name "*.hpp"`
+  allow_failure: true
+
+static:
+  stage: check
+  script:
+    - cppcheck --verbose --enable=all --error-exitcode=1 --inconclusive -I Common/includes -I Server/includes -I Client/includes Client/**.cpp Server/**.cpp Common/**.cpp
+  allow_failure: true
+
+build-gcc:
+  stage: build
+  script:
+    - mkdir -p build && cd build
+    - conan install .. --build=missing
+    - cmake ..
+    - cmake --build . --target r-type_client
+    - cmake --build . --target r-type_server
+    - cmake --build . --target test_server
+    - cmake --build . --target test_client
+    # - cmake --build . --target memcheck       TODO: Add
+    # - cmake --build . --target coverage
+  artifacts:
+    paths:
+      - build/coverage
+    
+unit-test:
+  stage: test
+  before_script:
+    - mkdir -p build && cd build
+    - conan install .. --build=missing
+    - cmake ..
+    - cmake --build . --target test_server
+    - cmake --build . --target test_client
+  script:
+    - ./build/Tests/test_server
+    - ./build/Tests/test_client
+
+deploy-blih:
+    stage: deploy
+    only:
+        - master
+    script:
+        - echo "Pushing to $TARGET_REPO"
+        - mkdir -p ~/.ssh
+        - echo "$SSH_PRIVATE_KEY" > ~/.ssh/epitech
+        - chmod 600 ~/.ssh/epitech
+        - git config core.sshCommand "ssh -o \"StrictHostKeyChecking=no\" -i ~/.ssh/epitech -F /dev/null"
+        - git remote remove epitech || true
+        - git remote add epitech $TARGET_REPO || true
+        - git push epitech HEAD:$CI_COMMIT_REF_NAME
+        - git config --unset core.sshCommand
+        - rm -rf ~/.ssh/epitech
+

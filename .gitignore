@@ -1,0 +1,5 @@
+build
+.idea
+cmake_build_*
+*.o
+*.a
