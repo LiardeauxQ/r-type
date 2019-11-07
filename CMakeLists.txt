@@ -56,10 +56,7 @@ set(RTYPE_SERVER
 )
 
 set(RTYPE_CLIENT
-	${CLIENT_PATH}/main.cpp
-	${CLIENT_PATH}/CollisionDetection.hpp
-	${CLIENT_PATH}/SphereCollisionDetection.cpp
-	${CLIENT_PATH}/SphereCollisionDetection.hpp)
+	${CLIENT_PATH}/main.cpp)
 
 set(RTYPE_COMMON
 )

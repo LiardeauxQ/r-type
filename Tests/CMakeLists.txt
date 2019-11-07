@@ -2,10 +2,7 @@ cmake_minimum_required(VERSION 3.10)
  
 include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
 
-set(CLIENT_SOURCES
-    ${CLIENT_PATH}/CollisionDetection.hpp
-    ${CLIENT_PATH}/SphereCollisionDetection.cpp
-    ${CLIENT_PATH}/SphereCollisionDetection.hpp)
+set(CLIENT_SOURCES "")
 
 set(COMMON_SOURCES "${COMMON_PATH}/src")
 set(SERVER_SOURCES "${SERVER_PATH}/src")
