@@ -59,10 +59,11 @@ set(RTYPE_CLIENT
 	${CLIENT_PATH}/main.cpp
 	${CLIENT_PATH}/CollisionDetection.hpp
 	${CLIENT_PATH}/SphereCollisionDetection.cpp
-	${CLIENT_PATH}/SphereCollisionDetection.hpp)
+	${CLIENT_PATH}/SphereCollisionDetection.hpp
+	${CLIENT_PATH}/AABBCollisionDetection.cpp
+	${CLIENT_PATH}/AABBCollisionDetection.hpp)
 
-set(RTYPE_COMMON
-)
+set(RTYPE_COMMON)
 
 find_package (Criterion REQUIRED)
 add_subdirectory (Tests)

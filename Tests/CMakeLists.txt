@@ -5,7 +5,9 @@ include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
 set(CLIENT_SOURCES
     ${CLIENT_PATH}/CollisionDetection.hpp
     ${CLIENT_PATH}/SphereCollisionDetection.cpp
-    ${CLIENT_PATH}/SphereCollisionDetection.hpp)
+    ${CLIENT_PATH}/SphereCollisionDetection.hpp
+    ${CLIENT_PATH}/AABBCollisionDetection.cpp
+    ${CLIENT_PATH}/AABBCollisionDetection.hpp SphereCollisionDetection_test.cpp)
 
 set(COMMON_SOURCES "${COMMON_PATH}/src")
 set(SERVER_SOURCES "${SERVER_PATH}/src")
@@ -25,7 +27,8 @@ add_executable(test_server
 
 add_executable(test_client
     ${CLIENT_SOURCES}
-    ${TEST_PATH}/test_client.cpp
+    ${TEST_PATH}/AABBCollisionDetection_test.cpp
+    ${TEST_PATH}/SphereCollisionDetection_test.cpp
 )
 
 find_package(criterion)
