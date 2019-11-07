@@ -7,6 +7,7 @@ project(r-type_server)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
 
 # Set compiler arguments
 if (NOT WIN32)
@@ -56,12 +57,15 @@ set(RTYPE_SERVER
 
 set(RTYPE_CLIENT
 	${CLIENT_PATH}/main.cpp
-)
+	${CLIENT_PATH}/CollisionDetection.hpp
+	${CLIENT_PATH}/SphereCollisionDetection.cpp
+	${CLIENT_PATH}/SphereCollisionDetection.hpp)
 
 set(RTYPE_COMMON
 )
 
-add_subdirectory(Tests)
+find_package (Criterion REQUIRED)
+add_subdirectory (Tests)
 
 add_executable(r-type_client
     ${RTYPE_CLIENT}
@@ -75,6 +79,9 @@ find_package(sfml)
 
 # Client link
 target_link_libraries(r-type_client sfml::sfml)
+
+#Find any version 2.X of SFML
+#See the FindSFML.cmake file for additional details and instructions
 
 # Server link
 # target_link_libraries(r-type_client)

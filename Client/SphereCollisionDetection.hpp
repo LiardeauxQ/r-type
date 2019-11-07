@@ -1,0 +1,14 @@
+//
+// Created by Quentin Liardeaux on 11/7/19.
+//
+
+#ifndef R_TYPE_SERVER_SPHERECOLLISIONDETECTION_HPP
+#define R_TYPE_SERVER_SPHERECOLLISIONDETECTION_HPP
+
+
+class SphereCollisionDetection {
+
+};
+
+
+#endif //R_TYPE_SERVER_SPHERECOLLISIONDETECTION_HPP

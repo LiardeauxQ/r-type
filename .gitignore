@@ -1,5 +1,5 @@
 build
 .idea
-cmake_build_*
+cmake-build-*
 *.o
 *.a
