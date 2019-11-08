@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
  
-set(CLIENT_SOURCES "${CLIENT_PATH}/src")
+include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
+
 set(COMMON_SOURCES "${COMMON_PATH}/src")
 set(SERVER_SOURCES "${SERVER_PATH}/src")
 set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
@@ -31,9 +32,10 @@ add_executable(test_client
     ${TESTS_CLIENT}
 )
 
-target_link_libraries(test_client criterion)
+find_package(criterion)
 
-target_link_libraries(test_server criterion)
+target_link_libraries(test_client ${CRITERION_LIBRARIES})
+target_link_libraries(test_server ${CRITERION_LIBRARIES})
 
 set_property(TARGET test_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET test_client PROPERTY CXX_STANDARD_REQUIRED YES)

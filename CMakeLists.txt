@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10.0)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
+
 # Set compiler arguments
 if (NOT WIN32)
 	if(NOT CMAKE_BUILD_TYPE)
@@ -45,6 +47,9 @@ add_subdirectory(Tests)
 
 
 # Client link
+
+#Find any version 2.X of SFML
+#See the FindSFML.cmake file for additional details and instructions
 
 # Server link
 # target_link_libraries(r-type_client)
