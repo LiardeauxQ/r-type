@@ -11,18 +11,33 @@ include_directories(
     "${SERVER_ROOT}/inc"
 )
 
+set(TESTS_CLIENT
+    ${TEST_PATH}/src/test_client.cpp
+)
+
+set(TESTS_SERVER
+    ${TEST_PATH}/src/test_server.cpp
+)
+
 add_executable(test_server
     ${RTYPE_SERVER}
     ${RTYPE_COMMON}
-    ${TEST_PATH}/test_server.cpp
+    ${TESTS_SERVER}
 )
 
 add_executable(test_client
     ${RTYPE_CLIENT}
     ${RTYPE_COMMON}
-    ${TEST_PATH}/test_client.cpp
+    ${TESTS_CLIENT}
 )
 
 target_link_libraries(test_client criterion)
 
 target_link_libraries(test_server criterion)
+
+set_property(TARGET test_client PROPERTY CXX_STANDARD 17)
+set_property(TARGET test_client PROPERTY CXX_STANDARD_REQUIRED YES)
+set_property(TARGET test_client PROPERTY CXX_EXTENSIONS NO)
+set_property(TARGET test_server PROPERTY CXX_STANDARD 17)
+set_property(TARGET test_server PROPERTY CXX_EXTENSIONS NO)
+set_property(TARGET test_server PROPERTY CXX_STANDARD_REQUIRED YES)

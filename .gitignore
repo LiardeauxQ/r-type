@@ -3,3 +3,4 @@ build
 cmake_build_*
 *.o
 *.a
+.vscode
