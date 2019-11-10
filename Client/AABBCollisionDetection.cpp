@@ -13,7 +13,7 @@ bool AABBCollisionDetection::isInside(double value, double min, double max) cons
 }
 
 bool AABBCollisionDetection::isCollidingWith(shared_ptr<CollisionDetection> object) const {
-    auto rectObject = dynamic_cast<AABBCollisionDetection*>(object.get());
+    auto rectObject = dynamic_pointer_cast<AABBCollisionDetection>(object);
 
     if (isInside(rectObject->m_frameRect.x, m_frameRect.x,
             m_frameRect.x + m_frameRect.width))
