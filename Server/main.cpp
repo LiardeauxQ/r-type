@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <ostream>
+#include <GameServer.hpp>
 
 #ifndef VERSION
     #define VERSION "NOT DEFINED"
@@ -14,5 +15,7 @@
 
 int main(void) {
     std::cout << "Welcome to server V" << VERSION << "." << std::endl;
-    return 0;
+    auto server = GameServer(8080, "0.0.0.0");
+
+    return server.run();
 }

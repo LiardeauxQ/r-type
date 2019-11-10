@@ -6,15 +6,22 @@
 #define CPP_RTYPE_2019_GAMESERVER_HPP
 
 #include "Definition.hpp"
-#include <vector>
+#include <list>
 using namespace std;
 
 class GameServer {
 public:
-    GameServer(short port, const std::string& addr);
+    GameServer(short port, std::string addr);
     ~GameServer();
+
+    void run();
 private:
-    vector<Box<GameRoom>>
+    list<Box<GameRoom>> m_gameRooms;
+    list<Box<Client>> m_clients;
+    TcpSocket m_listener;
+    short m_port;
+    std::string& m_addr;
+    bool m_running;
 };
 
 #endif //CPP_RTYPE_2019_GAMESERVER_HPP
