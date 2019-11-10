@@ -41,6 +41,7 @@ set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
 set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
 
+add_subdirectory(Common)
 add_subdirectory(Client)
 add_subdirectory(Server)
 add_subdirectory(Tests)

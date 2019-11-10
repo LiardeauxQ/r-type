@@ -5,8 +5,12 @@
 #ifndef CPP_RTYPE_2019_GAMESERVER_HPP
 #define CPP_RTYPE_2019_GAMESERVER_HPP
 
-#include "Definition.hpp"
+#include "Definitions.hpp"
+#include "GameRoom.hpp"
+#include "Command.hpp"
+#include "Client.hpp"
 #include <list>
+
 using namespace std;
 
 class GameServer {
@@ -17,7 +21,7 @@ public:
     void run();
 private:
     list<Box<GameRoom>> m_gameRooms;
-    list<Box<Client>> m_clients;
+    list<Rc<Client>> m_clients;
     TcpSocket m_listener;
     short m_port;
     std::string& m_addr;

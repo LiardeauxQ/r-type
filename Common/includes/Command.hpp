@@ -5,6 +5,10 @@
 #ifndef R_TYPE_SERVER_COMMAND_HPP
 #define R_TYPE_SERVER_COMMAND_HPP
 
+#include <unordered_map>
+
+using namespace std;
+
 enum COMMAND_ID {
     ERROR,              // client <=> server
     CREATE_ROOM,        // client => server
@@ -16,10 +20,11 @@ enum COMMAND_ID {
     GAME_START,         // server => client
 };
 
+
 class Command {
 public:
     Command(TcpSocket sock);
-    Command(id, void *payload);
+    Command(COMMAND_ID id, void *payload);
 
     send(TcpSocket sock);
 
@@ -30,7 +35,6 @@ public:
 
     CommandContent content;
 };
-
 
 
 #endif //R_TYPE_SERVER_COMMAND_HPP

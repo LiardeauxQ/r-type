@@ -3,6 +3,20 @@
 //
 
 #include "../includes/GameServer.hpp"
+#include <iostream>
+
+typedef int (*CommandFunction)(const Command&);
+
+
+int test(const Command& cmd)
+{
+    std::cout << "Command id: " << cmd.content.id << std::endl;
+}
+
+static const unordered_map<size_t, CommandFunction> COMMAND_MAP = {
+    {ERROR, test},
+    {}
+};
 
 GameServer::GameServer(short port, std::string addr)
     : m_gameRooms()

@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.10)
 
 project(r-type_client LANGUAGES CXX)
 
-set(CLIENT_SOURCES "${CLIENT_PATH}/src")
-set(COMMON_SOURCES "${COMMON_PATH}/src")
-set(SERVER_SOURCES "${SERVER_PATH}/src")
+set(CLIENT_SOURCES "${CLIENT_PATH}/sources")
+set(COMMON_SOURCES "${COMMON_PATH}/sources")
+set(SERVER_SOURCES "${SERVER_PATH}/sources")
 
 set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
 
 set(RTYPE_CLIENT
-	${CLIENT_PATH}/src/main.cpp
+	${CLIENT_PATH}/sources/main.cpp
 )
 
 include_directories(
-    "${CLIENT_ROOT}/inc"
+    "${CLIENT_ROOT}/includes"
 )
 
 add_executable(r-type_client
