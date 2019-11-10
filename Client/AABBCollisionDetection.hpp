@@ -16,7 +16,7 @@ struct Frame {
 
 class AABBCollisionDetection: public CollisionDetection {
 public:
-    AABBCollisionDetection(const Frame &frameRect);
+    explicit AABBCollisionDetection(const Frame &frameRect);
     ~AABBCollisionDetection() final = default;
 
     [[nodiscard]] bool isCollidingWith(shared_ptr<CollisionDetection> object) const final;

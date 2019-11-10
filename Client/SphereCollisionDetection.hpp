@@ -17,7 +17,7 @@ typedef Point Vector;
 
 class SphereCollisionDetection: public CollisionDetection {
 public:
-    SphereCollisionDetection(double radius, const Point &center);
+    explicit SphereCollisionDetection(double radius, const Point &center);
     ~SphereCollisionDetection() final = default;
 
     [[nodiscard]] bool isCollidingWith(shared_ptr<CollisionDetection> object) const final;
