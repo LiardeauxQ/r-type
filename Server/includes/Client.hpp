@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include "TcpStream.hpp"
 
 using namespace std;
 
@@ -14,14 +15,13 @@ using ClientId = uint32_t;
 
 class Client {
 public:
-    Client(TcpSocket socket);
+    explicit Client(const TcpStream& socket);
     Client(const Client& client) = delete;
     Client operator=(const Client& client) = delete;
 
     bool operator==(const Client& rhs);
-
 private:
-    TcpSocket m_socket;
+    TcpStream m_socket;
     ClientId m_id;
     string m_name;
 };

@@ -5,14 +5,14 @@
 #include "Client.hpp"
 #include "Command.hpp"
 
-Client::Client(TcpSocket socket)
+Client::Client(const TcpStream& socket)
     : m_socket(socket)
-    , m_id(socket)
+    , m_id()
     , m_name()
 {
-    auto information = Command();
-    socket.send();
+    Command cmd();
 }
+
 bool Client::operator==(const Client& rhs)
 {
     return rhs.m_socket == m_socket;

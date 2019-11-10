@@ -9,7 +9,7 @@ set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
 set(RTYPE_COMMON
     ${COMMON_SOURCES}/World.cpp
     ${COMMON_SOURCES}/Socket.cpp
-    ${COMMON_SOURCES}/TcpSocket.cpp
+    ${COMMON_SOURCES}/TcpStream.cpp
     ${COMMON_SOURCES}/TcpListener.cpp
 PARENT_SCOPE)
 

@@ -6,7 +6,7 @@
 #define R_TYPE_SERVER_COMMAND_HPP
 
 #include <unordered_map>
-
+#include "ISerialize.hpp"
 using namespace std;
 
 enum COMMAND_ID {
@@ -21,20 +21,15 @@ enum COMMAND_ID {
 };
 
 
-class Command {
-public:
-    Command(TcpSocket sock);
-    Command(COMMAND_ID id, void *payload);
+class Command : ISerialize, IDeserialize {
+    Command(void *data, size_t size);
+    ~Command() override;
 
-    send(TcpSocket sock);
+    void* serialize(size_t& size) const override;
 
-    struct CommandContent {
-        uint32_t id;
-        void *payload;
+    struct Header {
+        COMMAND_ID id;
     };
-
-    CommandContent content;
 };
-
 
 #endif //R_TYPE_SERVER_COMMAND_HPP

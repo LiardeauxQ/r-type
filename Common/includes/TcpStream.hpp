@@ -10,6 +10,7 @@
 class TcpStream : public Socket {
 public:
     explicit TcpStream(RawSocket sock);
+    ~TcpStream() final = default;
 
     void connect(const string& addr, uint16_t port);
     void connect(const string& addr);

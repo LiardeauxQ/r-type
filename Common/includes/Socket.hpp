@@ -36,7 +36,7 @@ public:
     Socket(int32_t domain, int32_t type, int32_t protocol);
     Socket(uint8_t base0, uint8_t base1, uint8_t base2, uint8_t base3, uint8_t port1, uint8_t port2);
 
-    Socket(const Socket& sock) = delete;
+    Socket(const Socket& sock) = default;
     Socket& operator=(const Socket& sock) = default;
 
     virtual ~Socket();
