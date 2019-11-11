@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <ostream>
+#include "EntityRequest.hpp"
 
 #ifndef VERSION
     #define VERSION "NOT DEFINED"

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10.0)
 
+project(R-Type)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
@@ -35,16 +37,18 @@ if (UNIX)
 	include_directories("${CMAKE_HOME_DIRECTORY}/.conan/data")
 endif ()
 
+set(CRITERION_LIBRARIES criterion)
+
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
-set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
-set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
+set(ECS_PATH "${CMAKE_SOURCE_DIR}/ECS")
+set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
 
 add_subdirectory(Client)
-add_subdirectory(Server)
+add_subdirectory(ECS)
 add_subdirectory(Tests)
-
+add_subdirectory(Server)
 
 # Client link
 
