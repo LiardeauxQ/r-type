@@ -24,7 +24,9 @@ Socket::Socket(Socket::Type type, sockaddr_in addr)
 
     m_handle = ::socket(AF_INET, getUnixFromType(m_type), 0);
     if (m_handle == -1)
-        throw "Error while creating socket";
+        throw "Error while creating socket.";
+    if (bind(m_handle, &m_addr, sizeof(sockaddr)) < 0)
+        throw "Error while binding.";
 }
 
 Socket::~Socket()
@@ -74,18 +76,13 @@ sockaddr_in Socket::parseStringAddr(const string& addr, uint16_t port)
 {
     size_t pos = addr.find(':');
 
-    sockaddr_in addrIn = {
-        AF_INET,
-        0,
-        { 0 },
-        { 0 },
-    };
+    sockaddr_in addrIn;
 
     if (pos != string::npos) {
-        cout << addr.c_str() << endl;
         auto newPort = static_cast<uint16_t>(std::stoi(addr.c_str() + pos));
         auto newAddr = string(addr);
         newAddr[pos] = 0;
+        cout << "Filling sockaddr with: " << newAddr.c_str() << " " << newPort << endl;
         addrIn.sin_port = htons(newPort);
         addrIn.sin_addr.s_addr = inet_addr(newAddr.c_str());
     } else {
@@ -93,6 +90,7 @@ sockaddr_in Socket::parseStringAddr(const string& addr, uint16_t port)
         addrIn.sin_addr.s_addr = inet_addr(addr.c_str());
         addrIn.sin_port = htons(port);
     }
+    addrIn.sin_family = AF_INET;
     return addrIn;
 }
 
@@ -100,6 +98,7 @@ Socket::Socket(uint8_t base0, uint8_t base1, uint8_t base2, uint8_t base3, uint8
 {
 
 }
+
 Socket::Socket(Socket::Type type, const string& addr, uint16_t port)
     : Socket(type, parseStringAddr(addr, port))
 {}
