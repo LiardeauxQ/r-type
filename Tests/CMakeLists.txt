@@ -2,22 +2,22 @@ cmake_minimum_required(VERSION 3.10)
  
 include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
 
-set(COMMON_SOURCES "${COMMON_PATH}/src")
-set(SERVER_SOURCES "${SERVER_PATH}/src")
+set(COMMON_SOURCES "${COMMON_PATH}/sources")
+set(SERVER_SOURCES "${SERVER_PATH}/sources")
 set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
 
 include_directories(
-    "${CLIENT_ROOT}/inc"
-    "${COMMON_ROOT}/inc"
-    "${SERVER_ROOT}/inc"
+    "${CLIENT_ROOT}/includes"
+    "${COMMON_PATH}/includes"
+    "${SERVER_ROOT}/includes"
 )
 
 set(TESTS_CLIENT
-    ${TEST_PATH}/src/test_client.cpp
+    ${TEST_PATH}/sources/test_client.cpp
 )
 
 set(TESTS_SERVER
-    ${TEST_PATH}/src/test_server.cpp
+    ${TEST_PATH}/sources/test_server.cpp
 )
 
 add_executable(test_server
