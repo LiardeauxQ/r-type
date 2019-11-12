@@ -24,9 +24,9 @@ class Command : ISerialize {
 public:
     explicit Command(COMMAND_ID id) : m_id(id) {}
 
-    static Command deserialize();
+    // static Command deserialize();
 
-    void* serialize(size_t& size) const override = 0;
+    // void* serialize(size_t& size) const override = 0;
 
     COMMAND_ID m_id;
 };

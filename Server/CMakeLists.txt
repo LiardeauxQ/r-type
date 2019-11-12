@@ -15,7 +15,6 @@ set(RTYPE_SERVER
     ${SERVER_PATH}/sources/Client.cpp
 )
 
-message("COMMAN PATH: ${COMMON_PATH}/includes")
 
 include_directories(
     "${SERVER_PATH}/includes"
@@ -30,4 +29,4 @@ set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET r-type_server PROPERTY CXX_EXTENSIONS NO)
 
-target_link_libraries(r-type_server ecs)
+target_link_libraries(r-type_server ecs r-type_common)

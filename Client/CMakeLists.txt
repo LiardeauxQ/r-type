@@ -22,7 +22,7 @@ add_executable(r-type_client
     ${RTYPE_CLIENT}
 )
 
-target_link_libraries(r-type_client ecs)
+target_link_libraries(r-type_client ecs r-type_common)
 
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED YES)
