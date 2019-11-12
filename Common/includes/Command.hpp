@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include "ISerialize.hpp"
+#include "Definitions.hpp"
 using namespace std;
 
 enum COMMAND_ID {
@@ -24,9 +25,10 @@ class Command : ISerialize {
 public:
     explicit Command(COMMAND_ID id) : m_id(id) {}
 
-    // static Command deserialize();
+    template <typename T>
+    static Box<T> deserialize(void *data);
 
-    // void* serialize(size_t& size) const override = 0;
+    void* serialize(size_t& size) const override = 0;
 
     COMMAND_ID m_id;
 };
