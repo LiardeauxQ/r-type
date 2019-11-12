@@ -9,22 +9,23 @@
 #include "GameRoom.hpp"
 #include "Command.hpp"
 #include "Client.hpp"
+#include "TcpListener.hpp"
+#include "TcpStream.hpp"
 #include <list>
 
 using namespace std;
 
 class GameServer {
 public:
-    GameServer(short port, std::string addr);
+    explicit GameServer(uint16_t port);
     ~GameServer();
 
-    void run();
+    int run();
+    void acceptClients();
 private:
     list<Box<GameRoom>> m_gameRooms;
     list<Rc<Client>> m_clients;
-    TcpSocket m_listener;
-    short m_port;
-    std::string& m_addr;
+    TcpListener m_listener;
     bool m_running;
 };
 

@@ -10,7 +10,7 @@
 
 class TcpListener : public Socket {
 public:
-    TcpListener();
+    explicit TcpListener(uint16_t port);
 
     [[nodiscard]] TcpStream accept() const;
     void listen(int32_t nbConnection) const;

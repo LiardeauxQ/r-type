@@ -11,6 +11,7 @@ set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
 set(RTYPE_SERVER
     ${SERVER_PATH}/sources/main.cpp
     ${SERVER_PATH}/sources/GameServer.cpp
+    ${SERVER_PATH}/sources/GameRoom.cpp
     ${SERVER_PATH}/sources/Client.cpp
 )
 

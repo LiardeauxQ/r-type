@@ -7,6 +7,7 @@
 
 #include <vector>
 #include "Definitions.hpp"
+#include "Client.hpp"
 
 using namespace std;
 

@@ -33,6 +33,7 @@ public:
 
     Socket(Type type, RawSocket socket);
     Socket(Type type, const string& addr);
+    Socket(Type type, const string& addr, uint16_t port);
     Socket(int32_t domain, int32_t type, int32_t protocol);
     Socket(uint8_t base0, uint8_t base1, uint8_t base2, uint8_t base3, uint8_t port1, uint8_t port2);
 
@@ -41,16 +42,18 @@ public:
 
     virtual ~Socket();
 
-    bool operator==(const Socket& socket);
+    bool operator==(const Socket& socket) const;
 
 protected:
-    static sockaddr_in parseStringAddr(const string& addr);
+    static sockaddr_in parseStringAddr(const string& addr, uint16_t port = 0);
 
     RawSocket m_handle;
     Type m_type;
     sockaddr m_addr;
 private:
+    Socket(Socket::Type type, sockaddr_in addr);
     static Type getTypeFromUnix(int32_t type);
+    int32_t getUnixFromType(Type type);
 };
 
 #endif //CPP_RTYPE_2019_SOCKET_HPP

@@ -5,45 +5,34 @@
 #include "../includes/GameServer.hpp"
 #include <iostream>
 
-typedef int (*CommandFunction)(const Command&);
-
-
-int test(const Command& cmd)
-{
-    std::cout << "Command id: " << cmd.content.id << std::endl;
-}
-
-static const unordered_map<size_t, CommandFunction> COMMAND_MAP = {
-    {ERROR, test},
-    {}
-};
-
-GameServer::GameServer(short port, std::string addr)
+GameServer::GameServer(uint16_t port)
     : m_gameRooms()
-    , m_port(port)
-    , m_addr(move(addr))
+    , m_clients()
+    , m_listener(port)
     , m_running(true)
-    , m_listener(m_addr, m_port)
 {
 }
 
 void processCommand(const Command& cmd) noexcept
 {
-
+    std::cout << "Command.id: " << cmd.m_id << std::endl;
 }
 
-void listenToClient() noexcept const
+void GameServer::acceptClients()
 {
-    TcpSocket socket = m_listener.listen();
-    m_clients.push(make_unique<Client>(socket));
+    TcpStream socket = m_listener.accept();
+    cout << "Adding new client." << endl;
+    m_clients.push_front(make_shared<Client>(socket));
 }
 
-void GameServer::run()
+int GameServer::run()
 {
-    Command cmd;
-
+    m_listener.listen(100);
     while (m_running) {
-        listenToClient(cmd);
-        processCommand(cmd);
+        acceptClients();
     }
+    return 0;
+}
+GameServer::~GameServer()
+{
 }

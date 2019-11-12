@@ -10,12 +10,16 @@
 #include <GameServer.hpp>
 
 #ifndef VERSION
-    #define VERSION "NOT DEFINED"
+    #define VERSION "0.1.0"
 #endif
 
 int main(int argc, char *argv[]) {
     std::cout << "Welcome to server V" << VERSION << "." << std::endl;
-    auto server = GameServer(8080, "0.0.0.0");
-
-    return server.run();
+    try {
+        auto server = GameServer(8080);
+        return server.run();
+    } catch(char const *msg) {
+        cerr << msg << endl;
+        return 84;
+    }
 }

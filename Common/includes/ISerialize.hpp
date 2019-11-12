@@ -17,6 +17,7 @@ public:
 
 class IDeserialize {
 public:
+    virtual ~IDeserialize() = default;
     IDeserialize(void *data, size_t size) {};
 };
 

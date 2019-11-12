@@ -11,6 +11,7 @@ set(RTYPE_COMMON
     ${COMMON_SOURCES}/Socket.cpp
     ${COMMON_SOURCES}/TcpStream.cpp
     ${COMMON_SOURCES}/TcpListener.cpp
+    ${COMMON_SOURCES}/Protocol/CreateRoom.cpp
 PARENT_SCOPE)
 
 include_directories(

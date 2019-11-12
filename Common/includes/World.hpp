@@ -16,19 +16,20 @@ using Id = size_t;
 
 class World {
 public:
-    World(Box<IEcdb> database);
+    // World(Box<IEcdb> database);
+    World() = delete;
     ~World() = default;
 
-    void createEntity();
+    // void createEntity();
 
-    void createResource(const string& name);
+    // void createResource(const string& name);
 
-    void registerComponent(Box<ComponentSchema> schema);
+    // void registerComponent(Box<ComponentSchema> schema);
 
-    Entity& fetchEntity(const string& name);
-    Resource& fetchResource(const string& name);
+    // Entity& fetchEntity(const string& name);
+    // Resource& fetchResource(const string& name);
 private:
-    Box<IEcdb> database;
+    // Box<IEcdb> database;
 };
 
 }

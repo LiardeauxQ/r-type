@@ -20,16 +20,15 @@ enum COMMAND_ID {
     GAME_START,         // server => client
 };
 
+class Command : ISerialize {
+public:
+    explicit Command(COMMAND_ID id) : m_id(id) {}
 
-class Command : ISerialize, IDeserialize {
-    Command(void *data, size_t size);
-    ~Command() override;
+    static Command deserialize();
 
-    void* serialize(size_t& size) const override;
+    void* serialize(size_t& size) const override = 0;
 
-    struct Header {
-        COMMAND_ID id;
-    };
+    COMMAND_ID m_id;
 };
 
 #endif //R_TYPE_SERVER_COMMAND_HPP

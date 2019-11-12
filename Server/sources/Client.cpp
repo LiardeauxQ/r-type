@@ -10,10 +10,9 @@ Client::Client(const TcpStream& socket)
     , m_id()
     , m_name()
 {
-    Command cmd();
 }
 
-bool Client::operator==(const Client& rhs)
+bool Client::operator==(const Client& rhs) const
 {
     return rhs.m_socket == m_socket;
 }

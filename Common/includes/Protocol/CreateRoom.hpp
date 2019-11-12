@@ -7,8 +7,11 @@
 
 #include "Command.hpp"
 
-class CreateGame : public Command {
+class CreateRoom : public Command {
+    explicit CreateGame(void *data);
 
+    string roomName;
+    static const size_t CREATE_GAME_PAYLOAD_SIZE = sizeof(char) * 256;
 };
 
 #endif //CPP_RTYPE_2019_CREATEGAME_HPP

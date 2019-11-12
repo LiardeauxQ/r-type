@@ -3,6 +3,7 @@
 //
 
 #include "TcpListener.hpp"
+#include <iostream>
 
 TcpStream TcpListener::accept() const
 {
@@ -16,9 +17,10 @@ TcpStream TcpListener::accept() const
 
 void TcpListener::listen(int32_t nbClientMax) const
 {
+    cout << "Listening" << endl;
     ::listen(m_handle, nbClientMax);
 }
 
-TcpListener::TcpListener()
-    : Socket(TCP, "0.0.0.0")
+TcpListener::TcpListener(uint16_t port)
+    : Socket(TCP, "127.0.0.1", port)
 {}

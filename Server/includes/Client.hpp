@@ -19,7 +19,7 @@ public:
     Client(const Client& client) = delete;
     Client operator=(const Client& client) = delete;
 
-    bool operator==(const Client& rhs);
+    bool operator==(const Client& rhs) const;
 private:
     TcpStream m_socket;
     ClientId m_id;
