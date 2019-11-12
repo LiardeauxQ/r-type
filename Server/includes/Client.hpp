@@ -8,10 +8,12 @@
 #include <cstdint>
 #include <string>
 #include "TcpStream.hpp"
+#include "Command.hpp"
+#include <openssl/md5.h>
 
 using namespace std;
 
-using ClientId = uint32_t;
+using ClientId = uint8_t[MD5_DIGEST_LENGTH];
 
 class Client {
 public:
@@ -20,10 +22,11 @@ public:
     Client operator=(const Client& client) = delete;
 
     bool operator==(const Client& rhs) const;
+
+    string m_name;
+    ClientId m_id;
 private:
     TcpStream m_socket;
-    ClientId m_id;
-    string m_name;
 };
 
 #endif //CPP_RTYPE_2019_CLIENT_HPP
