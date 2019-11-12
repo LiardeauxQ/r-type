@@ -7,9 +7,9 @@
 
 #include "Command.hpp"
 
-class CreateRoom : public Command {
+class CreateRoom : public Message {
 public:
-    explicit CreateRoom(void *data);
+    explicit CreateRoom();
 
     string m_roomName;
     static const size_t CREATE_GAME_PAYLOAD_SIZE = sizeof(char) * 256;
