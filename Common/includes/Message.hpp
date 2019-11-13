@@ -10,7 +10,7 @@
 #include "Definitions.hpp"
 using namespace std;
 
-enum REQUEST_ID {
+enum MESSAGE_ID {
     ERROR,              // client <=> server
     CREATE_ROOM,        // client => server
     JOIN_ROOM,          // client => server
@@ -21,18 +21,18 @@ enum REQUEST_ID {
     GAME_START,         // server => client
 };
 
-struct Request : ISerialize {
-    explicit Request(REQUEST_ID id) : m_id(id) {}
+struct Message : ISerialize {
+    explicit Message(MESSAGE_ID id) : m_id(id) {}
+    ~Message() override = default;
 
     template <typename T>
     static Box<T> deserialize(void *data);
 
-    void* serialize(size_t& size) const override = 0;
-
-    REQUEST_ID m_id;
+    MESSAGE_ID m_id;
 };
+
 template <typename T>
-Box<T> Request::deserialize(void* data)
+Box<T> Message::deserialize(void* data)
 {
     auto element = make_unique<T>();
     memset(element.get(), data, sizeof(T));
