@@ -7,7 +7,7 @@
 
 #include "Message.hpp"
 
-class Error : Message {
+struct Error : public Message {
     Error(uint32_t code, MESSAGE_ID idFrom);
 
     MESSAGE_ID m_idFrom;

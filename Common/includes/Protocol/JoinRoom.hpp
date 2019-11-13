@@ -5,8 +5,14 @@
 #ifndef R_TYPE_JOINROOM_HPP
 #define R_TYPE_JOINROOM_HPP
 
-class JoinRoom {
-    JoinRoom(string roomName)
+#include "Message.hpp"
+
+using namespace std;
+
+class JoinRoom : public Message {
+    explicit JoinRoom(string roomName);
+
+    string m_roomName;
 };
 
 #endif //R_TYPE_JOINROOM_HPP
