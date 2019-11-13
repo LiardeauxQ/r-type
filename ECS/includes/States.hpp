@@ -18,6 +18,7 @@ private:
     void push(Box<AbstractState> newState);
     Box<AbstractState> pop();
     vector<Box<AbstractState>> m_states;
+    bool m_running;
 };
 
 #endif //R_TYPE_STATESSTACK_HPP

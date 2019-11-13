@@ -12,9 +12,10 @@ class AbstractState;
 struct Transition {
     enum Name {
         POP,
-        PUSH,
-        PAUSE,
+        QUIT,
+        PUSH,   // Need a new state to push on the stack.
         NONE,
+//      SWITCH,
     };
 
     explicit Transition(Name trans = NONE, Box<AbstractState> newState = nullptr);
