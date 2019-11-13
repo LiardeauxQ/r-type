@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class JoinRoom : public Message {
+struct JoinRoom : public Message {
     explicit JoinRoom(string roomName);
 
     string m_roomName;
