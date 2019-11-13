@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
 
 set(CLIENT_SOURCES
+    ${CLIENT_PATH}/GeometryObject.cpp
+    ${CLIENT_PATH}/GeometryObject.hpp
     ${CLIENT_PATH}/CollisionDetection.hpp
     ${CLIENT_PATH}/SphereCollisionDetection.cpp
     ${CLIENT_PATH}/SphereCollisionDetection.hpp

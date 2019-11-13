@@ -6,12 +6,9 @@
 #define R_TYPE_SERVER_SPHERECOLLISIONDETECTION_HPP
 
 #include <math.h>
-#include "CollisionDetection.hpp"
 
-struct Point {
-    double x;
-    double y;
-};
+#include "CollisionDetection.hpp"
+#include "GeometryObject.hpp"
 
 typedef Point Vector;
 

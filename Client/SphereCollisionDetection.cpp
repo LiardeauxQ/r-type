@@ -12,9 +12,9 @@ SphereCollisionDetection::SphereCollisionDetection(double radius, const Point &c
 
 bool SphereCollisionDetection::isCollidingWith(shared_ptr<CollisionDetection> object) const {
     auto sphereObject = dynamic_pointer_cast<SphereCollisionDetection>(object);
-    Vector vector = {abs(sphereObject->m_center.x - m_center.x),
-                     abs(sphereObject->m_center.y - m_center.y)};
-    double distance = sqrt(pow(vector.x, 2) + pow(vector.y, 2));
+    Vector vector(abs(sphereObject->m_center.m_x - m_center.m_x),
+            abs(sphereObject->m_center.m_y - m_center.m_y));
+    double distance = sqrt(pow(vector.m_x, 2) + pow(vector.m_y, 2));
 
     return distance < sphereObject->m_radius + m_radius;
 }

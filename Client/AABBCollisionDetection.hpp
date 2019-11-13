@@ -6,13 +6,7 @@
 #define R_TYPE_SERVER_AABBCOLLISIONDETECTION_HPP
 
 #include "CollisionDetection.hpp"
-
-struct Frame {
-    double x;
-    double y;
-    double width;
-    double height;
-};
+#include "GeometryObject.hpp"
 
 class AABBCollisionDetection: public CollisionDetection {
 public:

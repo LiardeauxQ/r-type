@@ -61,7 +61,7 @@ set(RTYPE_CLIENT
 	${CLIENT_PATH}/SphereCollisionDetection.cpp
 	${CLIENT_PATH}/SphereCollisionDetection.hpp
 	${CLIENT_PATH}/AABBCollisionDetection.cpp
-	${CLIENT_PATH}/AABBCollisionDetection.hpp)
+	${CLIENT_PATH}/AABBCollisionDetection.hpp Client/OBBCollisionDetection.cpp Client/OBBCollisionDetection.hpp Client/GeometryObject.hpp Client/GeometryObject.cpp)
 
 set(RTYPE_COMMON)
 
