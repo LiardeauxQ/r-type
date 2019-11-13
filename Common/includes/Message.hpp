@@ -10,7 +10,7 @@
 #include "Definitions.hpp"
 using namespace std;
 
-enum COMMAND_ID {
+enum REQUEST_ID {
     ERROR,              // client <=> server
     CREATE_ROOM,        // client => server
     JOIN_ROOM,          // client => server
@@ -21,16 +21,21 @@ enum COMMAND_ID {
     GAME_START,         // server => client
 };
 
-class Command : ISerialize {
-public:
-    explicit Command(COMMAND_ID id) : m_id(id) {}
+struct Request : ISerialize {
+    explicit Request(REQUEST_ID id) : m_id(id) {}
 
     template <typename T>
     static Box<T> deserialize(void *data);
 
     void* serialize(size_t& size) const override = 0;
 
-    COMMAND_ID m_id;
+    REQUEST_ID m_id;
 };
+template <typename T>
+Box<T> Request::deserialize(void* data)
+{
+    auto element = make_unique<T>();
+    memset(element.get(), data, sizeof(T));
+}
 
 #endif //R_TYPE_SERVER_COMMAND_HPP

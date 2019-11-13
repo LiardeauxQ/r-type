@@ -14,9 +14,9 @@ GameServer::GameServer(uint16_t port)
 {
 }
 
-void processCommand(const Command& cmd) noexcept
+void processCommand(const Message& cmd) noexcept
 {
-    std::cout << "Command.id: " << cmd.m_id << std::endl;
+    std::cout << "Message.id: " << cmd.m_id << std::endl;
 }
 
 void GameServer::acceptClients()

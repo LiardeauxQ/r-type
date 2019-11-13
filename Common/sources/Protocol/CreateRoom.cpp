@@ -4,8 +4,12 @@
 
 #include "Protocol/CreateRoom.hpp"
 
-CreateRoom::CreateRoom(void *data)
-    : Command(CREATE_ROOM)
+CreateRoom::CreateRoom(string roomName)
+    : Message(CREATE_ROOM)
+    , m_roomName(move(roomName))
+{}
+void* CreateRoom::serialize(size_t& size) const
 {
-    
+    size = m_roomName.length();
+    return (void *) m_roomName.c_str();
 }

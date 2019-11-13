@@ -5,11 +5,11 @@
 #ifndef CPP_RTYPE_2019_CLIENT_HPP
 #define CPP_RTYPE_2019_CLIENT_HPP
 
-#include <cstdint>
-#include <string>
+#include "Message.hpp"
 #include "TcpStream.hpp"
-#include "Command.hpp"
+#include <cstdint>
 #include <openssl/md5.h>
+#include <string>
 
 using namespace std;
 
