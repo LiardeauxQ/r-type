@@ -6,7 +6,7 @@ project(r-type_common LANGUAGES CXX)
 set(COMMON_SOURCES "${COMMON_PATH}/sources")
 
 set(COMMON
-    ${COMMON_SOURCES}/Protocol/CreateRoom.cpp
+    ${COMMON_SOURCES}/Protocol/JoinRoom.cpp
     ${COMMON_SOURCES}/Protocol/Error.cpp
     ${COMMON_SOURCES}/Socket.cpp
     ${COMMON_SOURCES}/TcpListener.cpp
