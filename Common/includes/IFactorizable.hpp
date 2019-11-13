@@ -11,5 +11,5 @@ class IFactorizable {
     public:
         virtual ~IFactorizable() = default;
         virtual Box<IFactorizable> copy() const = 0;
-        virtual T getId() const = 0;
+        virtual T getKey() const = 0;
 };

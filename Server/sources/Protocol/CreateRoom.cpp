@@ -4,8 +4,7 @@
 
 #include "Protocol/CreateRoom.hpp"
 
-CreateRoom::CreateRoom(void *data)
-    : Command(CREATE_ROOM)
+CreateRoom::CreateRoom()
 {
     
 }

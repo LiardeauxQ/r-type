@@ -5,7 +5,7 @@
 #ifndef CPP_RTYPE_2019_CREATEROOM_HPP
 #define CPP_RTYPE_2019_CREATEROOM_HPP
 
-#include "Command.hpp"
+#include "Message.hpp"
 
 class CreateRoom : public Message {
 public:

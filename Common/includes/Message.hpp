@@ -7,20 +7,21 @@
 #include "ISerializable.hpp"
 #include "IFactorizable.hpp"
 #include "Definitions.hpp"
+#include <exception>
 
-class Message : ISerializable, IFactorizable<String> {
+struct MessageDeserializationException : public std::exception {
+	const char* what () const throw () {
+    	return "Cannot deserialize a message";
+    }
+};
+
+class Message : public ISerializable, public IFactorizable<String> {
 
     public:
         explicit Message() {};
 
-        String getId() const {
+        virtual String getKey() const {
             return "base";
         }
-
-        virtual void deserialize(Vec<u8> data) = 0;
-
-        virtual Box<IFactorizable> copy() const = 0;
-
-        virtual Vec<u8> serialize() const override = 0;
 
 };

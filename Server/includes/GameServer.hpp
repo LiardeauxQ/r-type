@@ -8,6 +8,7 @@
 #include "Definitions.hpp"
 #include "GameRoom.hpp"
 #include "Command.hpp"
+#include "MessageFactory.hpp"
 #include "Client.hpp"
 #include "TcpListener.hpp"
 #include "TcpStream.hpp"
