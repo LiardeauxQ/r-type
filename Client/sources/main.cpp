@@ -6,7 +6,6 @@
 */
 
 #include <iostream>
-#include "SphereCollisionDetection.hpp"
 
 #ifndef VERSION
     #define VERSION "NOT DEFINED"

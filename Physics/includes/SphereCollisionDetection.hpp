@@ -7,8 +7,8 @@
 
 #include <math.h>
 
-#include "Physics/includes/CollisionDetection.hpp"
-#include "Physics/includes/GeometryObject.hpp"
+#include "CollisionDetection.hpp"
+#include "GeometryObject.hpp"
 
 typedef Point Vector;
 

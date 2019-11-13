@@ -6,7 +6,7 @@
 */
 
 #include <criterion/criterion.h>
-#include "includes/AABBCollisionDetection.hpp"
+#include "AABBCollisionDetection.hpp"
 
 Test(AABBCollisionDetection, simple_valid_collision_test)
 {
