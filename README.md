@@ -18,5 +18,5 @@ mkdir build && cd build && conan install .. && cmake .. && cmake -build
 
 * Alexandre Fourcat
 * Thomas Nicollet
-* Killian Perrier
+* Kilian Perrier
 * Quentin Liardeaux

@@ -2,7 +2,7 @@
 // Created by Quentin Liardeaux on 11/12/19.
 //
 
-#include "GeometryObject.hpp"
+#include "includes/GeometryObject.hpp"
 
 Point::Point(double x, double y)
     : m_x(x)

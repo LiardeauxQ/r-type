@@ -2,7 +2,7 @@
 // Created by Quentin Liardeaux on 11/7/19.
 //
 
-#include "SphereCollisionDetection.hpp"
+#include "includes/SphereCollisionDetection.hpp"
 #include <iostream>
 
 SphereCollisionDetection::SphereCollisionDetection(double radius, const Point &center)

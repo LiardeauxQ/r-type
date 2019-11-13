@@ -1,13 +1,10 @@
 cmake_minimum_required(VERSION 3.10.0)
 
-set(CMAKE_CXX_STANDARD 17)
-
-project(r-type_client)
-project(r-type_server)
+project(R-Type)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Documents/.cmake")
 
 # Set compiler arguments
 if (NOT WIN32)
@@ -15,7 +12,7 @@ if (NOT WIN32)
 		set(CMAKE_BUILD_TYPE Release)
 	endif()
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++17 -Wno-unused")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wno-unused")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -pipe -march=native")
     set(CMAKE_STATIC_LINKER_FLAGS, "-lcriterion")
@@ -40,46 +37,25 @@ if (UNIX)
 	include_directories("${CMAKE_HOME_DIRECTORY}/.conan/data")
 endif ()
 
-set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
-set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
-set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
-
-# Include headers
-include_directories(${SERVER_PATH})
-include_directories(${COMMON_PATH})
-include_directories(${CLIENT_PATH})
+find_package (Criterion REQUIRED)
+set(CRITERION_LIBRARIES criterion)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
-set(RTYPE_SERVER
-    ${SERVER_PATH}/main.cpp
-)
+set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
+set(ECS_PATH "${CMAKE_SOURCE_DIR}/ECS")
+set(PHYSICS_PATH "${CMAKE_SOURCE_DIR}/Physics")
+set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
+set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
 
-set(RTYPE_CLIENT
-	${CLIENT_PATH}/main.cpp
-	${CLIENT_PATH}/CollisionDetection.hpp
-	${CLIENT_PATH}/SphereCollisionDetection.cpp
-	${CLIENT_PATH}/SphereCollisionDetection.hpp
-	${CLIENT_PATH}/AABBCollisionDetection.cpp
-	${CLIENT_PATH}/AABBCollisionDetection.hpp Client/OBBCollisionDetection.cpp Client/OBBCollisionDetection.hpp Client/GeometryObject.hpp Client/GeometryObject.cpp)
-
-set(RTYPE_COMMON)
-
-find_package (Criterion REQUIRED)
-add_subdirectory (Tests)
-
-add_executable(r-type_client
-    ${RTYPE_CLIENT}
-    ${RTYPE_COMMON})
-
-add_executable(r-type_server
-    ${RTYPE_SERVER}
-    ${RTYPE_COMMON})
-
-find_package(sfml)
+add_subdirectory(Common)
+add_subdirectory(Client)
+add_subdirectory(ECS)
+add_subdirectory(Physics)
+add_subdirectory(Tests)
+add_subdirectory(Server)
 
 # Client link
-target_link_libraries(r-type_client sfml::sfml)
 
 #Find any version 2.X of SFML
 #See the FindSFML.cmake file for additional details and instructions

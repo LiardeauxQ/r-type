@@ -3,7 +3,7 @@
 //
 
 #include <criterion/criterion.h>
-#include "GeometryObject.hpp"
+#include "includes/GeometryObject.hpp"
 #include "SphereCollisionDetection.hpp"
 
 Test(SphereCollisionDetection, simple_valid_collision_test)
