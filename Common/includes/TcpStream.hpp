@@ -17,7 +17,13 @@ public:
     void send(const void *data, size_t size) const;
 
     template<typename T>
-    void receive(T& data, size_t size, ssize_t& received) const;
+    void receive(T *data, size_t size, ssize_t& received) const
+    {
+        received = ::recv(m_handle, data, size, 0);
+
+        if (received == -1)
+            throw "Error while receiving";
+    }
 
 private:
     void connectRaw();

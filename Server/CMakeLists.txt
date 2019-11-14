@@ -10,9 +10,9 @@ set(TEST_PATH "${CMAKE_HOME_DIRECTORY}/Tests")
 
 set(RTYPE_SERVER
     ${SERVER_PATH}/sources/main.cpp
-    ${SERVER_PATH}/sources/GameServer.cpp
-    ${SERVER_PATH}/sources/GameRoom.cpp
-    ${SERVER_PATH}/sources/Client.cpp
+    #${SERVER_PATH}/sources/GameServer.cpp
+    #${SERVER_PATH}/sources/GameRoom.cpp
+    #${SERVER_PATH}/sources/Client.cpp
 )
 
 
@@ -29,4 +29,4 @@ set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET r-type_server PROPERTY CXX_EXTENSIONS NO)
 
-target_link_libraries(r-type_server ecs r-type_common)
+target_link_libraries(r-type_server ecs r-type_common crypto)
