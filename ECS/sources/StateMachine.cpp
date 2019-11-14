@@ -23,6 +23,7 @@ Box<AbstractState> StateMachine::pop()
         m_states.back()->onResume();
     return ret;
 }
+
 void StateMachine::update()
 {
     while (m_running) {
@@ -32,24 +33,31 @@ void StateMachine::update()
             trans = m_states.back()->update();
         else
             break;
-
         for (auto& s : m_states)
             s->shadowUpdate();
+        this->transition(move(trans));
+    }
+}
 
-        switch (trans.m_transition) {
-        case Transition::Name::POP:
-            this->pop();
-            break;
-        case Transition::Name::PUSH:
-            this->push(move(trans.m_newState));
-            break;
-        case Transition::Name::QUIT:
-            for (auto &s: m_states)
-                s->onStop();
-            m_running = false;
-            break;
-        case Transition::NONE:
-            break;
-        }
+StateMachine::StateMachine()
+    : m_running(true)
+{}
+
+void StateMachine::transition(Transition trans)
+{
+    switch (trans.m_transition) {
+    case Transition::Name::POP:
+        this->pop();
+        break;
+    case Transition::Name::PUSH:
+        this->push(move(trans.m_newState));
+        break;
+    case Transition::Name::QUIT:
+        for (auto &s: m_states)
+            s->onStop();
+        m_running = false;
+        break;
+    case Transition::NONE:
+        break;
     }
 }

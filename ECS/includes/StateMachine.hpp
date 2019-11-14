@@ -9,12 +9,13 @@
 #include "AbstactState.hpp"
 #include "Transition.hpp"
 
-class States {
+class StateMachine {
 public:
-    States() = default;
+    StateMachine();
 
     void update();
 private:
+    void transition(Transition trans);
     void push(Box<AbstractState> newState);
     Box<AbstractState> pop();
     vector<Box<AbstractState>> m_states;
