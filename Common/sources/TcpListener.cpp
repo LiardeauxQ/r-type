@@ -11,7 +11,7 @@ TcpStream TcpListener::accept() const
     RawSocket newConnection =::accept(m_handle, const_cast<sockaddr*>(&m_addr), &s);
 
     if (newConnection == -1)
-        throw "Erroe while connecting";
+        throw "Error while connecting";
     return TcpStream(newConnection);
 }
 
@@ -22,5 +22,5 @@ void TcpListener::listen(int32_t nbClientMax) const
 }
 
 TcpListener::TcpListener(uint16_t port)
-    : Socket(TCP, "127.0.0.1", port)
+    : Socket(TCP, "0.0.0.0", port)
 {}

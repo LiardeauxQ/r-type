@@ -4,7 +4,7 @@ project(R-Type)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Documents/.cmake")
 
 # Set compiler arguments
 if (NOT WIN32)
@@ -37,18 +37,21 @@ if (UNIX)
 	include_directories("${CMAKE_HOME_DIRECTORY}/.conan/data")
 endif ()
 
+find_package (Criterion REQUIRED)
 set(CRITERION_LIBRARIES criterion)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
 set(ECS_PATH "${CMAKE_SOURCE_DIR}/ECS")
+set(PHYSICS_PATH "${CMAKE_SOURCE_DIR}/Physics")
 set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
 set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
 
 add_subdirectory(Common)
 add_subdirectory(Client)
 add_subdirectory(ECS)
+add_subdirectory(Physics)
 add_subdirectory(Tests)
 add_subdirectory(Server)
 
