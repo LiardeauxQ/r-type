@@ -30,15 +30,15 @@ bool OBBCollisionDetection::projectOn(const Point &normalVector,
     tuple<Point, Point> minMax1 = findMinMaxPoints(normalVector, object1);
     tuple<Point, Point> minMax2 = findMinMaxPoints(normalVector, object2);
 
-    if (get<0>(minMax2).isXIn(minMax1)) {
+    if (std::get<0>(minMax2).isXIn(minMax1)) {
         return true;
-    } else if (get<1>(minMax2).isXIn(minMax1)) {
+    } else if (std::get<1>(minMax2).isXIn(minMax1)) {
         return true;
     }
     if (normalVector.m_x == 0) {
-        if (get<0>(minMax2).isYIn(minMax1))
+        if (std::get<0>(minMax2).isYIn(minMax1))
             return true;
-        else if (get<1>(minMax2).isYIn(minMax1))
+        else if (std::get<1>(minMax2).isYIn(minMax1))
             return true;
     }
     return false;

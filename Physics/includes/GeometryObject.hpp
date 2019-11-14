@@ -9,6 +9,7 @@
 #include <string>
 #include <exception>
 #include <ostream>
+#include <tuple>
 
 #define PI 3.14159265
 #define RAD 180

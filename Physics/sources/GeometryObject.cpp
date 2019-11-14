@@ -52,25 +52,25 @@ bool Point::areSame(double a, double b) const {
 }
 
 bool Point::isIn(tuple<Point, Point> const &interval) const {
-    double x0 = get<0>(interval).m_x;
-    double x1 = get<1>(interval).m_x;
-    double y0 = get<0>(interval).m_y;
-    double y1 = get<1>(interval).m_y;
+    double x0 = std::get<0>(interval).m_x;
+    double x1 = std::get<1>(interval).m_x;
+    double y0 = std::get<0>(interval).m_y;
+    double y1 = std::get<1>(interval).m_y;
 
     return ((m_x > x0 || areSame(m_x, x0)) && (m_x < x1 || areSame(m_x, x1))
     && (m_y > y0 || areSame(m_y, y0)) && (m_y < y1 || areSame(m_y, y1)));
 }
 
 bool Point::isXIn(tuple<Point, Point> const &interval) const {
-    double x0 = get<0>(interval).m_x;
-    double x1 = get<1>(interval).m_x;
+    double x0 = std::get<0>(interval).m_x;
+    double x1 = std::get<1>(interval).m_x;
 
     return (m_x > x0 || areSame(m_x, x0)) && (m_x < x1 || areSame(m_x, x1));
 }
 
 bool Point::isYIn(tuple<Point, Point> const &interval) const {
-    double y0 = get<0>(interval).m_y;
-    double y1 = get<1>(interval).m_y;
+    double y0 = std::get<0>(interval).m_y;
+    double y1 = std::get<1>(interval).m_y;
 
     return (m_y > y0 || areSame(m_y, y0)) && (m_y < y1 || areSame(m_y, y1));
 }
