@@ -18,7 +18,7 @@ include_directories(
 set(TESTS_CLIENT
     ${TEST_PATH}/sources/AABBCollisionDetection_test.cpp
     ${TEST_PATH}/sources/SphereCollisionDetection_test.cpp
-)
+    ${TEST_PATH}/sources/OBBCollisionDetection_test.cpp)
 
 set(TESTS_SERVER
     ${TEST_PATH}/sources/test_server.cpp
