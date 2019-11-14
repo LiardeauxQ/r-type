@@ -50,6 +50,8 @@ deploy-blih:
     stage: deploy
     only:
         - master
+    before_script:
+        - apt-get install -y git
     script:
         - echo "Pushing to $TARGET_REPO"
         - mkdir -p ~/.ssh
@@ -61,4 +63,3 @@ deploy-blih:
         - git push epitech HEAD:$CI_COMMIT_REF_NAME
         - git config --unset core.sshCommand
         - rm -rf ~/.ssh/epitech
-
