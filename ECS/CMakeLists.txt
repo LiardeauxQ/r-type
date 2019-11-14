@@ -9,8 +9,7 @@ set(ECS
     ${ECS_SOURCES}/World.cpp
     ${ECS_SOURCES}/Entity.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
-    ${ECS_SOURCES}/Component.cpp
-)
+    ${ECS_SOURCES}/Component.cpp)
 
 add_library(ecs STATIC
     ${ECS}
