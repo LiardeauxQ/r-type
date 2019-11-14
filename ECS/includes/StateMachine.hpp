@@ -9,6 +9,9 @@
 #include "AbstactState.hpp"
 #include "Transition.hpp"
 
+struct Transition;
+class AbstractState;
+
 class StateMachine {
 public:
     StateMachine();

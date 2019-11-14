@@ -6,11 +6,11 @@
 
 #include "Definitions.hpp"
 #include "Transition.hpp"
+#include "Dispatcher.hpp"
 #include <vector>
 
-typedef uint32_t System;
-
 struct Transition;
+class Dispatcher;
 
 class AbstractState {
 public:
@@ -23,8 +23,14 @@ public:
     virtual void onStop(/* Data<T> */) = 0;
     virtual void onPause(/* Data<T> */) = 0;
     virtual void onResume(/* Data<T> */) = 0;
+
     virtual Transition update(/* Data<T> */) = 0;
+    virtual Transition fixedUpdate(/* Data<T> */) = 0;
+
     virtual void shadowUpdate(/* Data<T> */) = 0;
+    virtual void shadowFixedUpdate(/* Data<T> */) = 0;
+
+    virtual Transition handleEvent(/* Event */) = 0;
 private:
-    vector<System> m_systems;
+    unique_ptr<Dispatcher> m_dispatcher;
 };
