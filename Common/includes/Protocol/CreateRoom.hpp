@@ -5,6 +5,8 @@
 #ifndef CPP_RTYPE_2019_CREATEROOM_HPP
 #define CPP_RTYPE_2019_CREATEROOM_HPP
 
+#include <string>
+
 #include "Command.hpp"
 
 class CreateRoom : public Command {
