@@ -42,20 +42,21 @@ set(CRITERION_LIBRARIES criterion)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
-set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
-set(ECS_PATH "${CMAKE_SOURCE_DIR}/ECS")
+set(RTYPE_CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")
+set(RTYPE_SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
+set(TESTS_PATH,  "${CMAKE_SOURCE_DIR}/Tests")
+set(COMMON_PATH  "${CMAKE_SOURCE_DIR}/Common")
+set(ECS_PATH 	 "${CMAKE_SOURCE_DIR}/ECS")
 set(PHYSICS_PATH "${CMAKE_SOURCE_DIR}/Physics")
-set(SERVER_PATH "${CMAKE_SOURCE_DIR}/Server")
-set(COMMON_PATH "${CMAKE_SOURCE_DIR}/Common")
 set(NETWORK_PATH "${CMAKE_SOURCE_DIR}/Network")
 
-add_subdirectory(Network)
-add_subdirectory(Common)
 add_subdirectory(Client)
+add_subdirectory(Server)
+add_subdirectory(Tests)
+add_subdirectory(Common)
 add_subdirectory(ECS)
 add_subdirectory(Physics)
-add_subdirectory(Tests)
-add_subdirectory(Server)
+add_subdirectory(Network)
 
 # Client link
 
