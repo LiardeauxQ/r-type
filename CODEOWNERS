@@ -1,0 +1,12 @@
+CODEOWNERS @nwmqpa @night @Alexandre @qLiardeaux
+
+/Tests/ @qLiardeaux
+/Client/ @night @qLiardeaux
+/Server/ @nwmqpa @Alexandre
+/ECS/ @nwmqpa @Alexandre
+/Libloading/ @nwmqpa
+/Physics/ @qLiardeaux
+
+CMakeLists.txt @Alexandre @nwmqpa
+
+README @nwmqpa @night @Alexandre @qLiardeaux
