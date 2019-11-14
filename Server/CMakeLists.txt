@@ -15,18 +15,15 @@ set(RTYPE_SERVER
     #${SERVER_PATH}/sources/Client.cpp
 )
 
-
-include_directories(
-    "${SERVER_PATH}/includes"
-    "${COMMON_PATH}/includes"
-)
-
 add_executable(r-type_server
     ${RTYPE_SERVER}
 )
+
+target_include_directories(r-type_server PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET r-type_server PROPERTY CXX_EXTENSIONS NO)
 
-target_link_libraries(r-type_server ecs r-type_common crypto)
+target_link_libraries(r-type_server ecs common network)
+target_link_libraries(r-type_server crypto)

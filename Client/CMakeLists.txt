@@ -22,12 +22,12 @@ add_executable(r-type_client
     ${RTYPE_CLIENT}
 )
 
-target_link_libraries(r-type_client ecs r-type_common physics)
-
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET r-type_client PROPERTY CXX_EXTENSIONS NO)
 
 find_package(sfml)
 
+
+target_link_libraries(r-type_client ecs common physics)
 target_link_libraries(r-type_client sfml::sfml)

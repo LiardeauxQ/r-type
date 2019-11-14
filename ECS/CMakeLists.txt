@@ -21,3 +21,5 @@ target_include_directories(ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 set_property(TARGET ecs PROPERTY CXX_STANDARD 17)
 set_property(TARGET ecs PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET ecs PROPERTY CXX_EXTENSIONS NO)
+
+target_link_libraries(ecs common)
