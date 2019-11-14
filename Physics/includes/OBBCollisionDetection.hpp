@@ -24,6 +24,7 @@ private:
             const vector<Point> &object2) const;
     [[nodiscard]] tuple<Point, Point> findMinMaxPoints(const Point &normalVector,
             const vector<Point> &object) const;
+    [[nodiscard]] Point handleNormalVectorComputationError(Point const &p1, Point const &p2) const;
 };
 
 #endif //R_TYPE_SERVER_OBBCOLLISIONDETECTION_HPP
