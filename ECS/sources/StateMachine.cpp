@@ -2,9 +2,9 @@
 // Created by alex on 11/13/19.
 //
 
-#include "States.hpp"
+#include "StateMachine.hpp"
 
-void States::push(Box<AbstractState> newState)
+void StateMachine::push(Box<AbstractState> newState)
 {
     if (!m_states.empty())
         m_states.back()->onPause();
@@ -12,7 +12,7 @@ void States::push(Box<AbstractState> newState)
     m_states.push_back(move(newState));
 }
 
-Box<AbstractState> States::pop()
+Box<AbstractState> StateMachine::pop()
 {
     if (m_states.empty())
         return nullptr;
@@ -23,7 +23,7 @@ Box<AbstractState> States::pop()
         m_states.back()->onResume();
     return ret;
 }
-void States::update()
+void StateMachine::update()
 {
     while (m_running) {
         Transition trans;

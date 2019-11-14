@@ -7,7 +7,8 @@ set(ECS_SOURCES "${ECS_PATH}/sources")
 
 set(ECS
     ${ECS_SOURCES}/World.cpp
-    ${ECS_SOURCES}/States.cpp
+    ${ECS_SOURCES}/StateMachine.cpp
+    ${ECS_SOURCES}/AbstractState.cpp
     ${ECS_SOURCES}/Entity.cpp
     ${ECS_SOURCES}/Transition.cpp
     ${ECS_SOURCES}/EntityRequest.cpp

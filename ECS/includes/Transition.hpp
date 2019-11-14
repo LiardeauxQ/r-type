@@ -13,12 +13,13 @@ struct Transition {
     enum Name {
         POP,
         QUIT,
-        PUSH,   // Need a new state to push on the stack.
+        PUSH,
         NONE,
-//      SWITCH,
     };
 
     explicit Transition(Name trans = NONE, Box<AbstractState> newState = nullptr);
+    Transition(Transition&& trans);
+    Transition& operator=(Transition&& trans);
 
     Name m_transition;
     Box<AbstractState> m_newState;

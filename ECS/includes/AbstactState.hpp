@@ -14,6 +14,9 @@ struct Transition;
 
 class AbstractState {
 public:
+    AbstractState(AbstractState&&) noexcept;
+    AbstractState& operator=(AbstractState&&) noexcept;
+
     virtual ~AbstractState() = default;
 
     virtual void onStart(/* Data<T> */) = 0;
@@ -25,4 +28,3 @@ public:
 private:
     vector<System> m_systems;
 };
-
