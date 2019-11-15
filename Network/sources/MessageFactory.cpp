@@ -3,7 +3,6 @@
 //
 
 #include <string.h>
-#include <openssl/md5.h>
 #include "MessageFactory.hpp"
 
 Vec<Box<Message>> MessageFactory::deserialize_packets(Vec<u8> const &bytes) {
