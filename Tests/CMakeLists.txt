@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 set(TESTS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
+include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
+
 set(TESTS_RTYPE_CLIENT
     ${TESTS_SOURCES}/Client/test_client.cpp
 )

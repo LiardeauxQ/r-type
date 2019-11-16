@@ -18,4 +18,6 @@ set_property(TARGET common PROPERTY CXX_STANDARD 17)
 set_property(TARGET common PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET common PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(common crypto)
+if (NOT APPLE)
+    target_link_libraries(common crypto)
+endif()

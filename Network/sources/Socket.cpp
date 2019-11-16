@@ -25,7 +25,7 @@ Socket::Socket(Socket::Type type, sockaddr_in addr)
     m_handle = ::socket(AF_INET, getUnixFromType(m_type), 0);
     if (m_handle == -1)
         throw "Error while creating socket.";
-    if (bind(m_handle, &m_addr, sizeof(sockaddr)) < 0)
+    if (::bind(m_handle, &m_addr, sizeof(sockaddr)) < 0)
         throw "Error while binding.";
 }
 
