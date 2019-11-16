@@ -38,11 +38,4 @@ void TcpStream::send(const void* data, size_t size) const
         throw "Error while sending.";
 }
 
-template <typename T>
-void TcpStream::receive(T& data, size_t size, ssize_t& received) const
-{
-    received = ::recv(m_handle, &data, size, 0);
 
-    if (received == -1)
-        throw "Error while receiving";
-}

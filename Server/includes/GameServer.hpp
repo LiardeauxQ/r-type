@@ -5,9 +5,11 @@
 #ifndef CPP_RTYPE_2019_GAMESERVER_HPP
 #define CPP_RTYPE_2019_GAMESERVER_HPP
 
+#include "Client.hpp"
 #include "Definitions.hpp"
 #include "GameRoom.hpp"
 #include "Command.hpp"
+#include "MessageFactory.hpp"
 #include "Client.hpp"
 #include "TcpListener.hpp"
 #include "TcpStream.hpp"

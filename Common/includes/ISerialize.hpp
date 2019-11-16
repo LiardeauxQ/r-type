@@ -15,10 +15,4 @@ public:
     virtual void *serialize(size_t &size) const = 0;
 };
 
-class IDeserialize {
-public:
-    virtual ~IDeserialize() = default;
-    IDeserialize(void *data, size_t size) {};
-};
-
 #endif //CPP_RTYPE_2019_ISERIALIZE_HPP
