@@ -1,0 +1,77 @@
+{
+    "sprites": [
+    {
+        "name": "monster 1",
+        "filename": "r-typesheet19.gif",
+        "movements": {
+            "right": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 0
+                },
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 1
+                }
+            ],
+            "left": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 0
+                },
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 1
+                }
+            ],
+            "top": [],
+            "bottom": [],
+            "jump_right": [],
+            "jump_left": [],
+            "fire_right": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 0
+                },
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 1
+                }
+            ],
+            "fire_left": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 0
+                },
+                {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                    "animation_pos": 1
+                }
+            ]
+        }
+    }]
+}

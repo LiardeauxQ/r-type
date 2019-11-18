@@ -2,7 +2,7 @@
 // Created by Quentin Liardeaux on 11/7/19.
 //
 
-#include "includes/AABBCollisionDetection.hpp"
+#include "AABBCollisionDetection.hpp"
 
 AABBCollisionDetection::AABBCollisionDetection(const Frame &frameRect)
     : m_frameRect(frameRect)

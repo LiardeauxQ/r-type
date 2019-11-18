@@ -11,3 +11,5 @@ Frame<T>::Frame(T x, T y, T width, T height)
     , m_width(width)
     , m_height(height)
 {}
+
+template class Frame<int>;

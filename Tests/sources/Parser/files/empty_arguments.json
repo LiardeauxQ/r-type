@@ -1,0 +1,31 @@
+{
+  "sprites": [
+    {
+      "name": "monster 1",
+      "filename": "r-typesheet19.gif",
+      "movements": {
+        "right": [],
+        "left": [],
+        "top": [],
+        "bottom": [],
+        "jump_right": [],
+        "jump_left": [],
+        "fire_right": [],
+        "fire_left": []
+      }
+    },
+    {
+      "name": "monster 2",
+      "filename": "r-typesheet20.gif",
+      "movements": {
+        "right": [],
+        "left": [],
+        "top": [],
+        "bottom": [],
+        "jump_right": [],
+        "jump_left": [],
+        "fire_right": [],
+        "fire_left": []
+      }
+    }]
+}
