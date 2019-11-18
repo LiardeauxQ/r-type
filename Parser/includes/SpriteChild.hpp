@@ -6,8 +6,13 @@
 #define R_TYPE_SPRITECHILD_HPP
 
 #include <vector>
+#include <memory>
+#include <string>
 
-#include "includes/SpriteFile.hpp"
+#include "rapidjson/document.h"
+
+#include "ParseError.hpp"
+#include "Frame.hpp"
 
 using namespace std;
 
@@ -24,12 +29,19 @@ enum SpritePosition {
 
 class SpriteChild {
 public:
-    SpriteChild(SpritePosition position, vector<int> const &points);
+    SpriteChild(SpritePosition position);
+    SpriteChild(rapidjson::Value const &value);
     ~SpriteChild() = default;
-private:
-    SpritePosition m_position;
-    vector<int> m_points;
-};
 
+    void addAnimation(Frame<int> frame);
+    static shared_ptr<SpriteChild> fromJSONDocument(rapidjson::Value const &value, SpritePosition position);
+    [[nodiscard]] const SpritePosition &getPosition() const { return m_position; }
+    [[nodiscard]] const Frame<int> &getFrameForAnimationAtPos(size_t pos) const;
+private:
+    static Frame<int> createFrameFromRapidJsonValue(rapidjson::Value const &value);
+
+    SpritePosition m_position;
+    vector<Frame<int>> m_frames;
+};
 
 #endif //R_TYPE_SPRITECHILD_HPP

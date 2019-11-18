@@ -13,8 +13,10 @@ using namespace std;
 class ParseSprite {
 public:
     ParseSprite(string const &filename);
-    virtual ~ParseSprite() = 0;
-protected:
+    ~ParseSprite() = default;
+
+    string const &getData() { return m_data; }
+private:
     string m_filename;
     string m_data;
 };

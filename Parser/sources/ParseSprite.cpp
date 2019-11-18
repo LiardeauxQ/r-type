@@ -4,6 +4,8 @@
 
 #include "ParseSprite.hpp"
 
+#include <iostream>
+
 ParseSprite::ParseSprite(string const &filename)
     : m_filename(filename)
 {

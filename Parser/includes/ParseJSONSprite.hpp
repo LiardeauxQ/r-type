@@ -6,17 +6,24 @@
 #define R_TYPE_PARSEJSONSPRITE_HPP
 
 #include "ParseSprite.hpp"
+#include "SpriteFile.hpp"
+
 #include "rapidjson/document.h"
-#include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
-class ParseJSONSprite: public ParseSprite {
+class ParseJSONSprite {
 public:
-    ParseJSONSprite(string const &filename);
-    ~ParseJSONSprite() {}
+    static vector<shared_ptr<SpriteFile>> parse(string const &filename);
 private:
-    rapidjson::Document m_document;
-};
+    struct Parser {
+        Parser(string const &filename);
+        ~Parser() = default;
 
+        rapidjson::Value &getSpritesFrom(string const &filename);
+        void addSpriteFile(rapidjson::Value const &value);
+
+        vector<shared_ptr<SpriteFile>> m_spriteFiles;
+    };
+};
 
 #endif //R_TYPE_PARSEJSONSPRITE_HPP
