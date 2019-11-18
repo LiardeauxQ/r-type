@@ -1,4 +1,5 @@
 {
+    "sprites": [
     {
         "name": "monster 1",
         "filename": "r-typesheet19.gif",
@@ -72,9 +73,5 @@
                 }
             ]
         }
-    },
-    {
-        "name": "monster 2",
-        "filename": "r-typesheet20.gif"
-    }
+    }]
 }

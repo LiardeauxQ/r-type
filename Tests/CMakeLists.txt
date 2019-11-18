@@ -24,6 +24,10 @@ set(TESTS_NETWORK
     ${TESTS_SOURCES}/Network/test_network.cpp
 )
 
+set(TESTS_PARSER
+    ${TESTS_SOURCES}/Parser/test_parser.cpp
+    )
+
 set(TESTS_PHYSICS
     ${TESTS_SOURCES}/Physics/AABBCollisionDetection_test.cpp
     ${TESTS_SOURCES}/Physics/SphereCollisionDetection_test.cpp
@@ -107,3 +111,16 @@ set_property(TARGET test_physics PROPERTY CXX_STANDARD_REQUIRED YES)
 
 target_link_libraries(test_physics physics common)
 target_link_libraries(test_physics ${CRITERION_LIBRARIES})
+
+add_executable(test_parser
+    ${TESTS_PARSER}
+    )
+
+file(COPY ${TESTS_SOURCES}/Parser/files DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+set_property(TARGET test_parser PROPERTY CXX_STANDARD 17)
+set_property(TARGET test_parser PROPERTY CXX_EXTENSIONS NO)
+set_property(TARGET test_parser PROPERTY CXX_STANDARD_REQUIRED YES)
+
+target_link_libraries(test_parser parser common)
+target_link_libraries(test_parser ${CRITERION_LIBRARIES})
