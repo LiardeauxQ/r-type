@@ -11,6 +11,12 @@
     #define VERSION "NOT DEFINED"
 #endif
 
+#include "StateMachine.hpp"
+#include "MainMenuState.hpp"
+
 int main(void) {
+    StateMachine states(unique_ptr<AbstractState>(new MainMenuState()));
+
+    states.run();
     return 0;
 }

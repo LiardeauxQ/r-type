@@ -21,6 +21,7 @@ struct Error {
 class AbstractState {
 public:
     AbstractState(AbstractState&&) noexcept;
+    AbstractState() = default;
     AbstractState& operator=(AbstractState&&) noexcept;
 
     virtual ~AbstractState() = default;

@@ -12,13 +12,15 @@
 #include <iostream>
 #include <thread>
 
+using namespace std;
+
 template <typename Resources, typename E>
 class ThreadPool {
 public:
     explicit ThreadPool(shared_ptr<Resources> res, uint32_t nbThread = thread::hardware_concurrency());
     ~ThreadPool();
 
-    future<E> enqueueWork(function<E(shared_ptr<Resources>)> work);
+    void enqueueWork(function<E(shared_ptr<Resources>)> work);
     uint32_t m_nbThread;
 private:
     deque<function<E(shared_ptr<Resources>)>> m_works;
@@ -40,19 +42,17 @@ ThreadPool<Resources, E>::ThreadPool(shared_ptr<Resources> res, uint32_t nbThrea
     auto worker = [&]() {
         size_t size = 0;
         function<E(shared_ptr<Resources>)> f = nullptr;
-        {
-            lock_guard<mutex> lock(m_worksLock);
-            size = m_works.size();
-        }
+        m_worksLock.lock();
+        size = m_works.size();
+        m_worksLock.unlock();
         while (m_isRunning || size != 0) {
-            {
-                lock_guard<mutex> lock(m_worksLock);
-                size = m_works.size();
-                if (size != 0) {
-                    f = m_works.back();
-                    m_works.pop_back();
-                }
+            m_worksLock.lock();
+            size = m_works.size();
+            if (size != 0) {
+                f = m_works.back();
+                m_works.pop_back();
             }
+            m_worksLock.unlock();
             if (f) {
                 f(m_sharedData);
                 f = nullptr;
@@ -73,11 +73,10 @@ ThreadPool<T, E>::~ThreadPool()
 }
 
 template <typename T, typename E>
-future<E> ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work)
+void ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work)
 {
     lock_guard<mutex> lock(m_worksLock);
     m_works.push_front(work);
-    return future<E>();
 }
 
 #endif //R_TYPE_THREADPOOL_HPP

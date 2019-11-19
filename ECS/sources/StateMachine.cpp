@@ -24,7 +24,7 @@ Box<AbstractState> StateMachine::pop()
     return ret;
 }
 
-void StateMachine::update()
+void StateMachine::run()
 {
     while (m_running) {
         Transition trans;
@@ -38,10 +38,6 @@ void StateMachine::update()
         this->transition(move(trans));
     }
 }
-
-StateMachine::StateMachine()
-    : m_running(true)
-{}
 
 void StateMachine::transition(Transition trans)
 {
@@ -60,4 +56,10 @@ void StateMachine::transition(Transition trans)
     case Transition::NONE:
         break;
     }
+}
+StateMachine::StateMachine(unique_ptr<AbstractState> initial)
+    : m_states()
+    , m_running(true)
+{
+    m_states.push_back(move(initial));
 }

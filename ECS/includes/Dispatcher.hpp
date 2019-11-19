@@ -22,9 +22,9 @@ public:
 
     ~Dispatcher() = default;
 
-    void dispatch();
+    void dispatch(shared_ptr<T> data);
 private:
-    ThreadPool<T, E>& m_pool;
+    shared_ptr<ThreadPool<T, E>> m_pool;
     vector<System> m_systems;
 };
 
@@ -43,10 +43,13 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::dispatch()
+void Dispatcher<T, E>::dispatch(shared_ptr<T> data)
 {
     for (auto& s: m_systems) {
-        cout << "Running system: " << s << endl;
+        // auto& fetchedData = m_world.fetch(s.getDependencies());
+        // m_pool->enqueueWork([fetchedData, &s](shared_ptr<T> world) -> E {
+        //     s(world, fetchedData);
+        // });
     }
 }
 

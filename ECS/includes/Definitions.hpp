@@ -11,8 +11,6 @@
 #include <string>
 #include <stdint.h>
 
-using namespace std;
-
 template<typename  T>
 using Box = std::unique_ptr<T>;
 

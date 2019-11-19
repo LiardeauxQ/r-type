@@ -12,11 +12,13 @@
 struct Transition;
 class AbstractState;
 
+using namespace std;
+
 class StateMachine {
 public:
-    StateMachine();
+    StateMachine(unique_ptr<AbstractState> initial);
 
-    void update();
+    void run();
 private:
     void transition(Transition trans);
     void push(Box<AbstractState> newState);

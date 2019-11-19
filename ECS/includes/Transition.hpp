@@ -18,8 +18,8 @@ struct Transition {
     };
 
     explicit Transition(Name trans = NONE, Box<AbstractState> newState = nullptr);
-    Transition(Transition&& trans);
-    Transition& operator=(Transition&& trans);
+    Transition(Transition&& trans) noexcept;
+    Transition& operator=(Transition&& trans) noexcept;
 
     Name m_transition;
     Box<AbstractState> m_newState;
