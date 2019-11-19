@@ -14,11 +14,14 @@ class AbstractState;
 
 using namespace std;
 
+namespace ecs {
+
 class StateMachine {
 public:
     StateMachine(unique_ptr<AbstractState> initial);
 
     void run();
+
 private:
     void transition(Transition trans);
     void push(Box<AbstractState> newState);
@@ -26,5 +29,7 @@ private:
     vector<Box<AbstractState>> m_states;
     bool m_running;
 };
+
+}
 
 #endif //R_TYPE_STATESSTACK_HPP

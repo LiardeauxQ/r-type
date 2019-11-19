@@ -4,7 +4,7 @@
 
 #include "StateMachine.hpp"
 
-void StateMachine::push(Box<AbstractState> newState)
+void ecs::StateMachine::push(Box<AbstractState> newState)
 {
     if (!m_states.empty())
         m_states.back()->onPause();
@@ -12,7 +12,7 @@ void StateMachine::push(Box<AbstractState> newState)
     m_states.push_back(move(newState));
 }
 
-Box<AbstractState> StateMachine::pop()
+Box<AbstractState> ecs::StateMachine::pop()
 {
     if (m_states.empty())
         return nullptr;
@@ -24,7 +24,7 @@ Box<AbstractState> StateMachine::pop()
     return ret;
 }
 
-void StateMachine::run()
+void ecs::StateMachine::run()
 {
     while (m_running) {
         Transition trans;
@@ -39,7 +39,7 @@ void StateMachine::run()
     }
 }
 
-void StateMachine::transition(Transition trans)
+void ecs::StateMachine::transition(Transition trans)
 {
     switch (trans.m_transition) {
     case Transition::Name::POP:
@@ -57,7 +57,8 @@ void StateMachine::transition(Transition trans)
         break;
     }
 }
-StateMachine::StateMachine(unique_ptr<AbstractState> initial)
+
+ecs::StateMachine::StateMachine(unique_ptr<AbstractState> initial)
     : m_states()
     , m_running(true)
 {
