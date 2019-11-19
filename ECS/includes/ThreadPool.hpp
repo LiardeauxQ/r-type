@@ -53,8 +53,10 @@ ThreadPool<Resources, E>::ThreadPool(shared_ptr<Resources> res, uint32_t nbThrea
                     m_works.pop_back();
                 }
             }
-            if (f)
+            if (f) {
                 f(m_sharedData);
+                f = nullptr;
+            }
         }
     };
 
