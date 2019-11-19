@@ -30,7 +30,6 @@ enum SpritePosition {
 class SpriteChild {
 public:
     SpriteChild(SpritePosition position);
-    SpriteChild(rapidjson::Value const &value);
     ~SpriteChild() = default;
 
     void addAnimation(Frame<int> frame);
