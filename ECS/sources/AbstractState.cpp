@@ -5,7 +5,8 @@
 #include "AbstactState.hpp"
 
 AbstractState::AbstractState(AbstractState&& rhs) noexcept
-    : m_dispatcher(move(rhs.m_dispatcher))
+    : m_events() //TODO: Move new events to new object
+    , m_dispatcher(move(rhs.m_dispatcher))
 {}
 
 AbstractState& AbstractState::operator=(AbstractState&& rhs) noexcept

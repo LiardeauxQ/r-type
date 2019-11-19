@@ -7,7 +7,10 @@
 #include "Definitions.hpp"
 #include "Transition.hpp"
 #include "Dispatcher.hpp"
+#include "AbstractEvent.hpp"
+#include "Event.hpp"
 #include <vector>
+#include <deque>
 
 struct Transition;
 class Dispatcher;
@@ -31,6 +34,9 @@ public:
     virtual void shadowFixedUpdate(/* Data<T> */) = 0;
 
     virtual Transition handleEvent(/* Event */) = 0;
+
+protected:
+    deque<unique_ptr<ecs::AbstractEvent>> m_events;
 private:
     unique_ptr<Dispatcher> m_dispatcher;
 };
