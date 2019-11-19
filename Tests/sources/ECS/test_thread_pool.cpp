@@ -7,33 +7,65 @@
 
 #include <criterion/criterion.h>
 #include "ThreadPool.hpp"
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
 #include <iostream>
+#include <atomic>
+
+struct Event {
+    Event(string msg) : message(move(msg)) {};
+    string message;
+};
 
 Test(ThreadPool, creation) {
-    struct Event {
-        Event(string msg) : message(move(msg)) {};
-        string message;
-    };
-    int i = 0;
-    {
-        ThreadPool<Event, void> pool(make_shared<Event>("test"));
 
-        pool.enqueueWork([&i](shared_ptr<Event> e) {
-            i += 1;
-            std::cout << "1" << std::endl;
-        });
-        pool.enqueueWork([&i](shared_ptr<Event> e) {
-            i += 1;
-            std::cout << "2" << std::endl;
-        });
-        pool.enqueueWork([&i](shared_ptr<Event> e) {
-            i += 1;
-            std::cout << "3" << std::endl;
-        });
-    }
-    cout << "Final: " << i << endl;
+    ThreadPool<Event, void> pool(make_shared<Event>("test"));
 }
 
-#pragma clang diagnostic pop
+Test(ThreadPool, enqueue_100_works_4_thread) {
+    atomic<int> print = 0;
+    auto toto = make_shared<Event>("test");
+    {
+        ThreadPool<Event, void> pool(toto, 4);
+
+        for (int i = 0; i < 100; i++) {
+            pool.enqueueWork([&print](shared_ptr<Event> e) {
+                print += 1;
+            });
+        }
+    }
+    cr_assert_eq(print, 100, "Should be 100, it's %d", print.load());
+}
+
+Test(ThreadPool, enqueue_100_works_1_thread) {
+    atomic<int> print = 0;
+    auto toto = make_shared<Event>("test");
+    {
+        ThreadPool<Event, void> pool(toto, 1);
+
+        for (int i = 0; i < 100; i++) {
+            pool.enqueueWork([&print](shared_ptr<Event> e) {
+                print += 1;
+            });
+        }
+    }
+    cr_assert_eq(print, 100, "Should be 100, it's %d", print.load());
+}
+
+Test(ThreadPool, data_race_test_1) {
+    atomic<int> add = 0;
+    atomic<int> remove = 100;
+    auto toto = make_shared<Event>("test");
+    {
+        ThreadPool<Event, void> pool(toto, 1);
+
+        for (int i = 0; i < 100; i++) {
+            pool.enqueueWork([&add, &remove](shared_ptr<Event> e) {
+                add -= remove;
+                add++;
+                remove--;
+                remove += add;
+            });
+        }
+    }
+    cr_assert_eq(101, add);
+    cr_assert_eq(2, remove);
+}
