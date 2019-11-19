@@ -9,7 +9,6 @@ set(ECS
     ${ECS_SOURCES}/StateMachine.cpp
     ${ECS_SOURCES}/AbstractState.cpp
     ${ECS_SOURCES}/Entity.cpp
-    ${ECS_SOURCES}/Dispatcher.cpp
     ${ECS_SOURCES}/Transition.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp
@@ -18,6 +17,7 @@ set(ECS
 add_library(ecs STATIC
     ${ECS}
 )
+find_package(Threads)
 
 target_include_directories(ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
@@ -25,4 +25,4 @@ set_property(TARGET ecs PROPERTY CXX_STANDARD 17)
 set_property(TARGET ecs PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET ecs PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(ecs common)
+target_link_libraries(ecs common ${CMAKE_THREAD_LIBS_INIT})

@@ -10,7 +10,13 @@
 #include <vector>
 
 struct Transition;
-class Dispatcher;
+
+struct Event {
+    string name;
+};
+struct Error {
+    string message;
+};
 
 class AbstractState {
 public:
@@ -32,5 +38,5 @@ public:
 
     virtual Transition handleEvent(/* Event */) = 0;
 private:
-    unique_ptr<Dispatcher> m_dispatcher;
+    unique_ptr<Dispatcher<Event, Error>> m_dispatcher;
 };

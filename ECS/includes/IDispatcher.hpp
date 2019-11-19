@@ -4,8 +4,10 @@
 
 #pragma once
 
+#include "ThreadPool.hpp"
+
 namespace ecs {
-    
+
     class IDispatcher {
         
 
