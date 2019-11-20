@@ -14,6 +14,7 @@ set(TESTS_RTYPE_SERVER
 
 set(TESTS_COMMON
     ${TESTS_SOURCES}/Common/test_common.cpp
+    ${TESTS_SOURCES}/Common/test_stop_watch.cpp
 )
 
 set(TESTS_ECS
