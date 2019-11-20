@@ -17,7 +17,7 @@ add_library(parser STATIC
 
 #include_directories(includes)
 
-find_package(RapidJSON)
+find_package(rapidjson)
 
 target_link_libraries(parser rapidjson::rapidjson common)
 
