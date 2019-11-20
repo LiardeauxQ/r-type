@@ -13,7 +13,7 @@ void StopWatch::reset()
     start();
 }
 
-double StopWatch::elapsed()
+int64_t StopWatch::elapsed()
 {
     return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - m_started).count();
 }

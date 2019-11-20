@@ -16,12 +16,11 @@ public:
 
     void start();
     void reset();
-    double elapsed();
+    int64_t elapsed();
 private:
     using timePoint = chrono::time_point<chrono::high_resolution_clock, chrono::duration<double>>;
 
     timePoint m_started;
-
 };
 
 #endif //R_TYPE_STOPWATCH_HPP
