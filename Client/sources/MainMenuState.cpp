@@ -4,49 +4,50 @@
 
 #include "MainMenuState.hpp"
 
-void MainMenuState::onStart()
+void MainMenuState::onStart(ecs::StateData<string>& data)
 {
     cout << "Starting Main menu" << endl;
 }
 
-void MainMenuState::onStop()
+void MainMenuState::onStop(ecs::StateData<string>& data)
 {
     cout << "Stopping Main Menu" << endl;
 }
 
-void MainMenuState::onPause()
+void MainMenuState::onPause(ecs::StateData<string>& data)
 {
     cout << "Pausing Main Menu" << endl;
 }
 
-void MainMenuState::onResume()
+void MainMenuState::onResume(ecs::StateData<string>& data)
 {
     cout << "Resuming Main Menu" << endl;
 }
 
-Transition MainMenuState::update()
+ecs::Transition<string> MainMenuState::update(ecs::StateData<string>& data)
 {
     cout << "Updating Main Menu" << endl;
-    return Transition();
+    return ecs::Transition<string>();
 }
 
-Transition MainMenuState::handleEvent()
+ecs::Transition<string> MainMenuState::handleEvent(ecs::StateData<string>& data)
 {
     cout << "Handling event of Main Menu" << endl;
-    return Transition();
-}
-Transition MainMenuState::fixedUpdate()
-{
-    cout << "Fixed update." << endl;
-    return Transition();
+    return ecs::Transition<string>();
 }
 
-void MainMenuState::shadowUpdate()
+ecs::Transition<string> MainMenuState::fixedUpdate(ecs::StateData<string>& data)
+{
+    cout << "Fixed update." << endl;
+    return ecs::Transition<string>();
+}
+
+void MainMenuState::shadowUpdate(ecs::StateData<string>& data)
 {
     cout << "Shadow update." << endl;
 }
 
-void MainMenuState::shadowFixedUpdate()
+void MainMenuState::shadowFixedUpdate(ecs::StateData<string>& data)
 {
     cout << "Shadow fixed update." << endl;
 }

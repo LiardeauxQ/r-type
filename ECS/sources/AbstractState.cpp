@@ -4,12 +4,3 @@
 
 #include "AbstactState.hpp"
 
-AbstractState::AbstractState(AbstractState&& rhs) noexcept
-    : m_dispatcher(move(rhs.m_dispatcher))
-{}
-
-AbstractState& AbstractState::operator=(AbstractState&& rhs) noexcept
-{
-    m_dispatcher.swap(rhs.m_dispatcher);
-    return *this;
-}

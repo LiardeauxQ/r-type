@@ -8,22 +8,20 @@
 #include <SFML/Graphics.hpp>
 #include "AbstactState.hpp"
 
-class MainMenuState: public AbstractState {
+class MainMenuState: public ecs::AbstractState<string> {
 public:
     MainMenuState() = default;
     ~MainMenuState() override = default;
 
-    void onStart() override;
-    void onStop() override;
-    void onPause() override;
-    void onResume() override;
-    Transition update() override;
-    Transition handleEvent() override;
-
-private:
-    Transition fixedUpdate() override;
-    void shadowUpdate() override;
-    void shadowFixedUpdate() override;
+    void onStart(ecs::StateData<string>& data) override;
+    void onStop(ecs::StateData<string>& data) override;
+    void onPause(ecs::StateData<string>& data) override;
+    void onResume(ecs::StateData<string>& data) override;
+    ecs::Transition<string> update(ecs::StateData<string>& data) override;
+    ecs::Transition<string> handleEvent(ecs::StateData<string>& data) override;
+    ecs::Transition<string> fixedUpdate(ecs::StateData<string>& data) override;
+    void shadowUpdate(ecs::StateData<string>& data) override;
+    void shadowFixedUpdate(ecs::StateData<string>& data) override;
 };
 
 #endif //R_TYPE_MAINMENUSTATE_HPP

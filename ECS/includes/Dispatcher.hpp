@@ -11,6 +11,8 @@
 #include <iostream>
 #include <queue>
 
+namespace ecs {
+
 typedef uint8_t System; // TODO implement System
 
 template <typename T, typename E>
@@ -22,9 +24,10 @@ public:
 
     ~Dispatcher() = default;
 
-    void dispatch(shared_ptr<T> data);
+    void dispatch(T& data);
+
 private:
-    shared_ptr<ThreadPool<T, E>> m_pool;
+    ThreadPool<T, E>& m_pool;
     vector<System> m_systems;
 };
 
@@ -32,7 +35,8 @@ template <typename T, typename E>
 Dispatcher<T, E>::Dispatcher(Dispatcher&& dispatcher) noexcept
     : m_pool(dispatcher.m_pool)
     , m_systems(move(dispatcher.m_systems))
-{}
+{
+}
 
 template <typename T, typename E>
 Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
@@ -43,9 +47,9 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::dispatch(shared_ptr<T> data)
+void Dispatcher<T, E>::dispatch(T& data)
 {
-    for (auto& s: m_systems) {
+    for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
         // m_pool->enqueueWork([fetchedData, &s](shared_ptr<T> world) -> E {
         //     s(world, fetchedData);
@@ -56,7 +60,10 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> data)
 template <typename T, typename E>
 Dispatcher<T, E>::Dispatcher(ThreadPool<T, E>& pool)
     : m_pool(pool)
-    , m_systems(pool.m_nbThread)
-{}
+    , m_systems()
+{
+}
+
+}
 
 #endif //R_TYPE_DISPATCHER_HPP

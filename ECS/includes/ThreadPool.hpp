@@ -12,6 +12,8 @@
 #include <iostream>
 #include <thread>
 
+namespace ecs {
+
 using namespace std;
 
 template <typename Resources, typename E>
@@ -22,6 +24,7 @@ public:
 
     void enqueueWork(function<E(shared_ptr<Resources>)> work);
     uint32_t m_nbThread;
+
 private:
     deque<function<E(shared_ptr<Resources>)>> m_works;
     shared_ptr<Resources> m_sharedData;
@@ -60,7 +63,7 @@ ThreadPool<Resources, E>::ThreadPool(shared_ptr<Resources> res, uint32_t nbThrea
         }
     };
 
-    for(unsigned int i = 0; i < nbThread; ++i)
+    for (unsigned int i = 0; i < nbThread; ++i)
         m_threads.push_back(thread(worker));
 }
 
@@ -68,7 +71,7 @@ template <typename T, typename E>
 ThreadPool<T, E>::~ThreadPool()
 {
     m_isRunning = false;
-    for (auto& t: m_threads)
+    for (auto& t : m_threads)
         t.join();
 }
 
@@ -77,6 +80,8 @@ void ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work)
 {
     lock_guard<mutex> lock(m_worksLock);
     m_works.push_front(work);
+}
+
 }
 
 #endif //R_TYPE_THREADPOOL_HPP
