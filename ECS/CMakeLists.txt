@@ -6,10 +6,7 @@ set(ECS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(ECS
     ${ECS_SOURCES}/World.cpp
-    ${ECS_SOURCES}/StateMachine.cpp
-    ${ECS_SOURCES}/AbstractState.cpp
     ${ECS_SOURCES}/Entity.cpp
-    ${ECS_SOURCES}/Transition.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp)
 
