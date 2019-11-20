@@ -4,10 +4,10 @@
 
 #include "AbstractEvent.hpp"
 
-ecs::AbstractEvent::AbstractEvent(string const &type, any value)
+ecs::Event::Event(string const &type, any value)
     : m_type(hash<string>()(type))
     , m_value(value) {}
 
-bool ecs::AbstractEvent::isOfType(string const &type) const {
+bool ecs::Event::isOfType(string const &type) const {
     return m_type == hash<string>()(type);
 }

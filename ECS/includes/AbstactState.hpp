@@ -36,7 +36,7 @@ public:
     virtual Transition handleEvent(/* Event */) = 0;
 
 protected:
-    deque<unique_ptr<ecs::AbstractEvent>> m_events;
+    deque<unique_ptr<ecs::Event>> m_events;
 private:
     unique_ptr<Dispatcher> m_dispatcher;
 };

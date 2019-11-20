@@ -14,7 +14,7 @@
 
 using namespace std;
 
-class SFMLEvent: public ecs::AbstractEvent {
+class SFMLEvent: public ecs::Event {
 public:
     SFMLEvent(sf::Event const &event);
     ~SFMLEvent() = default;
@@ -25,7 +25,7 @@ public:
     SFMLEventProducer(shared_ptr<sf::RenderWindow> window);
     ~SFMLEventProducer() = default;
 
-    vector<unique_ptr<ecs::AbstractEvent>> fetchEvents() final;
+    vector<unique_ptr<ecs::Event>> fetchEvents() final;
 private:
     shared_ptr<sf::RenderWindow> m_window;
 };

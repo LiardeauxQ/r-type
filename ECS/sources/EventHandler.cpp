@@ -4,32 +4,37 @@
 
 #include "Event.hpp"
 
-EventHandler::EventHandler(shared_ptr<deque<unique_ptr<ecs::AbstractEvent>>> events)
+EventHandler::EventHandler(shared_ptr<deque<unique_ptr<ecs::Event>>> events)
     : m_producers()
     , m_eventThread()
-    , m_events(move(events)) {
+    , m_events(move(events))
+    , m_isRunning(false) {
 }
 
 void EventHandler::start() {
+    m_isRunning = true;
     m_eventThread = thread(&EventHandler::run, this);
 }
 
 void EventHandler::run() {
-    for (auto & m_producer : m_producers) {
-        addEvents(m_producer->fetchEvents());
+    while (m_isRunning) {
+        for (auto &m_producer : m_producers) {
+            addEvents(m_producer->fetchEvents());
+        }
     }
 }
 
 void EventHandler::stop() {
+    m_isRunning = false;
     m_eventThread.join();
 }
 
-void EventHandler::addEvents(vector<unique_ptr<ecs::AbstractEvent>> events) {
+void EventHandler::addEvents(vector<unique_ptr<ecs::Event>> events) {
     for (auto & event : events)
         m_events->push_back(move(event));
 }
 
-void EventHandler::addEvent(unique_ptr<ecs::AbstractEvent> event) {
+void EventHandler::addEvent(unique_ptr<ecs::Event> event) {
     m_events->push_back(move(event));
 }
 

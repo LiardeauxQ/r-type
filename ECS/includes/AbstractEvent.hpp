@@ -12,10 +12,10 @@
 using namespace std;
 
 namespace ecs {
-    class AbstractEvent {
+    class Event {
     public:
-        AbstractEvent(string const &type, any value);
-        virtual ~AbstractEvent() {};
+        Event(string const &type, any value);
+        virtual ~Event() {};
 
         [[nodiscard]] bool isOfType(string const &type) const;
 
