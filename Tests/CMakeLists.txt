@@ -18,6 +18,7 @@ set(TESTS_COMMON
 
 set(TESTS_ECS
     ${TESTS_SOURCES}/ECS/test_ecs.cpp
+    ${TESTS_SOURCES}/ECS/test_thread_pool.cpp
 )
 
 set(TESTS_NETWORK
