@@ -51,7 +51,7 @@ void Dispatcher<T, E>::dispatch(T& data)
 {
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        // m_pool->enqueueWork([fetchedData, &s](shared_ptr<T> world) -> E {
+        // m_pool->enqueueWork([fetchedData, &s](StateData<T> data) -> E {
         //     s(world, fetchedData);
         // });
     }
