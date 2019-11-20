@@ -9,28 +9,44 @@
 #include "Definitions.hpp"
 #include "Entity.hpp"
 #include "IEntityComponentStorage.hpp"
+#include <iostream>
 
 namespace ecs {
 
-    using namespace std;
+using namespace std;
 
-    using Id = size_t;
+using Id = size_t;
 
-    class World {
-        public:
-            World(Box<IEntityComponentStorage> database);
-            ~World() = default;
+class World {
+public:
+    //explicit World(unique_ptr<IEntityComponentStorage> database);
+    World() = default;
+    ~World() = default;
 
-            void createEntity();
+    void createEntity();
 
-            void createResource(const string& name);
+    void createResource(string name);
 
-            void registerComponent(Box<std::string> schema);
+    void registerComponent(string schema);
 
-            Entity& fetchEntity(const string& name);
-            //Resource& fetchResource(const string& name);
-        private:
-            Box<IEntityComponentStorage> database;
-    };
+    Entity* fetchEntity(const string& name);
+
+    template<typename T>
+    T& fetchResource(const string& name)
+    {
+        return any_cast<T&>(m_resources.at(name));
+    }
+
+    template<typename T>
+    void writeResource(const string& name, const T data)
+    {
+        m_resources[name] = data;
+    }
+
+private:
+    unique_ptr<IEntityComponentStorage> database;
+    unordered_map<string, any> m_resources;
+    unordered_map<string, any> m_components;
+};
 
 }

@@ -9,34 +9,68 @@
 #include "Dispatcher.hpp"
 #include "AbstractEvent.hpp"
 #include "Event.hpp"
-#include <vector>
+#include "World.hpp"
+
 #include <deque>
+#include <utility>
+#include <vector>
 
+namespace ecs {
+
+template <typename T>
 struct Transition;
-class Dispatcher;
 
+struct Error {
+    uint32_t code;
+    string message;
+};
+
+template <typename T>
+struct StateData {
+    shared_ptr<ecs::World> world;
+    T data;
+};
+
+template <typename T>
 class AbstractState {
 public:
     AbstractState(AbstractState&&) noexcept;
+    AbstractState() = default;
     AbstractState& operator=(AbstractState&&) noexcept;
 
     virtual ~AbstractState() = default;
 
-    virtual void onStart(/* Data<T> */) = 0;
-    virtual void onStop(/* Data<T> */) = 0;
-    virtual void onPause(/* Data<T> */) = 0;
-    virtual void onResume(/* Data<T> */) = 0;
+    virtual void onStart(StateData<T>& data) = 0;
+    virtual void onStop(StateData<T>& data) = 0;
+    virtual void onPause(StateData<T>& data) = 0;
+    virtual void onResume(StateData<T>& data) = 0;
 
-    virtual Transition update(/* Data<T> */) = 0;
-    virtual Transition fixedUpdate(/* Data<T> */) = 0;
+    virtual Transition<T> update(StateData<T>& data) = 0;
+    virtual Transition<T> fixedUpdate(StateData<T>& data) = 0;
 
-    virtual void shadowUpdate(/* Data<T> */) = 0;
-    virtual void shadowFixedUpdate(/* Data<T> */) = 0;
+    virtual void shadowUpdate(StateData<T>& data) = 0;
+    virtual void shadowFixedUpdate(StateData<T>& data) = 0;
 
-    virtual Transition handleEvent(/* Event */) = 0;
+    virtual Transition<T> handleEvent(StateData<T>& data) = 0;
 
 protected:
     deque<unique_ptr<ecs::Event>> m_events;
 private:
-    unique_ptr<Dispatcher> m_dispatcher;
+    unique_ptr<Dispatcher<StateData<T>, Error>> m_dispatcher;
+    shared_ptr<StateData<T>> m_sharedData;
 };
+
+template <typename T>
+AbstractState<T>::AbstractState(AbstractState<T>&& rhs) noexcept
+    : m_dispatcher(move(rhs.m_dispatcher))
+{
+}
+
+template <typename T>
+AbstractState<T>& AbstractState<T>::operator=(AbstractState<T>&& rhs) noexcept
+{
+    m_dispatcher.swap(rhs.m_dispatcher);
+    return *this;
+}
+
+}
