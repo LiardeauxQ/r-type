@@ -10,6 +10,9 @@
 #include <iostream>
 #include <atomic>
 
+using namespace std;
+using namespace ecs;
+
 struct Event {
     Event(string msg) : message(move(msg)) {};
     string message;
