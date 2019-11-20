@@ -28,7 +28,7 @@ Test(StopWatch, basic) {
 Test(StopWatch, deltaTime) {
     StopWatch timer;
     StopWatch deltaTimer;
-    vector<double> elapsedTimes;
+    vector<int64_t> elapsedTimes;
 
     timer.start();
     while (timer.elapsed() < 1000) {
@@ -36,9 +36,9 @@ Test(StopWatch, deltaTime) {
         this_thread::sleep_for(chrono::duration(chrono::milliseconds(1000)));
         elapsedTimes.push_back(deltaTimer.elapsed());
     }
-    double mean = 0;
-    for (double e : elapsedTimes)
+    int64_t mean = 0;
+    for (int64_t e : elapsedTimes)
         mean += e;
-    mean / elapsedTimes.size();
+    static_cast<unsigned long>(mean) / elapsedTimes.size();
     cr_assert_eq(static_cast<int>(mean), 1000);
 }
