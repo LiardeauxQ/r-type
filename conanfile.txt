@@ -1,5 +1,6 @@
 [requires]
 sfml/2.5.1@bincrafters/stable
+rapidjson/1.1.0
 
 [options]
 sfml:graphics=True

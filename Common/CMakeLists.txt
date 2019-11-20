@@ -6,6 +6,7 @@ set(COMMON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(COMMON
     ${COMMON_SOURCES}/MD5Hasher.cpp
+    ${COMMON_SOURCES}/Frame.cpp
 )
 
 add_library(common STATIC
@@ -18,4 +19,6 @@ set_property(TARGET common PROPERTY CXX_STANDARD 17)
 set_property(TARGET common PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET common PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(common crypto)
+if (NOT APPLE)
+    target_link_libraries(common crypto)
+endif()

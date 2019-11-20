@@ -56,6 +56,7 @@ add_subdirectory(Tests)
 add_subdirectory(Common)
 add_subdirectory(ECS)
 add_subdirectory(Physics)
+add_subdirectory(Parser)
 add_subdirectory(Network)
 
 # Client link
