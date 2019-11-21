@@ -6,7 +6,14 @@
 
 void MainMenuState::onStart(ecs::StateData<string>& data)
 {
-    data.world.writeResource<size_t>("increment", 0);
+    auto shipTexture = sf::Texture();
+    shipTexture.loadFromFile("./assets/r-typesheet24.gif");
+    auto shipSprite = sf::Sprite();
+    shipSprite.setTexture(shipTexture);
+    shipSprite.setPosition(100, 100);
+
+    data.world.writeResource("shipTexture", shipTexture);
+    data.world.writeResource("shipSprite", shipSprite);
 }
 
 void MainMenuState::onStop(ecs::StateData<string>& data)
@@ -32,6 +39,9 @@ ecs::Transition<string, ecs::Event> MainMenuState::update(ecs::StateData<string>
 
 ecs::Transition<string, ecs::Event> MainMenuState::handleEvent(ecs::StateData<string>& data, ecs::Event event)
 {
+    if (event.isOfType("sfml")) {
+        cout << "SFML event found." << endl;
+    }
     return ecs::Transition<string, ecs::Event>();
 }
 

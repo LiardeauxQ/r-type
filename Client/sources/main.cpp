@@ -16,12 +16,14 @@
 
 #include "DrawSystem.hpp"
 #include "MovementSystem.hpp"
+#include "WithParameterSystem.hpp"
 
 int main(int argc, char* argv[])
 {
     try {
         auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
         dispatcher->registerSystem<DrawSystem>();
+        dispatcher->registerSystem<WithParameterSystem>(12);
         dispatcher->registerSystem<MovementSystem>();
         auto initialState = make_unique<MainMenuState>(move(dispatcher));
 

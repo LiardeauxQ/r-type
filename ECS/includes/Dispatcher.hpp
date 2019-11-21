@@ -31,6 +31,9 @@ public:
     template<typename S>
     void registerSystem();
 
+    template<typename S, typename... Args>
+    void registerSystem(Args... args);
+
 private:
     ThreadPool<T, E> *m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
@@ -76,6 +79,7 @@ template <typename S>
 void Dispatcher<T, E>::registerSystem()
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
+    static_assert(std::is_default_constructible<S>::value);
     m_systems.push_back(make_unique<S>());
 }
 
@@ -83,6 +87,13 @@ template <typename T, typename E>
 void Dispatcher<T, E>::attachThreadPool(ThreadPool<T, E> *pool)
 {
     m_pool = pool;
+}
+template <typename T, typename E>
+template <typename S, typename... Args>
+void Dispatcher<T, E>::registerSystem(Args... args)
+{
+    static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
+    m_systems.push_back(make_unique<S>(forward<Args>(args)...));
 }
 
 }
