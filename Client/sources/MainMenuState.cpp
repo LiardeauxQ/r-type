@@ -27,7 +27,7 @@ void MainMenuState::onResume(ecs::StateData<string>& data)
 
 ecs::Transition<string> MainMenuState::update(ecs::StateData<string>& data)
 {
-    m_dispatcher->dispatch(data);
+    m_dispatcher->dispatch(make_shared<ecs::StateData<string>>(data));
     return ecs::Transition<string>();
 }
 

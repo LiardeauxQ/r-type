@@ -5,27 +5,28 @@
 #ifndef R_TYPE_SFMLEVENTPRODUCER_HPP
 #define R_TYPE_SFMLEVENTPRODUCER_HPP
 
+#include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
-#include <SFML/Graphics.hpp>
 
-#include "Event.hpp"
 #include "AbstractEvent.hpp"
+#include "Event.hpp"
 
 using namespace std;
 
-class SFMLEvent: public ecs::Event {
+class SFMLEvent : public ecs::Event {
 public:
-    SFMLEvent(sf::Event const &event);
+    SFMLEvent(sf::Event const& event);
     ~SFMLEvent() = default;
 };
 
-class SFMLEventProducer: public AbstractEventProducer {
+class SFMLEventProducer : public AbstractEventProducer {
 public:
     SFMLEventProducer(shared_ptr<sf::RenderWindow> window);
     ~SFMLEventProducer() = default;
 
     vector<unique_ptr<ecs::Event>> fetchEvents() final;
+
 private:
     shared_ptr<sf::RenderWindow> m_window;
 };

@@ -61,7 +61,6 @@ public:
 
 protected:
     deque<unique_ptr<ecs::Event>> m_events;
-private:
     unique_ptr<Dispatcher<StateData<T>, Error>> m_dispatcher;
 };
 

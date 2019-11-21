@@ -16,7 +16,7 @@ using namespace std;
 
 class AbstractEventProducer {
 public:
-    virtual ~AbstractEventProducer() = default;;
+    virtual ~AbstractEventProducer() = default;
     virtual vector<unique_ptr<ecs::Event>> fetchEvents() = 0;
 };
 

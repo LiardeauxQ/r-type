@@ -14,6 +14,8 @@
 
 namespace ecs {
 
+template<typename T> class ISystem;
+
 template <typename T, typename E>
 class Dispatcher {
 public:
@@ -23,13 +25,14 @@ public:
 
     ~Dispatcher() = default;
 
-    void dispatch(T& data);
+    void dispatch(shared_ptr<T> data);
 
-    void registerSystem(T system);
+    template<typename S>
+    void registerSystem();
 
 private:
     ThreadPool<T, E>& m_pool;
-    vector<ISystem> m_systems;
+    vector<unique_ptr<ISystem<T>>> m_systems;
 };
 
 template <typename T, typename E>
@@ -48,13 +51,13 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::dispatch(T& data)
+void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
 {
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        // m_pool->enqueueWork([fetchedData, &s](StateData<T> data) -> E {
-        //     s(world, fetchedData);
-        // });
+        m_pool.enqueueWork([&s](shared_ptr<T> data) -> E {
+            (*s)(1, data);
+        }, inputData);
     }
 }
 
@@ -66,10 +69,11 @@ Dispatcher<T, E>::Dispatcher(ThreadPool<T, E>& pool)
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::registerSystem(T system)
+template <typename S>
+void Dispatcher<T, E>::registerSystem()
 {
-    static_assert(std::is_base_of<ISystem, T>::value, "Dispatcher registered class need to be a ISystem.");
-    m_systems.push_back(system);
+    static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
+    m_systems.push_back(make_unique<S>());
 }
 
 }

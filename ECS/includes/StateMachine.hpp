@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "AbstactState.hpp"
+#include "AbstractState.hpp"
 #include "StopWatch.hpp"
 #include "Transition.hpp"
 #include "World.hpp"

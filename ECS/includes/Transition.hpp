@@ -5,7 +5,7 @@
 #ifndef R_TYPE_TRANSITION_HPP
 #define R_TYPE_TRANSITION_HPP
 
-#include "AbstactState.hpp"
+#include "AbstractState.hpp"
 
 using namespace std;
 

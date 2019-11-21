@@ -5,18 +5,19 @@
 ** Main file.
 */
 
-#include <iostream>
-
 #ifndef VERSION
-    #define VERSION "NOT DEFINED"
+#define VERSION "NOT DEFINED"
 #endif
 
-#include "StateMachine.hpp"
+#include "DrawSystem.hpp"
 #include "MainMenuState.hpp"
+#include "StateMachine.hpp"
 #include "World.hpp"
+#include <iostream>
 #include <memory>
 
-shared_ptr<ecs::World> initializeWorld() {
+shared_ptr<ecs::World> initializeWorld()
+{
     auto world = make_shared<ecs::World>();
     auto pool = new ecs::ThreadPool<ecs::StateData<string>, ecs::Error>();
     world->createResource("threadPool");
@@ -24,14 +25,17 @@ shared_ptr<ecs::World> initializeWorld() {
     return world;
 }
 
-unique_ptr<ecs::AbstractState<string>> initializeMainMenu(ecs::World& world) {
-    auto pool = world.fetchResource<ecs::ThreadPool<ecs::StateData<string>, ecs::Error> *>("threadPool");
+unique_ptr<ecs::AbstractState<string>> initializeMainMenu(ecs::World& world)
+{
+    auto pool = world.fetchResource<ecs::ThreadPool<ecs::StateData<string>, ecs::Error>*>("threadPool");
     auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>(*pool);
     auto state = make_unique<MainMenuState>(move(dispatcher));
+    state->registerSystem<DrawSystem>();
     return state;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     auto world = initializeWorld();
     auto initialState = initializeMainMenu(*world);
     ecs::StateMachine states(move(initialState), world);

@@ -5,10 +5,10 @@
 #ifndef R_TYPE_MAINMENUSTATE_HPP
 #define R_TYPE_MAINMENUSTATE_HPP
 
+#include "AbstractState.hpp"
 #include <SFML/Graphics.hpp>
-#include "AbstactState.hpp"
 
-class MainMenuState: public ecs::AbstractState<string> {
+class MainMenuState : public ecs::AbstractState<string> {
 public:
     explicit MainMenuState(unique_ptr<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>> dispatcher);
     ~MainMenuState() override = default;

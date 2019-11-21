@@ -4,19 +4,23 @@
 
 #pragma once
 
-#include <any>
+#include "AbstractState.hpp"
 #include "Definitions.hpp"
 #include "EntityRequest.hpp"
+#include <any>
 
 namespace ecs {
 
-    class ISystem {
+using namespace std;
+template<typename T> struct StateData;
 
-        public:
-            virtual ~ISystem() = default;
-            virtual EntityRequest getDependencies() const = 0;
-            virtual void operator()(std::any entities) = 0;
+template <typename T>
+class ISystem {
 
-    };
+public:
+    virtual ~ISystem() = default;
+    virtual EntityRequest getDependencies() const = 0;
+    virtual void operator()(any entities, shared_ptr<T> data) = 0;
+};
 
 }
