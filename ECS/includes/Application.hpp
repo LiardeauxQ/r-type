@@ -6,7 +6,9 @@
 
 #include "AbstractEvent.hpp"
 #include "AbstractState.hpp"
+#include "Event.hpp"
 #include "StateMachine.hpp"
+#include "SFMLEventProducer.hpp"
 
 namespace ecs {
 
@@ -28,26 +30,12 @@ private:
     ThreadPool<ecs::StateData<T>, ecs::Error> m_threadPool;
     World m_world;
     ecs::StateMachine<T, E> m_stateMachine;
-    deque<Event> m_events;
+    shared_ptr<deque<unique_ptr<Event>>> m_events;
     deque<Transition<T, E>> m_transitions;
     bool m_isRunning;
+    EventHandler m_eventHandler;
     unique_ptr<T> m_data;
 };
-
-template <typename T, typename E>
-void Application<T, E>::run()
-{
-    int64_t deltaTime = 0;
-
-    while (m_isRunning) {
-        m_world.m_timer.start();
-        auto stateData = StateData<T> { m_world, deltaTime, *m_data };
-        m_stateMachine.update(stateData);
-        this->handleTransition(stateData);
-        this->handleEvent(stateData);
-        deltaTime = m_world.m_timer.elapsed();
-    }
-}
 
 template <typename T, typename E>
 Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data)
@@ -57,11 +45,31 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
         initialState->attachThreadPool(&this->m_threadPool);
         return move(initialState);
     }())
-    , m_events()
+    , m_events(make_shared<deque<unique_ptr<Event>>>())
     , m_transitions()
     , m_isRunning(true)
+    , m_eventHandler(m_events)
     , m_data(move(data))
 {
+    auto window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Name");
+    m_world.writeResource("window", window);
+    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(window));
+}
+
+template <typename T, typename E>
+void Application<T, E>::run()
+{
+    int64_t deltaTime = 0;
+
+    m_eventHandler.start();
+    while (m_isRunning) {
+        m_world.m_timer.start();
+        auto stateData = StateData<T> { m_world, deltaTime, *m_data };
+        m_stateMachine.update(stateData);
+        this->handleTransition(stateData);
+        this->handleEvent(stateData);
+        deltaTime = m_world.m_timer.elapsed();
+    }
 }
 
 template <typename T, typename E>
@@ -83,8 +91,12 @@ void Application<T, E>::handleTransition(StateData<T> stateData)
 template <typename T, typename E>
 void Application<T, E>::handleEvent(StateData<T> stateData)
 {
-    for (auto e : m_events)
-        m_stateMachine.handleEvent(stateData, e);
+    m_eventHandler.stop();
+
+    while (!m_events->empty()) {
+        m_stateMachine.handleEvent(stateData, move(*m_events->back())); // TODO change.
+        m_events->pop_back();
+    }
 }
 
 }
