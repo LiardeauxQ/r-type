@@ -6,7 +6,7 @@
 
 void MainMenuState::onStart(ecs::StateData<string>& data)
 {
-    data.world->writeResource<size_t>("increment", 0);
+    data.world.writeResource<size_t>("increment", 0);
 }
 
 void MainMenuState::onStop(ecs::StateData<string>& data)
@@ -24,21 +24,21 @@ void MainMenuState::onResume(ecs::StateData<string>& data)
     cout << "Resuming Main Menu" << endl;
 }
 
-ecs::Transition<string> MainMenuState::update(ecs::StateData<string>& data)
+ecs::Transition<string, ecs::Event> MainMenuState::update(ecs::StateData<string>& data)
 {
     m_dispatcher->dispatch(make_shared<ecs::StateData<string>>(data));
-    return ecs::Transition<string>();
+    return ecs::Transition<string, ecs::Event>();
 }
 
-ecs::Transition<string> MainMenuState::handleEvent(ecs::StateData<string>& data)
+ecs::Transition<string, ecs::Event> MainMenuState::handleEvent(ecs::StateData<string>& data, ecs::Event event)
 {
-    return ecs::Transition<string>();
+    return ecs::Transition<string, ecs::Event>();
 }
 
-ecs::Transition<string> MainMenuState::fixedUpdate(ecs::StateData<string>& data)
+ecs::Transition<string, ecs::Event> MainMenuState::fixedUpdate(ecs::StateData<string>& data)
 {
     cout << "Fixed update." << endl;
-    return ecs::Transition<string>();
+    return ecs::Transition<string, ecs::Event>();
 }
 
 void MainMenuState::shadowUpdate(ecs::StateData<string>& data)
