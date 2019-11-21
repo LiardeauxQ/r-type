@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 #include "World.hpp"
+#include "ISystem.hpp"
 
 namespace ecs {
 
@@ -24,17 +25,21 @@ struct Error {
 template <typename T>
 struct StateData {
     shared_ptr<ecs::World> world;
-    T data;
+    const int64_t delta = 0;
+    T& data;
 };
 
 template <typename T>
 class AbstractState {
 public:
     AbstractState(AbstractState&&) noexcept;
-    AbstractState() = default;
+    AbstractState(unique_ptr<Dispatcher<StateData<T>, Error>> dispatcher);
     AbstractState& operator=(AbstractState&&) noexcept;
 
     virtual ~AbstractState() = default;
+
+    template<typename S>
+    void registerSystem(S system);
 
     virtual void onStart(StateData<T>& data) = 0;
     virtual void onStop(StateData<T>& data) = 0;
@@ -49,9 +54,8 @@ public:
 
     virtual Transition<T> handleEvent(StateData<T>& data) = 0;
 
-private:
+protected:
     unique_ptr<Dispatcher<StateData<T>, Error>> m_dispatcher;
-    shared_ptr<StateData<T>> m_sharedData;
 };
 
 template <typename T>
@@ -65,6 +69,19 @@ AbstractState<T>& AbstractState<T>::operator=(AbstractState<T>&& rhs) noexcept
 {
     m_dispatcher.swap(rhs.m_dispatcher);
     return *this;
+}
+
+template <typename T>
+template <typename S>
+void AbstractState<T>::registerSystem(S system)
+{
+    m_dispatcher->registerSystem(system);
+}
+
+template <typename T>
+AbstractState<T>::AbstractState(unique_ptr<Dispatcher<StateData<T>, Error>> dispatcher)
+    : m_dispatcher(move(dispatcher))
+{
 }
 
 }

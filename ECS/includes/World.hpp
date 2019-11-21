@@ -9,6 +9,7 @@
 #include "Definitions.hpp"
 #include "Entity.hpp"
 #include "IEntityComponentStorage.hpp"
+#include "StopWatch.hpp"
 #include <iostream>
 
 namespace ecs {
@@ -43,6 +44,7 @@ public:
         m_resources[name] = data;
     }
 
+    StopWatch m_timer;
 private:
     unique_ptr<IEntityComponentStorage> database;
     unordered_map<string, any> m_resources;

@@ -8,12 +8,11 @@
 #include "Definitions.hpp"
 #include "StateMachine.hpp"
 #include "ThreadPool.hpp"
+#include "ISystem.hpp"
 #include <iostream>
 #include <queue>
 
 namespace ecs {
-
-typedef uint8_t System; // TODO implement System
 
 template <typename T, typename E>
 class Dispatcher {
@@ -26,9 +25,11 @@ public:
 
     void dispatch(T& data);
 
+    void registerSystem(T system);
+
 private:
     ThreadPool<T, E>& m_pool;
-    vector<System> m_systems;
+    vector<ISystem> m_systems;
 };
 
 template <typename T, typename E>
@@ -62,6 +63,13 @@ Dispatcher<T, E>::Dispatcher(ThreadPool<T, E>& pool)
     : m_pool(pool)
     , m_systems()
 {
+}
+
+template <typename T, typename E>
+void Dispatcher<T, E>::registerSystem(T system)
+{
+    static_assert(std::is_base_of<ISystem, T>::value, "Dispatcher registered class need to be a ISystem.");
+    m_systems.push_back(system);
 }
 
 }

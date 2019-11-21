@@ -10,7 +10,7 @@
 
 class MainMenuState: public ecs::AbstractState<string> {
 public:
-    MainMenuState() = default;
+    explicit MainMenuState(unique_ptr<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>> dispatcher);
     ~MainMenuState() override = default;
 
     void onStart(ecs::StateData<string>& data) override;
