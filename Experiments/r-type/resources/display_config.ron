@@ -1,0 +1,4 @@
+(
+  title: "r-type",
+  dimensions: Some((500, 500)),
+)
