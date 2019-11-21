@@ -44,7 +44,7 @@ public:
     virtual ~AbstractState() = default;
 
     template<typename S>
-    void registerSystem(S system);
+    void registerSystem();
 
     virtual void onStart(StateData<T>& data) = 0;
     virtual void onStop(StateData<T>& data) = 0;
@@ -79,9 +79,9 @@ AbstractState<T>& AbstractState<T>::operator=(AbstractState<T>&& rhs) noexcept
 
 template <typename T>
 template <typename S>
-void AbstractState<T>::registerSystem(S system)
+void AbstractState<T>::registerSystem()
 {
-    m_dispatcher->registerSystem(system);
+    m_dispatcher->template registerSystem<S>();
 }
 
 template <typename T>

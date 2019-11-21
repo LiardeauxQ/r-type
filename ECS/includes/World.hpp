@@ -26,8 +26,6 @@ public:
 
     void createEntity();
 
-    void createResource(string name);
-
     void registerComponent(string schema);
 
     Entity* fetchEntity(const string& name);
@@ -42,6 +40,20 @@ public:
     void writeResource(const string& name, const T data)
     {
         m_resources[name] = data;
+    }
+
+    template<typename T>
+    void writeResource(const string& name)
+    {
+        static_assert(is_default_constructible<T>::value, "To write a resource without argument the class need to implement a default constructor.");
+        m_resources[name] = T();
+    }
+
+    template<typename T, typename... Args>
+    void writeResource(const string& name, Args&&... args)
+    {
+        static_assert(is_constructible<T>::value, "To write a resource it need to be constructible.");
+        m_resources[name] = T{forward<Args>(args)...};
     }
 
     StopWatch m_timer;

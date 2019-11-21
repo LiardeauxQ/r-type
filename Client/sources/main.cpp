@@ -15,13 +15,16 @@
 #include "World.hpp"
 #include <iostream>
 #include <memory>
+#include "MovementSystem.hpp"
 
 shared_ptr<ecs::World> initializeWorld()
 {
     auto world = make_shared<ecs::World>();
     auto pool = new ecs::ThreadPool<ecs::StateData<string>, ecs::Error>();
-    world->createResource("threadPool");
     world->writeResource("threadPool", pool);
+    world->writeResource("transitionQueue", new deque<ecs::Transition<ecs::StateData<string>>>());
+    world->writeResource<DrawSystem>("menuState");
+    world->fetchResource<DrawSystem>("menuState");
     return world;
 }
 
@@ -31,6 +34,7 @@ unique_ptr<ecs::AbstractState<string>> initializeMainMenu(ecs::World& world)
     auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>(*pool);
     auto state = make_unique<MainMenuState>(move(dispatcher));
     state->registerSystem<DrawSystem>();
+    state->registerSystem<MovementSystem>();
     return state;
 }
 

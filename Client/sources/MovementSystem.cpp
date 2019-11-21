@@ -3,3 +3,13 @@
 //
 
 #include "MovementSystem.hpp"
+
+ecs::EntityRequest MovementSystem::getDependencies() const
+{
+    return ecs::EntityRequest({}, {});
+}
+
+void MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
+{
+    cout << "Moving entities." << endl;
+}

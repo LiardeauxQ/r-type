@@ -9,6 +9,7 @@
 
 class DrawSystem : public ecs::ISystem<ecs::StateData<string>> {
 public:
+    DrawSystem() = default;
     ~DrawSystem() override = default;
     [[nodiscard]] ecs::EntityRequest getDependencies() const override;
     void operator()(any entities, shared_ptr<ecs::StateData<string>> data) override;

@@ -6,8 +6,7 @@
 
 void MainMenuState::onStart(ecs::StateData<string>& data)
 {
-    data.world->createResource("increment");
-    data.world->writeResource<size_t>("increment", 1);
+    data.world->writeResource<size_t>("increment", 0);
 }
 
 void MainMenuState::onStop(ecs::StateData<string>& data)

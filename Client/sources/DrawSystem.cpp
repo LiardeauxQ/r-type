@@ -11,5 +11,5 @@ ecs::EntityRequest DrawSystem::getDependencies() const
 
 void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
-    cout << "Test" << endl;
+    cout << "Draw Game" << endl;
 }
