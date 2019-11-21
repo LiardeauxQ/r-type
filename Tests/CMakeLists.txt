@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(TESTS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
+set(TESTS_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/includes")
 
 include_directories (SYSTEM ${CRITERION_INCLUDE_DIRS})
 
@@ -19,6 +20,7 @@ set(TESTS_COMMON
 
 set(TESTS_ECS
     ${TESTS_SOURCES}/ECS/test_ecs.cpp
+    ${TESTS_SOURCES}/ECS/TestEvent.cpp
     ${TESTS_SOURCES}/ECS/test_thread_pool.cpp
 )
 
@@ -89,6 +91,7 @@ set_property(TARGET test_ecs PROPERTY CXX_STANDARD 17)
 set_property(TARGET test_ecs PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET test_ecs PROPERTY CXX_STANDARD_REQUIRED YES)
 
+target_include_directories(test_ecs PUBLIC ${TESTS_INCLUDES}/ECS)
 target_link_libraries(test_ecs ecs common)
 target_link_libraries(test_ecs ${CRITERION_LIBRARIES})
 

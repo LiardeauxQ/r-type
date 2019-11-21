@@ -7,6 +7,11 @@
 #include "Definitions.hpp"
 #include "Transition.hpp"
 #include "Dispatcher.hpp"
+#include "AbstractEvent.hpp"
+#include "Event.hpp"
+#include "World.hpp"
+
+#include <deque>
 #include <utility>
 #include <vector>
 #include "World.hpp"
@@ -55,6 +60,8 @@ public:
     virtual Transition<T> handleEvent(StateData<T>& data) = 0;
 
 protected:
+    deque<unique_ptr<ecs::Event>> m_events;
+private:
     unique_ptr<Dispatcher<StateData<T>, Error>> m_dispatcher;
 };
 
