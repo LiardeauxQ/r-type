@@ -9,6 +9,7 @@ set(RTYPE_CLIENT
 	${RTYPE_CLIENT_SOURCES}/SFMLEventProducer.cpp
 	${RTYPE_CLIENT_SOURCES}/DrawSystem.cpp
 	${RTYPE_CLIENT_SOURCES}/MainMenuState.cpp
+	${RTYPE_CLIENT_SOURCES}/MovementSystem.cpp
 )
 
 find_package(sfml)
