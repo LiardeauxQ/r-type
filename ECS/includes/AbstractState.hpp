@@ -10,6 +10,7 @@
 #include "AbstractEvent.hpp"
 #include "Event.hpp"
 #include "World.hpp"
+#include "ThreadPool.hpp"
 
 #include <deque>
 #include <utility>
@@ -19,7 +20,7 @@
 
 namespace ecs {
 
-template <typename T>
+template <typename T, typename E>
 struct Transition;
 
 struct Error {
@@ -29,65 +30,75 @@ struct Error {
 
 template <typename T>
 struct StateData {
-    shared_ptr<ecs::World> world;
+    ecs::World& world;
     const int64_t delta = 0;
     T& data;
 };
 
-template <typename T>
+template <typename T, typename E>
+class Dispatcher;
+
+template <typename T, typename E>
 class AbstractState {
 public:
-    AbstractState(AbstractState&&) noexcept;
-    AbstractState(unique_ptr<Dispatcher<StateData<T>, Error>> dispatcher);
+    explicit AbstractState(unique_ptr<Dispatcher<StateData<T>, ecs::Error>>);
+
     AbstractState& operator=(AbstractState&&) noexcept;
+    AbstractState(AbstractState&&) noexcept;
 
     virtual ~AbstractState() = default;
 
-    template<typename S>
+    template <typename S>
     void registerSystem();
+    void attachThreadPool(ThreadPool<ecs::StateData<T>, ecs::Error> *pool);
 
     virtual void onStart(StateData<T>& data) = 0;
     virtual void onStop(StateData<T>& data) = 0;
     virtual void onPause(StateData<T>& data) = 0;
     virtual void onResume(StateData<T>& data) = 0;
 
-    virtual Transition<T> update(StateData<T>& data) = 0;
-    virtual Transition<T> fixedUpdate(StateData<T>& data) = 0;
+    virtual Transition<T, E> update(StateData<T>& data) = 0;
+    virtual Transition<T, E> fixedUpdate(StateData<T>& data) = 0;
 
     virtual void shadowUpdate(StateData<T>& data) = 0;
     virtual void shadowFixedUpdate(StateData<T>& data) = 0;
 
-    virtual Transition<T> handleEvent(StateData<T>& data) = 0;
+    virtual Transition<T, E> handleEvent(StateData<T>& data, E event) = 0;
 
 protected:
     deque<unique_ptr<ecs::Event>> m_events;
     unique_ptr<Dispatcher<StateData<T>, Error>> m_dispatcher;
 };
 
-template <typename T>
-AbstractState<T>::AbstractState(AbstractState<T>&& rhs) noexcept
+template <typename T, typename E>
+AbstractState<T, E>::AbstractState(AbstractState<T, E>&& rhs) noexcept
     : m_dispatcher(move(rhs.m_dispatcher))
 {
 }
 
-template <typename T>
-AbstractState<T>& AbstractState<T>::operator=(AbstractState<T>&& rhs) noexcept
+template <typename T, typename E>
+AbstractState<T, E>& AbstractState<T, E>::operator=(AbstractState<T, E>&& rhs) noexcept
 {
     m_dispatcher.swap(rhs.m_dispatcher);
     return *this;
 }
 
-template <typename T>
+template <typename T, typename E>
 template <typename S>
-void AbstractState<T>::registerSystem()
+void AbstractState<T, E>::registerSystem()
 {
     m_dispatcher->template registerSystem<S>();
 }
 
-template <typename T>
-AbstractState<T>::AbstractState(unique_ptr<Dispatcher<StateData<T>, Error>> dispatcher)
+template <typename T, typename E>
+AbstractState<T, E>::AbstractState(unique_ptr<ecs::Dispatcher<ecs::StateData<T>, ecs::Error>> dispatcher)
     : m_dispatcher(move(dispatcher))
+{}
+
+template <typename T, typename E>
+void AbstractState<T, E>::attachThreadPool(ThreadPool<ecs::StateData<T>, ecs::Error> *pool)
 {
+    m_dispatcher->attachThreadPool(pool);
 }
 
 }

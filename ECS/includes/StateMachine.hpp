@@ -11,33 +11,33 @@
 
 namespace ecs {
 
-template <typename T>
+template <typename T, typename E>
 struct Transition;
-template <typename T>
+template <typename T, typename E>
 class AbstractState;
 template <typename T>
 struct StateData;
 
 using namespace std;
 
-template <typename T>
+template <typename T, typename E>
 class StateMachine {
 public:
-    StateMachine(unique_ptr<AbstractState<T>> initial, shared_ptr<World> world);
+    explicit StateMachine(unique_ptr<AbstractState<T, E>> initial);
 
-    void run(T data);
+    void update(StateData<T> data);
+    void start(StateData<T> data);
+    void handleEvent(StateData<T> data, E event);
+    void transition(Transition<T, E> trans, StateData<T>& data);
 private:
-    void transition(Transition<T> trans, StateData<T>& data);
-    void push(Box<AbstractState<T>> newState, StateData<T>& data);
-    Box<AbstractState<T>> pop(StateData<T>& data);
-    vector<Box<AbstractState<T>>> m_states;
+    void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
+    unique_ptr<AbstractState<T, E>> pop(StateData<T>& data);
+    vector<unique_ptr<AbstractState<T, E>>> m_states;
     bool m_running;
-    shared_ptr<World> m_world;
-    int64_t m_deltaTime;
 };
 
-template <typename T>
-void StateMachine<T>::push(unique_ptr<AbstractState<T>> newState, StateData<T>& data)
+template <typename T, typename E>
+void StateMachine<T, E>::push(unique_ptr<AbstractState<T, E>> newState, StateData<T>& data)
 {
     if (!m_states.empty())
         m_states.back()->onPause(data);
@@ -45,8 +45,8 @@ void StateMachine<T>::push(unique_ptr<AbstractState<T>> newState, StateData<T>& 
     m_states.push_back(move(newState));
 }
 
-template <typename T>
-unique_ptr<AbstractState<T>> StateMachine<T>::pop(StateData<T>& data)
+template <typename T, typename E>
+unique_ptr<AbstractState<T, E>> StateMachine<T, E>::pop(StateData<T>& data)
 {
     if (m_states.empty())
         return nullptr;
@@ -58,55 +58,61 @@ unique_ptr<AbstractState<T>> StateMachine<T>::pop(StateData<T>& data)
     return ret;
 }
 
-template <typename T>
-void StateMachine<T>::run(T data)
+template <typename T, typename E>
+void StateMachine<T, E>::handleEvent(StateData<T> stateData, E event)
 {
-    StateData<T> stateData{ m_world, m_deltaTime, data };
-    m_states.back()->onStart(stateData);
-    while (m_running) {
-        m_world->m_timer.start();
-        Transition<T> trans;
+    m_states.back()->handleEvent(stateData, event);
+}
+
+template <typename T, typename E>
+void StateMachine<T, E>::update(StateData<T> stateData)
+{
+    if (m_running) {
+        Transition<T, E> trans;
 
         if (!m_states.empty()) {
             trans = m_states.back()->update(stateData);
         } else {
-            break;
+            trans = Transition<T, E>();
         }
         for (auto& s : m_states)
             s->shadowUpdate(stateData);
         this->transition(move(trans), stateData);
-        m_deltaTime = m_world->m_timer.elapsed();
     }
 }
 
-template <typename T>
-void StateMachine<T>::transition(Transition<T> trans, StateData<T>& data)
+template <typename T, typename E>
+void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 {
     switch (trans.m_transition) {
-    case Transition<T>::Name::POP:
+    case Transition<T, E>::Name::POP:
         this->pop(data);
         break;
-    case Transition<T>::Name::PUSH:
+    case Transition<T, E>::Name::PUSH:
         this->push(move(trans.m_newState), data);
         break;
-    case Transition<T>::Name::QUIT:
+    case Transition<T, E>::Name::QUIT:
         for (auto& s : m_states)
             s->onStop(data);
         m_running = false;
         break;
-    case Transition<T>::NONE:
+    case Transition<T, E>::NONE:
         break;
     }
 }
 
-template <typename T>
-StateMachine<T>::StateMachine(unique_ptr<AbstractState<T>> initial, shared_ptr<World> world)
+template <typename T, typename E>
+StateMachine<T, E>::StateMachine(unique_ptr<AbstractState<T, E>> initial)
     : m_states()
     , m_running(true)
-    , m_world(move(world))
-    , m_deltaTime()
 {
     m_states.push_back(move(initial));
+}
+
+template <typename T, typename E>
+void StateMachine<T, E>::start(StateData<T> stateData)
+{
+    m_states.back()->onStart(stateData);
 }
 
 }

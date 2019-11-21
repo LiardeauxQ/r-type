@@ -19,25 +19,26 @@ template<typename T> class ISystem;
 template <typename T, typename E>
 class Dispatcher {
 public:
-    explicit Dispatcher(ThreadPool<T, E>& pool);
+    explicit Dispatcher();
     Dispatcher(Dispatcher&& dispatcher) noexcept;
     Dispatcher& operator=(Dispatcher&& dispatcher) noexcept;
 
     ~Dispatcher() = default;
 
+    void attachThreadPool(ThreadPool<T, E> *pool);
     void dispatch(shared_ptr<T> data);
 
     template<typename S>
     void registerSystem();
 
 private:
-    ThreadPool<T, E>& m_pool;
+    ThreadPool<T, E> *m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
 };
 
 template <typename T, typename E>
 Dispatcher<T, E>::Dispatcher(Dispatcher&& dispatcher) noexcept
-    : m_pool(dispatcher.m_pool)
+    : m_pool(move(dispatcher.m_pool))
     , m_systems(move(dispatcher.m_systems))
 {
 }
@@ -53,20 +54,22 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 template <typename T, typename E>
 void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
 {
+    if (!m_pool) {
+        throw "Cannot dispatch without a ThreadPool attached.";
+    }
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        m_pool.enqueueWork([&s](shared_ptr<T> data) -> E {
+        m_pool->enqueueWork([&s](shared_ptr<T> data) -> E {
             (*s)(1, data);
         }, inputData);
     }
 }
 
 template <typename T, typename E>
-Dispatcher<T, E>::Dispatcher(ThreadPool<T, E>& pool)
-    : m_pool(pool)
+Dispatcher<T, E>::Dispatcher()
+    : m_pool(nullptr)
     , m_systems()
-{
-}
+{}
 
 template <typename T, typename E>
 template <typename S>
@@ -74,6 +77,12 @@ void Dispatcher<T, E>::registerSystem()
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
     m_systems.push_back(make_unique<S>());
+}
+
+template <typename T, typename E>
+void Dispatcher<T, E>::attachThreadPool(ThreadPool<T, E> *pool)
+{
+    m_pool = pool;
 }
 
 }

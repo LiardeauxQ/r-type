@@ -11,10 +11,10 @@ using namespace std;
 
 namespace ecs {
 
-template <typename T>
+template <typename T, typename E>
 class AbstractState;
 
-template <typename T>
+template <typename T, typename E>
 struct Transition {
     enum Name {
         POP,
@@ -23,30 +23,30 @@ struct Transition {
         NONE,
     };
 
-    explicit Transition(Name trans = NONE, Box<AbstractState<T>> newState = nullptr);
+    explicit Transition(Name trans = NONE, unique_ptr<AbstractState<T, E>> newState = nullptr);
     Transition(Transition&& trans) noexcept;
     Transition& operator=(Transition&& trans) noexcept;
 
     Name m_transition;
-    unique_ptr<AbstractState<T>> m_newState;
+    unique_ptr<AbstractState<T, E>> m_newState;
 };
 
-template <typename T>
-Transition<T>::Transition(Transition::Name trans, unique_ptr<AbstractState<T>> newState)
+template <typename T, typename E>
+Transition<T, E>::Transition(Transition::Name trans, unique_ptr<AbstractState<T, E>> newState)
     : m_transition(trans)
     , m_newState(move(newState))
 {
 }
 
-template <typename T>
-Transition<T>::Transition(Transition&& trans) noexcept
+template <typename T, typename E>
+Transition<T, E>::Transition(Transition&& trans) noexcept
     : m_transition(trans.m_transition)
     , m_newState(move(trans.m_newState))
 {
 }
 
-template <typename T>
-Transition<T>& Transition<T>::operator=(Transition&& trans) noexcept
+template <typename T, typename E>
+Transition<T, E>& Transition<T, E>::operator=(Transition&& trans) noexcept
 {
     m_transition = trans.m_transition;
     m_newState.swap(trans.m_newState);
