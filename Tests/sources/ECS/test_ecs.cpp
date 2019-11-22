@@ -21,7 +21,8 @@ Test(EventHandler, test_event_handler) {
     std::this_thread::sleep_for(1s);
     handler.stop();
 
-    auto event = dynamic_cast<TestEvent*>(queue->front().get());
+    auto event = queue->front().get();
 
     cr_assert(event->isOfType("test"));
+    cr_assert_eq(any_cast<int>(event->getValue()), 1);
 }
