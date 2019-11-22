@@ -19,6 +19,9 @@ namespace ecs {
 
         [[nodiscard]] bool isOfType(string const &type) const;
 
+        template <typename T>
+        [[nodiscard]] const T& getValue() const { return any_cast<T>(m_value); }
+
     private:
         size_t m_type;
         any m_value;
