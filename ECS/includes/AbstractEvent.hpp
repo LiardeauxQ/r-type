@@ -18,7 +18,9 @@ namespace ecs {
         virtual ~Event() {};
 
         [[nodiscard]] bool isOfType(string const &type) const;
-        [[nodiscard]] any const &getValue() const { return m_value; }
+
+        template <typename T>
+        [[nodiscard]] const T& getValue() const { return any_cast<T>(m_value); }
 
     private:
         size_t m_type;

@@ -6,6 +6,7 @@
 #define R_TYPE_EVENT_HPP
 
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <deque>
 #include <vector>
