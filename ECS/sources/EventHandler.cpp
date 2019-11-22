@@ -32,16 +32,14 @@ void EventHandler::stop() {
 }
 
 void EventHandler::lock() {
-    m_isLock = true;
+    m_mutex.lock();
 }
 
 void EventHandler::unlock() {
-    m_isLock = false;
+    m_mutex.unlock();
 }
 
 void EventHandler::addEvents(vector<ecs::Event> events) {
-    if (m_isLock)
-        lock_guard<mutex> lock(m_mutex);
     for (const auto& event : events)
         m_events->push_back(event);
 }
