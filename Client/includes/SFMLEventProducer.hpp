@@ -14,12 +14,6 @@
 
 using namespace std;
 
-class SFMLEvent : public ecs::Event {
-public:
-    SFMLEvent(sf::Event const& event);
-    ~SFMLEvent() = default;
-};
-
 class SFMLEventProducer : public AbstractEventProducer {
 public:
     SFMLEventProducer(shared_ptr<sf::RenderWindow> window);

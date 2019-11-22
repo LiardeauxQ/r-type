@@ -27,7 +27,7 @@ public:
 
     void update(StateData<T> data);
     void start(StateData<T> data);
-    void handleEvent(StateData<T> data, E event);
+    void handleEvent(StateData<T> data, const E& event);
     void transition(Transition<T, E> trans, StateData<T>& data);
 private:
     void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
@@ -59,7 +59,7 @@ unique_ptr<AbstractState<T, E>> StateMachine<T, E>::pop(StateData<T>& data)
 }
 
 template <typename T, typename E>
-void StateMachine<T, E>::handleEvent(StateData<T> stateData, E event)
+void StateMachine<T, E>::handleEvent(StateData<T> stateData, const E& event)
 {
     m_states.back()->handleEvent(stateData, event);
 }

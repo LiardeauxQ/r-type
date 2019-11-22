@@ -30,7 +30,7 @@ private:
     ThreadPool<ecs::StateData<T>, ecs::Error> m_threadPool;
     World m_world;
     ecs::StateMachine<T, E> m_stateMachine;
-    shared_ptr<deque<unique_ptr<Event>>> m_events;
+    shared_ptr<deque<Event>> m_events;
     deque<Transition<T, E>> m_transitions;
     bool m_isRunning;
     EventHandler m_eventHandler;
@@ -45,7 +45,7 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
         initialState->attachThreadPool(&this->m_threadPool);
         return move(initialState);
     }())
-    , m_events(make_shared<deque<unique_ptr<Event>>>())
+    , m_events()
     , m_transitions()
     , m_isRunning(true)
     , m_eventHandler(m_events)
@@ -91,12 +91,13 @@ void Application<T, E>::handleTransition(StateData<T> stateData)
 template <typename T, typename E>
 void Application<T, E>::handleEvent(StateData<T> stateData)
 {
-    m_eventHandler.stop();
-
+    m_eventHandler.lock();
     while (!m_events->empty()) {
-        m_stateMachine.handleEvent(stateData, move(*m_events->back())); // TODO change.
+        Event event = m_events->back();
+        m_stateMachine.handleEvent(stateData, event);
         m_events->pop_back();
     }
+    m_eventHandler.unlock();
 }
 
 }

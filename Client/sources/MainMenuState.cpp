@@ -40,7 +40,12 @@ ecs::Transition<string, ecs::Event> MainMenuState::update(ecs::StateData<string>
 ecs::Transition<string, ecs::Event> MainMenuState::handleEvent(ecs::StateData<string>& data, ecs::Event event)
 {
     if (event.isOfType("sfml")) {
-        cout << "SFML event found." << endl;
+        auto sfEvent = event.getValue<sf::Event>();
+
+        if (sfEvent.type == sf::Event::Closed ||
+        (sfEvent.type == sf::Event::KeyPressed && sfEvent.key.code == sf::Keyboard::Escape)) {
+            return ecs::Transition<string, ecs::Event>(ecs::Transition<string, ecs::Event>::Name::POP);
+        }
     }
     return ecs::Transition<string, ecs::Event>();
 }
