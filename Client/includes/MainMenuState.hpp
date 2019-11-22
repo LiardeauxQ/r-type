@@ -6,7 +6,6 @@
 #define R_TYPE_MAINMENUSTATE_HPP
 
 #include "AbstractState.hpp"
-#include "AbstractEvent.hpp"
 #include <SFML/Graphics.hpp>
 
 class MainMenuState : public ecs::AbstractState<string, ecs::Event> {

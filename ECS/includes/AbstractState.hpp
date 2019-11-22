@@ -7,7 +7,6 @@
 #include "Definitions.hpp"
 #include "Transition.hpp"
 #include "Dispatcher.hpp"
-#include "AbstractEvent.hpp"
 #include "Event.hpp"
 #include "World.hpp"
 #include "ThreadPool.hpp"

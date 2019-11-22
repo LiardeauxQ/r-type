@@ -9,8 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include "AbstractEvent.hpp"
-#include "Event.hpp"
+#include "EventHandler.hpp"
 
 using namespace std;
 

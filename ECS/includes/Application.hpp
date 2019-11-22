@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "AbstractEvent.hpp"
 #include "AbstractState.hpp"
 #include "Event.hpp"
 #include "StateMachine.hpp"
