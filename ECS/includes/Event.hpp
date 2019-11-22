@@ -16,17 +16,19 @@ using namespace std;
 
 class AbstractEventProducer {
 public:
-    virtual ~AbstractEventProducer() = default;;
+    virtual ~AbstractEventProducer() = default;
     virtual vector<unique_ptr<ecs::Event>> fetchEvents() = 0;
 };
 
 class EventHandler {
 public:
-    EventHandler(shared_ptr<deque<unique_ptr<ecs::Event>>> events);
+    explicit EventHandler(shared_ptr<deque<unique_ptr<ecs::Event>>> events);
     ~EventHandler() = default;
 
     void start();
     void stop();
+    void lock();
+    void unlock();
 
     void addProducer(unique_ptr<AbstractEventProducer> producer);
     void addEvents(vector<unique_ptr<ecs::Event>> events);
@@ -36,8 +38,10 @@ private:
 
     vector<unique_ptr<AbstractEventProducer>> m_producers;
     thread m_eventThread;
+    mutex m_mutex;
     shared_ptr<deque<unique_ptr<ecs::Event>>> m_events;
     bool m_isRunning;
+    bool m_isLock;
 };
 
 #endif //R_TYPE_EVENT_HPP

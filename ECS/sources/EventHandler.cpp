@@ -7,8 +7,10 @@
 EventHandler::EventHandler(shared_ptr<deque<unique_ptr<ecs::Event>>> events)
     : m_producers()
     , m_eventThread()
+    , m_mutex()
     , m_events(move(events))
-    , m_isRunning(false) {
+    , m_isRunning(false)
+    , m_isLock(false) {
 }
 
 void EventHandler::start() {
@@ -29,7 +31,17 @@ void EventHandler::stop() {
     m_eventThread.join();
 }
 
+void EventHandler::lock() {
+    m_isLock = true;
+}
+
+void EventHandler::unlock() {
+    m_isLock = false;
+}
+
 void EventHandler::addEvents(vector<unique_ptr<ecs::Event>> events) {
+    if (m_isLock)
+        lock_guard<mutex> lock(m_mutex);
     for (auto & event : events)
         m_events->push_back(move(event));
 }
