@@ -7,15 +7,19 @@ use amethyst::{
         RenderingBundle,
     },
     utils::application_root_dir,
+    {LoggerConfig},
 };
 
-struct RType;
-impl SimpleState for RType {}
+mod rtype;
+
+use crate::rtype::RType;
+use amethyst::core::transform::TransformBundle;
 
 fn main() -> Result<(), amethyst::Error>{
     let app_root = application_root_dir()?;
 
-    let display_config_path = app_root.join("ressources").join("display_config.ron");
+    amethyst::start_logger(LoggerConfig::default());
+    let display_config_path = app_root.join("resources").join("display_config.ron");
     let assets_dir = app_root.join("assets");
 
     let mut world = World::new();
@@ -29,7 +33,8 @@ fn main() -> Result<(), amethyst::Error>{
                 )
                 // RenderFlat2D plugin is used to render entities with a `SpriteRender` component.
                 .with_plugin(RenderFlat2D::default()),
-        )?;
+        )?
+        .with_bundle(TransformBundle::new())?;
     let mut game = Application::new(assets_dir, RType, game_data)?;
 
     game.run();

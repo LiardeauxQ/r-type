@@ -18,7 +18,7 @@ Test(EventHandler, test_event_handler) {
 
     handler.addProducer(move(producer));
     handler.start();
-    std::this_thread::sleep_for(1s);
+    this_thread::sleep_for(1s);
     handler.stop();
 
     auto event = queue->front().get();
