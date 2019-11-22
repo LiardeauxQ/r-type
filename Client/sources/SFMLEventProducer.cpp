@@ -10,12 +10,10 @@ SFMLEventProducer::SFMLEventProducer(shared_ptr<sf::RenderWindow> window)
 
 }
 
-vector<unique_ptr<ecs::Event>> SFMLEventProducer::fetchEvents()
-{
-    vector<unique_ptr<ecs::Event>> events;
+vector<ecs::Event> SFMLEventProducer::fetchEvents() {
+    vector<ecs::Event> events;
     sf::Event event;
 
     while (m_window->pollEvent(event))
-        events.push_back(make_unique<ecs::Event>("sfml", event));
+        events.push_back(ecs::Event("sfml", event));
     return events;
-}

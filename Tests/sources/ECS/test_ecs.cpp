@@ -5,12 +5,12 @@
 ** Criterion
 */
 
-#include "Event.hpp"
+#include "EventHandler.hpp"
 #include "TestEvent.hpp"
 #include <criterion/criterion.h>
 
 Test(EventHandler, test_event_handler) {
-    auto queue = make_shared<deque<unique_ptr<ecs::Event>>>();
+    auto queue = make_shared<deque<ecs::Event>>();
 
     EventHandler handler(queue);
 
@@ -21,8 +21,8 @@ Test(EventHandler, test_event_handler) {
     std::this_thread::sleep_for(1s);
     handler.stop();
 
-    auto event = queue->front().get();
+    auto event = queue->front();
 
-    cr_assert(event->isOfType("test"));
-    cr_assert_eq(any_cast<int>(event->getValue()), 1);
+    cr_assert(event.isOfType("test"));
+    cr_assert_eq(event.getValue<int>(), 1);
 }

@@ -4,15 +4,12 @@
 
 #include "TestEvent.hpp"
 
-TestEvent::TestEvent(string const &type)
-    : ecs::Event(type, 1) {}
-
 TestEventProducer::TestEventProducer() {}
 
-vector<unique_ptr<ecs::Event>> TestEventProducer::fetchEvents() {
-    vector<unique_ptr<ecs::Event>> events;
+vector<ecs::Event> TestEventProducer::fetchEvents() {
+    vector<ecs::Event> events;
 
     for (int i = 0 ; i < 2 ; i++)
-        events.push_back(make_unique<TestEvent>("test"));
+        events.push_back(ecs::Event("test", 1));
     return events;
 }

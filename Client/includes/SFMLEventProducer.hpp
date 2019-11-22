@@ -19,8 +19,7 @@ public:
     SFMLEventProducer(shared_ptr<sf::RenderWindow> window);
     ~SFMLEventProducer() = default;
 
-    vector<unique_ptr<ecs::Event>> fetchEvents() final;
-
+    vector<ecs::Event> fetchEvents() final;
 private:
     shared_ptr<sf::RenderWindow> m_window;
 };
