@@ -7,8 +7,8 @@
 #include "Definitions.hpp"
 #include "Transition.hpp"
 #include "Dispatcher.hpp"
-#include "AbstractEvent.hpp"
 #include "Event.hpp"
+#include "EventHandler.hpp"
 #include "World.hpp"
 
 #include <deque>
