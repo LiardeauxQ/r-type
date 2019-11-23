@@ -57,15 +57,17 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 template <typename T, typename E>
 void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
 {
-    if (!m_pool) {
+    if (!m_pool)
         throw "Cannot dispatch without a ThreadPool attached.";
-    }
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
+        cout << "Enquing" << &s << endl;
         m_pool->enqueueWork([&s](shared_ptr<T> data) -> E {
             (*s)(1, data);
         }, inputData);
     }
+    cout << "Joinning" << endl;
+    m_pool->join();
 }
 
 template <typename T, typename E>

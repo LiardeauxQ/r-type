@@ -40,19 +40,21 @@ template <typename T, typename E>
 Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data)
     : m_threadPool()
     , m_world()
-    , m_stateMachine([this, &initialState]() -> unique_ptr<AbstractState<T, E>> {
+    , m_stateMachine([this, &initialState]() {
         initialState->attachThreadPool(&this->m_threadPool);
         return move(initialState);
     }())
-    , m_events()
+    , m_events(make_shared<deque<Event>>())
     , m_transitions()
     , m_isRunning(true)
     , m_eventHandler(m_events)
     , m_data(move(data))
 {
-    auto window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Name");
-    m_world.writeResource("window", window);
-    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(window));
+    auto window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "ECSApplication");
+    window->setFramerateLimit(30);
+    window->setActive(false);
+    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(*window));
+    m_world.writeResource<sf::RenderWindow *>("window", window);
 }
 
 template <typename T, typename E>
@@ -61,6 +63,7 @@ void Application<T, E>::run()
     int64_t deltaTime = 0;
 
     m_eventHandler.start();
+    m_stateMachine.start(StateData<T> { m_world, deltaTime, *m_data });
     while (m_isRunning) {
         m_world.m_timer.start();
         auto stateData = StateData<T> { m_world, deltaTime, *m_data };

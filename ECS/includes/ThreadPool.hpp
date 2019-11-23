@@ -24,6 +24,7 @@ public:
     ~ThreadPool();
 
     void enqueueWork(function<E(shared_ptr<Resources>)> work, shared_ptr<Resources> data);
+    void join();
     uint32_t m_nbThread;
 
 private:
@@ -81,6 +82,19 @@ void ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work, shared_ptr<T
 {
     lock_guard<mutex> lock(m_worksLock);
     m_works.push_front(make_tuple(work, data));
+}
+template <typename Resources, typename E>
+void ThreadPool<Resources, E>::join() // TODO: Change return type
+{
+    m_worksLock.lock();
+    size_t size = m_works.size();
+    m_worksLock.unlock();
+    while (size != 0) {
+        this_thread::sleep_for(chrono::milliseconds(50));
+        m_worksLock.lock();
+        size = m_works.size();
+        m_worksLock.unlock();
+    }
 }
 
 }

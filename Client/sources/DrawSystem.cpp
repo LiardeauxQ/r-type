@@ -11,5 +11,13 @@ ecs::EntityRequest DrawSystem::getDependencies() const
 
 void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
-    cout << "Draw Game" << endl;
+    auto window = data->world.fetchResource<sf::RenderWindow *>("window");
+
+    if (window->setActive(true)) {
+        auto sprite = data->world.fetchResource<sf::Sprite *>("shipSprite");
+        window->clear();
+        window->draw(*sprite);
+        window->display();
+        window->setActive(false);
+    }
 }

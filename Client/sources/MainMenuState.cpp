@@ -6,11 +6,11 @@
 
 void MainMenuState::onStart(ecs::StateData<string>& data)
 {
-    auto shipTexture = sf::Texture();
-    shipTexture.loadFromFile("./assets/r-typesheet24.gif");
-    auto shipSprite = sf::Sprite();
-    shipSprite.setTexture(shipTexture);
-    shipSprite.setPosition(100, 100);
+    auto shipTexture = new sf::Texture();
+    shipTexture->loadFromFile("./assets/r-typesheet24.gif");
+    auto shipSprite = new sf::Sprite();
+    shipSprite->setTexture(*shipTexture);
+    shipSprite->setPosition(100, 100);
 
     data.world.writeResource("shipTexture", shipTexture);
     data.world.writeResource("shipSprite", shipSprite);
