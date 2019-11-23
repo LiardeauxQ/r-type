@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(r-type_client LANGUAGES CXX)
 
+
 set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT

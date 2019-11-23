@@ -6,6 +6,7 @@
 #define R_TYPE_DRAWSYSTEM_HPP
 
 #include "ISystem.hpp"
+#include <SFML/Graphics.hpp>
 
 class DrawSystem : public ecs::ISystem<ecs::StateData<string>> {
 public:

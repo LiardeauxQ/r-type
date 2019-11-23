@@ -15,12 +15,12 @@ using namespace std;
 
 class SFMLEventProducer : public AbstractEventProducer {
 public:
-    SFMLEventProducer(shared_ptr<sf::RenderWindow> window);
+    SFMLEventProducer(sf::RenderWindow& window);
     ~SFMLEventProducer() = default;
 
     vector<ecs::Event> fetchEvents() final;
 private:
-    shared_ptr<sf::RenderWindow> m_window;
+    sf::RenderWindow& m_window;
 };
 
 #endif //R_TYPE_SFMLEVENTPRODUCER_HPP
