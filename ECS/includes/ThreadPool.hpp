@@ -90,7 +90,6 @@ void ThreadPool<Resources, E>::join() // TODO: Change return type
     size_t size = m_works.size();
     m_worksLock.unlock();
     while (size != 0) {
-        this_thread::sleep_for(chrono::milliseconds(50));
         m_worksLock.lock();
         size = m_works.size();
         m_worksLock.unlock();

@@ -20,11 +20,16 @@
 
 int main(int argc, char* argv[])
 {
-    auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
-    dispatcher->registerSystem<DrawSystem>();
-    auto initialState = make_unique<MainMenuState>(move(dispatcher));
+    try {
+        auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
+        dispatcher->registerSystem<DrawSystem>();
+        dispatcher->registerSystem<MovementSystem>();
+        auto initialState = make_unique<MainMenuState>(move(dispatcher));
 
-    ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
-    app.run();
+        ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
+        app.run();
+    } catch(const exception& e) {
+        cout << e.what() << endl;
+    }
     return 0;
 }

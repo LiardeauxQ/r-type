@@ -7,6 +7,7 @@
 
 #include <ISystem.hpp>
 #include <AbstractState.hpp>
+#include <SFML/Graphics.hpp>
 
 class MovementSystem : public ecs::ISystem<ecs::StateData<string>> {
 public:

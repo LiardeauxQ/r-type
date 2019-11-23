@@ -61,12 +61,10 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
         throw "Cannot dispatch without a ThreadPool attached.";
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        cout << "Enquing" << &s << endl;
         m_pool->enqueueWork([&s](shared_ptr<T> data) -> E {
             (*s)(1, data);
         }, inputData);
     }
-    cout << "Joinning" << endl;
     m_pool->join();
 }
 

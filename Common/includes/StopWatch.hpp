@@ -16,7 +16,7 @@ public:
 
     void start();
     void reset();
-    int64_t elapsed();
+    double elapsed();
 private:
     using timePoint = chrono::time_point<chrono::high_resolution_clock, chrono::duration<double>>;
 

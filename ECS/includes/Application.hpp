@@ -31,14 +31,13 @@ private:
     ecs::StateMachine<T, E> m_stateMachine;
     shared_ptr<deque<Event>> m_events;
     deque<Transition<T, E>> m_transitions;
-    bool m_isRunning;
     EventHandler m_eventHandler;
     unique_ptr<T> m_data;
 };
 
 template <typename T, typename E>
 Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data)
-    : m_threadPool()
+    : m_threadPool(1) // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
     , m_world()
     , m_stateMachine([this, &initialState]() {
         initialState->attachThreadPool(&this->m_threadPool);
@@ -46,7 +45,6 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
     }())
     , m_events(make_shared<deque<Event>>())
     , m_transitions()
-    , m_isRunning(true)
     , m_eventHandler(m_events)
     , m_data(move(data))
 {
@@ -60,16 +58,16 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
 template <typename T, typename E>
 void Application<T, E>::run()
 {
-    int64_t deltaTime = 0;
+    double deltaTime = 0;
 
     m_eventHandler.start();
     m_stateMachine.start(StateData<T> { m_world, deltaTime, *m_data });
-    while (m_isRunning) {
+    while (m_stateMachine.m_running) {
         m_world.m_timer.start();
         auto stateData = StateData<T> { m_world, deltaTime, *m_data };
         m_stateMachine.update(stateData);
-        this->handleTransition(stateData);
         this->handleEvent(stateData);
+        this->handleTransition(stateData);
         deltaTime = m_world.m_timer.elapsed();
     }
 }
@@ -84,7 +82,7 @@ void Application<T, E>::registerState(unique_ptr<AbstractState<T, E>> newState)
 template <typename T, typename E>
 void Application<T, E>::handleTransition(StateData<T> stateData)
 {
-    while (m_transitions.size() > 0) {
+    while (m_transitions.size() > 0 && m_stateMachine.m_running) {
         m_stateMachine.transition(move(m_transitions.back()), stateData);
         m_transitions.pop_back();
     }
@@ -96,7 +94,7 @@ void Application<T, E>::handleEvent(StateData<T> stateData)
     m_eventHandler.lock();
     while (!m_events->empty()) {
         Event event = m_events->back();
-        m_stateMachine.handleEvent(stateData, event);
+        m_transitions.push_back(m_stateMachine.handleEvent(stateData, event));
         m_events->pop_back();
     }
     m_eventHandler.unlock();

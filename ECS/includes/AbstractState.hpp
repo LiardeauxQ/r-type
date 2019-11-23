@@ -30,7 +30,7 @@ struct Error {
 template <typename T>
 struct StateData {
     ecs::World& world;
-    const int64_t delta = 0;
+    const double delta = 0;
     T& data;
 };
 

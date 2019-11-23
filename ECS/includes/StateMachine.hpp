@@ -27,13 +27,14 @@ public:
 
     void update(StateData<T> data);
     void start(StateData<T> data);
-    void handleEvent(StateData<T> data, const E& event);
+    Transition<T, E> handleEvent(StateData<T> data, const E& event);
     void transition(Transition<T, E> trans, StateData<T>& data);
+    bool m_running;
+
 private:
     void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
     unique_ptr<AbstractState<T, E>> pop(StateData<T>& data);
     vector<unique_ptr<AbstractState<T, E>>> m_states;
-    bool m_running;
 };
 
 template <typename T, typename E>
@@ -48,20 +49,24 @@ void StateMachine<T, E>::push(unique_ptr<AbstractState<T, E>> newState, StateDat
 template <typename T, typename E>
 unique_ptr<AbstractState<T, E>> StateMachine<T, E>::pop(StateData<T>& data)
 {
-    if (m_states.empty())
+    if (m_states.empty()) {
+        m_running = false;
         return nullptr;
+    }
     auto ret = move(m_states.back());
     ret->onStop(data);
     m_states.pop_back();
     if (!m_states.empty())
         m_states.back()->onResume(data);
+    else
+        m_running = false;
     return ret;
 }
 
 template <typename T, typename E>
-void StateMachine<T, E>::handleEvent(StateData<T> stateData, const E& event)
+Transition<T, E> StateMachine<T, E>::handleEvent(StateData<T> stateData, const E& event)
 {
-    m_states.back()->handleEvent(stateData, event);
+    return m_states.back()->handleEvent(stateData, event);
 }
 
 template <typename T, typename E>
@@ -73,7 +78,8 @@ void StateMachine<T, E>::update(StateData<T> stateData)
         if (!m_states.empty()) {
             trans = m_states.back()->update(stateData);
         } else {
-            trans = Transition<T, E>();
+            trans = Transition<T, E>(Transition<T, E>::Name::QUIT);
+            m_running = false;
         }
         for (auto& s : m_states)
             s->shadowUpdate(stateData);
@@ -103,8 +109,8 @@ void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 
 template <typename T, typename E>
 StateMachine<T, E>::StateMachine(unique_ptr<AbstractState<T, E>> initial)
-    : m_states()
-    , m_running(true)
+    : m_running(true)
+    , m_states()
 {
     m_states.push_back(move(initial));
 }

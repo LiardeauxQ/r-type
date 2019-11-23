@@ -24,7 +24,7 @@ public:
 class EventHandler {
 public:
     explicit EventHandler(shared_ptr<deque<ecs::Event>> events);
-    ~EventHandler() = default;
+    ~EventHandler();
 
     void start();
     void stop();

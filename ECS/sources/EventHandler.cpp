@@ -51,3 +51,8 @@ void EventHandler::addEvent(const ecs::Event& event) {
 void EventHandler::addProducer(unique_ptr<AbstractEventProducer> producer) {
     m_producers.push_back(move(producer));
 }
+
+EventHandler::~EventHandler()
+{
+    this->stop();
+}

@@ -11,5 +11,7 @@ ecs::EntityRequest MovementSystem::getDependencies() const
 
 void MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
-    cout << "Moving entities." << endl;
+    auto s = data->world.fetchResource<sf::Sprite *>("shipSprite");
+    auto pos = s->getPosition();
+    s->move(static_cast<float>(data->delta), 0);
 }
