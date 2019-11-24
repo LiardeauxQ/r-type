@@ -46,21 +46,29 @@ public:
     void writeResource(const string& name)
     {
         static_assert(is_default_constructible<T>::value, "To write a resource without argument the class need to implement a default constructor.");
-        m_resources[name] = T();
+        m_resources[name] = make_any<T>();
     }
 
     template<typename T, typename... Args>
     void writeResource(const string& name, Args&&... args)
     {
         static_assert(is_constructible<T>::value, "To write a resource it need to be constructible.");
-        m_resources[name] = T{forward<Args>(args)...};
+        m_resources[name] = make_any<T>(forward<Args>(args)...);
+    }
+
+    template<typename T>
+    void registerComponent()
+    {
+        static_assert(is_base_of<Component, T>::value, "You have to register a Component into the world.");
+        T component;
+        m_components.insert_or_assign(component.getName(), vector<Component>());
     }
 
     StopWatch m_timer;
 private:
     unique_ptr<IEntityComponentStorage> database;
     unordered_map<string, any> m_resources;
-    unordered_map<string, any> m_components;
+    unordered_map<string, vector<Component>> m_components;
 };
 
 }
