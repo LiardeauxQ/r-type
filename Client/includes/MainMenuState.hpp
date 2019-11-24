@@ -7,6 +7,7 @@
 
 #include "AbstractState.hpp"
 #include <SFML/Graphics.hpp>
+#include "Transform.hpp"
 
 class MainMenuState : public ecs::AbstractState<string, ecs::Event> {
 public:

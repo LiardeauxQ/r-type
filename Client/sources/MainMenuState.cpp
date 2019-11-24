@@ -12,6 +12,8 @@ void MainMenuState::onStart(ecs::StateData<string>& data)
     shipSprite->setTexture(*shipTexture);
     shipSprite->setPosition(100, 100);
 
+    data.world.registerComponent<Transform>();
+
     data.world.writeResource("shipTexture", shipTexture);
     data.world.writeResource("shipSprite", shipSprite);
 }
