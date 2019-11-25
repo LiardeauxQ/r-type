@@ -14,6 +14,7 @@ use amethyst::{
 mod rtype;
 mod systems;
 mod components;
+mod physics;
 
 use crate::rtype::RType;
 
@@ -36,7 +37,8 @@ fn main() -> Result<(), amethyst::Error>{
         )?
         .with_bundle(TransformBundle::new())?
         .with(systems::MovementSystem, "movement_system", &[])
-        .with(systems::BounceSystem, "bounce_system", &["movement_system"]);
+        .with(systems::BounceSystem, "bounce_system", &["movement_system"])
+        .with(systems::UpdateVelocitySystem, "update_velocity_system", &["movement_system", "bounce_system"]);
     let mut game = Application::new(assets_dir, RType, game_data)?;
 
     game.run();
