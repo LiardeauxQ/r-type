@@ -8,17 +8,21 @@ use amethyst::{
 
 pub const WIDTH: f32 = 150.0;
 pub const HEIGHT: f32 = 150.0;
+pub const VELOCITY_X: f32 = 10.0;
+pub const VELOCITY_Y: f32 = 10.0;
 
 pub const CIRCLE_SIZE: f32 = 15.0;
 
 pub struct Sphere {
     pub radius: f32,
+    pub velocity: [f32; 2],
 }
 
 impl Sphere {
     fn new(radius: f32) -> Sphere {
         Sphere {
             radius,
+            velocity: [VELOCITY_X, VELOCITY_Y],
         }
     }
 }
@@ -35,11 +39,9 @@ impl SimpleState for RType {
         let world = data.world; 
         let sprite_sheet_handle = load_sprite_sheet(world);
 
-        world.register::<Sphere>();
         initialize_sphere(world, sprite_sheet_handle);
         initialize_camera(world);
     }
-
 }
 
 fn initialize_camera(world: &mut World) {
