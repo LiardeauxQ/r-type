@@ -53,7 +53,7 @@ impl <'s> System<'s> for BounceSystem {
                 let coll2 = SphereCollision::new(circle_collider.radius, p2);
 
                 if coll1.is_colliding_with(&coll2) {
-                    collider = update_collision_from(&coll1.center, &coll2.center);
+                    *collider = update_collision_from(&coll1.center, &coll2.center);
                 }
             }
         }
