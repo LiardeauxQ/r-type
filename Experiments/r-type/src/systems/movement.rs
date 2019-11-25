@@ -5,22 +5,22 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
 };
 
-use crate::rtype::{Sphere, WIDTH, HEIGHT, CIRCLE_SIZE};
+use crate::components::{Velocity};
 
 #[derive(SystemDesc)]
 pub struct MovementSystem;
 
 impl<'s> System<'s> for MovementSystem {
     type SystemData = (
-        ReadStorage<'s, Sphere>,
+        ReadStorage<'s, Velocity>,
         WriteStorage<'s, Transform>,
         Read<'s, Time>,
     );
 
-    fn run(&mut self, (spheres, mut locals, time): Self::SystemData) {
-        for (sphere, local) in (&spheres, &mut locals).join() {
-            local.prepend_translation_x(sphere.velocity[0] * time.delta_seconds());
-            local.prepend_translation_y(sphere.velocity[1] * time.delta_seconds());
+    fn run(&mut self, (velocities, mut locals, time): Self::SystemData) {
+        for (velocity, local) in (&velocities, &mut locals).join() {
+            local.prepend_translation_x(velocity.x * time.delta_seconds());
+            local.prepend_translation_y(velocity.y * time.delta_seconds());
         }
     }
 }

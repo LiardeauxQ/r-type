@@ -1,7 +1,6 @@
 use amethyst::{
     assets::{AssetStorage, Loader, Handle},
     core::transform::Transform,
-    ecs::prelude::{Component, DenseVecStorage},
     prelude::*,
     renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
 };
@@ -13,23 +12,7 @@ pub const VELOCITY_Y: f32 = 10.0;
 
 pub const CIRCLE_SIZE: f32 = 15.0;
 
-pub struct Sphere {
-    pub radius: f32,
-    pub velocity: [f32; 2],
-}
-
-impl Sphere {
-    fn new(radius: f32) -> Sphere {
-        Sphere {
-            radius,
-            velocity: [VELOCITY_X, VELOCITY_Y],
-        }
-    }
-}
-
-impl Component for Sphere {
-    type Storage = DenseVecStorage<Self>;
-}
+use crate::components::{Circle, Velocity};
 
 pub struct RType;
 
@@ -39,6 +22,7 @@ impl SimpleState for RType {
         let world = data.world; 
         let sprite_sheet_handle = load_sprite_sheet(world);
 
+        world.register::<Circle>();
         initialize_sphere(world, sprite_sheet_handle);
         initialize_camera(world);
     }
@@ -69,13 +53,15 @@ fn initialize_sphere(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 
     world
         .create_entity()
-        .with(Sphere::new(5.0))
+        .with(Circle::new(5.0))
+        .with(Velocity::new(VELOCITY_X, VELOCITY_Y))
         .with(transform_s1)
         .with(sprite_render.clone())
         .build();
     world
         .create_entity()
-        .with(Sphere::new(5.0))
+        .with(Circle::new(5.0))
+        .with(Velocity::new(VELOCITY_X, VELOCITY_Y))
         .with(transform_s2)
         .with(sprite_render.clone())
         .build();

@@ -7,14 +7,15 @@ use amethyst::{
         RenderingBundle,
     },
     utils::application_root_dir,
+    core::transform::TransformBundle,
     {LoggerConfig},
 };
 
 mod rtype;
 mod systems;
+mod components;
 
 use crate::rtype::RType;
-use amethyst::core::transform::TransformBundle;
 
 fn main() -> Result<(), amethyst::Error>{
     let app_root = application_root_dir()?;
