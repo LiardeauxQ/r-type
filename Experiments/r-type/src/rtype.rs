@@ -12,7 +12,7 @@ pub const VELOCITY_Y: f32 = 10.0;
 
 pub const CIRCLE_SIZE: f32 = 15.0;
 
-use crate::components::{Circle, Velocity};
+use crate::components::{Circle, Velocity, Collidee, Collider};
 
 pub struct RType;
 
@@ -42,9 +42,11 @@ fn initialize_camera(world: &mut World) {
 fn initialize_sphere(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
     let mut transform_s1 = Transform::default();
     let mut transform_s2 = Transform::default();
+    let mut transform_s3 = Transform::default();
 
     transform_s1.set_translation_xyz(CIRCLE_SIZE * 0.5, CIRCLE_SIZE * 0.5, 0.0);
     transform_s2.set_translation_xyz(WIDTH - (CIRCLE_SIZE * 0.5), CIRCLE_SIZE * 0.5, 0.0);
+    transform_s3.set_translation_xyz(WIDTH * 0.5, HEIGHT * 0.5, 0.0);
 
     let sprite_render = SpriteRender {
         sprite_sheet: sprite_sheet.clone(),
@@ -53,16 +55,29 @@ fn initialize_sphere(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 
     world
         .create_entity()
-        .with(Circle::new(5.0))
+        .with(Circle::new(CIRCLE_SIZE * 0.5))
         .with(Velocity::new(VELOCITY_X, VELOCITY_Y))
+        .with(Collidee::default())
+        .with(Collider::default())
         .with(transform_s1)
         .with(sprite_render.clone())
         .build();
     world
         .create_entity()
-        .with(Circle::new(5.0))
+        .with(Circle::new(CIRCLE_SIZE * 0.5))
         .with(Velocity::new(VELOCITY_X, VELOCITY_Y))
+        .with(Collidee::default())
+        .with(Collider::default())
         .with(transform_s2)
+        .with(sprite_render.clone())
+        .build();
+    world
+        .create_entity()
+        .with(Circle::new(CIRCLE_SIZE * 0.5))
+        .with(Velocity::new(VELOCITY_X, VELOCITY_Y))
+        .with(Collidee::default())
+        .with(Collider::default())
+        .with(transform_s3)
         .with(sprite_render.clone())
         .build();
 }

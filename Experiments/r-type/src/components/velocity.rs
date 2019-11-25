@@ -8,7 +8,7 @@ pub struct Velocity {
 }
 
 impl Velocity {
-    pub fn new(x: f32, y: f32) -> Velocity {
+    pub fn new(x: f32, y: f32) -> Self {
         Velocity {
             x,
             y
