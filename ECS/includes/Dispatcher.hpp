@@ -24,9 +24,9 @@ public:
     Dispatcher(Dispatcher&& dispatcher) noexcept;
     Dispatcher& operator=(Dispatcher&& dispatcher) noexcept;
 
-    ~Dispatcher() = default;
+    ~Dispatcher();
 
-    void attachThreadPool(ThreadPool<T, E> *pool);
+    void attachThreadPool(shared_ptr<ThreadPool<T, E>> pool);
     void dispatch(shared_ptr<T> data);
 
     template<typename S>
@@ -36,7 +36,7 @@ public:
     void registerSystem(Args... args);
 
 private:
-    ThreadPool<T, E> *m_pool;
+    shared_ptr<ThreadPool<T, E>> m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
     vector<bool> m_workersData;
     [[nodiscard]] int prepareDispatch() const;
@@ -81,7 +81,7 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
         int index = this->prepareDispatch(/* fetchedData */);
         // int index = 0;
         if (index > -1) {
-            m_workersData.at(index) = true;
+            m_workersData[index] = true;
             m_pool->enqueueWork([&s, this, index](shared_ptr<T> data) -> E {
                 (*s)(1, data);
                 this->m_workersData[index] = false;
@@ -107,7 +107,7 @@ void Dispatcher<T, E>::registerSystem()
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::attachThreadPool(ThreadPool<T, E> *pool)
+void Dispatcher<T, E>::attachThreadPool(shared_ptr<ThreadPool<T, E>> pool)
 {
     m_workersData.reserve(pool->m_nbThread);
     for (uint32_t i = 0; i < pool->m_nbThread; ++i)
@@ -120,6 +120,16 @@ void Dispatcher<T, E>::registerSystem(Args... args)
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
     m_systems.push_back(make_unique<S>(forward<Args>(args)...));
+}
+
+template <typename T, typename E>
+Dispatcher<T, E>::~Dispatcher()
+{
+    for (int i = 0; i < m_pool->m_nbThread; ++i)
+        if (m_workersData[i]) {
+            i--;
+            continue;
+        }
 }
 
 }

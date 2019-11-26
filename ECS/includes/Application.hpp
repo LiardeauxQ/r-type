@@ -24,35 +24,36 @@ public:
 
 private:
     void handleTransition(StateData<T> stateData);
-    void handleEvent(StateData<T> stateData);
+    // void handleEvent(StateData<T> stateData);
 
-    ThreadPool<ecs::StateData<T>, ecs::Error> m_threadPool;
-    World m_world;
-    ecs::StateMachine<T, E> m_stateMachine;
-    shared_ptr<deque<Event>> m_events;
+    shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> m_threadPool;
     deque<Transition<T, E>> m_transitions;
     EventHandler m_eventHandler;
     unique_ptr<T> m_data;
+    ecs::StateMachine<T, E> m_stateMachine;
+    World m_world;
 };
 
 template <typename T, typename E>
 Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data)
-    : m_threadPool(1) // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
-    , m_world()
-    , m_stateMachine([this, &initialState]() {
-        initialState->attachThreadPool(&this->m_threadPool);
+    : m_threadPool{make_shared<ThreadPool<ecs::StateData<T>, ecs::Error>>(1)} // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
+    , m_transitions()
+    , m_eventHandler()
+    , m_data(move(data))
+    , m_stateMachine([&]() {
+        initialState->attachThreadPool(this->m_threadPool);
         return move(initialState);
     }())
-    , m_events(make_shared<deque<Event>>())
-    , m_transitions()
-    , m_eventHandler(m_events)
-    , m_data(move(data))
+    , m_world()
 {
     auto window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "ECSApplication");
     window->setFramerateLimit(30);
     window->setActive(false);
-    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(*window));
+    auto queue = make_shared<deque<sf::Event>>();
+    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(*window, queue));
+    m_world.writeResource<shared_ptr<deque<sf::Event>>>("sfEvent", move(queue));
     m_world.writeResource<sf::RenderWindow *>("window", window);
+    m_world.writeResource<deque<Transition<T, E>> *>("transitionQueue", &m_transitions);
 }
 
 template <typename T, typename E>
@@ -66,7 +67,7 @@ void Application<T, E>::run()
         m_world.m_timer.start();
         auto stateData = StateData<T> { m_world, deltaTime, *m_data };
         m_stateMachine.update(stateData);
-        this->handleEvent(stateData);
+        // this->handleEvent(stateData);
         this->handleTransition(stateData);
         deltaTime = m_world.m_timer.elapsed();
     }
@@ -88,16 +89,16 @@ void Application<T, E>::handleTransition(StateData<T> stateData)
     }
 }
 
-template <typename T, typename E>
-void Application<T, E>::handleEvent(StateData<T> stateData)
-{
-    m_eventHandler.lock();
-    while (!m_events->empty()) {
-        Event event = m_events->back();
-        m_transitions.push_back(m_stateMachine.handleEvent(stateData, event));
-        m_events->pop_back();
-    }
-    m_eventHandler.unlock();
-}
+// template <typename T, typename E>
+// void Application<T, E>::handleEvent(StateData<T> stateData)
+// {
+//     m_eventHandler.lock();
+//     while (!m_events->empty()) {
+//         Event event = m_events->back();
+//         m_transitions.push_back(m_stateMachine.handleEvent(stateData, event));
+//         m_events->pop_back();
+//     }
+//     m_eventHandler.unlock();
+// }
 
 }
