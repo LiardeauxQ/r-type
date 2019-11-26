@@ -25,6 +25,7 @@ impl<'s> System<'s> for MovementSystem {
     }
 }
 
+#[derive(SystemDesc)]
 pub struct UpdateVelocitySystem;
 
 impl <'s> System<'s> for UpdateVelocitySystem {

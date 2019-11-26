@@ -5,8 +5,9 @@ use amethyst::{
 };
 
 use crate::components::{Velocity, Circle, Collidee, Collider};
-use crate::physics::{SphereCollision, Point, Collision};
-use crate::rtype::{WIDTH, HEIGHT, CIRCLE_SIZE};
+use crate::physics::{SphereCollision, Collision};
+use crate::rtype::{WIDTH, HEIGHT};
+use crate::common::{Point};
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
@@ -63,9 +64,9 @@ impl <'s> System<'s> for BounceSystem {
 fn update_collision_from(p1: &Point, p2: &Point) -> Collider {
     let mut collider = Collider::default();
 
-    if come_from_x_axe(p1, p2, CIRCLE_SIZE * 0.5) {
+    if come_from_x_axe(p1, p2, 15.0 * 0.5) {
         collider.x_collision = true;
-    } else if come_from_y_axe(p1, p2, CIRCLE_SIZE * 0.5) {
+    } else if come_from_y_axe(p1, p2, 15.0 * 0.5) {
         collider.y_collision = true;
     } else {
         collider.x_collision = true;
