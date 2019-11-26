@@ -18,8 +18,3 @@ impl Component for Circle {
     type Storage = DenseVecStorage<Self>;
 }
 
-pub struct Enemy;
-
-impl Component for Enemy {
-    type Storage = DenseVecStorage<Self>;
-}
