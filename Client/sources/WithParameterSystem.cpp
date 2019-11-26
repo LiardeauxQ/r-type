@@ -11,7 +11,8 @@ ecs::EntityRequest WithParameterSystem::getDependencies() const
 
 void WithParameterSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
-    cout << "With Parameters: " << m_readerId << endl;
+
+    cout << "With Parameters: " << this_thread::get_id() << " " << m_readerId << endl;
 }
 
 WithParameterSystem::WithParameterSystem(int readerId)
