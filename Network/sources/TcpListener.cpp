@@ -25,7 +25,8 @@ optional<TcpStream> TcpListener::acceptNonBlocking() const
 void TcpListener::listen(int32_t nbClientMax) const
 {
     cout << "Listening" << endl;
-    ::listen(m_handle, nbClientMax);
+    if (::listen(m_handle, nbClientMax) == -1)
+        throw "Error while listening.";
 }
 
 TcpListener::TcpListener(uint16_t port)
