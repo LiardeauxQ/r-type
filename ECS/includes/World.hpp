@@ -52,7 +52,6 @@ public:
     template<typename T, typename... Args>
     void writeResource(const string& name, Args&&... args)
     {
-        static_assert(is_constructible<T>::value, "To write a resource it need to be constructible.");
         m_resources[name] = make_any<T>(forward<Args>(args)...);
     }
 
