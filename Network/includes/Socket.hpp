@@ -44,12 +44,14 @@ public:
 
     bool operator==(const Socket& socket) const;
 
+    int setNonBlocking(bool active = true);
 protected:
     static sockaddr_in parseStringAddr(const string& addr, uint16_t port = 0);
 
     RawSocket m_handle;
     Type m_type;
     sockaddr m_addr;
+    bool m_blocking;
 private:
     Socket(Socket::Type type, sockaddr_in addr);
     static Type getTypeFromUnix(int32_t type);
