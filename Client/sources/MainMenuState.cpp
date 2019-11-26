@@ -17,9 +17,11 @@ void MainMenuState::onStart(ecs::StateData<string>& data)
 
     data.world.writeResource("shipTexture", shipTexture);
     data.world.writeResource("shipSprite", shipSprite);
-
     data.world.writeResource<TcpListener>("listener", 1234);
-    data.world.fetchResource<TcpListener>("listener").setNonBlocking();
+
+    auto& listener = data.world.fetchResource<TcpListener>("listener");
+    listener.setNonBlocking();
+    listener.listen();
 }
 
 void MainMenuState::onStop(ecs::StateData<string>& data)
