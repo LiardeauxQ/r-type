@@ -11,6 +11,7 @@
 #include "ISystem.hpp"
 #include <iostream>
 #include <queue>
+#include <array>
 
 namespace ecs {
 
@@ -37,6 +38,8 @@ public:
 private:
     ThreadPool<T, E> *m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
+    vector<bool> m_workersData;
+    [[nodiscard]] int prepareDispatch() const;
 };
 
 template <typename T, typename E>
@@ -55,23 +58,38 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
+int Dispatcher<T, E>::prepareDispatch(/* fetchedData */) const
+{
+    for (int i = 0; i < m_workersData.size(); ++i)
+        if (!m_workersData[i] /* workerData.conflict(fetchedData) */)
+            return i;
+    return -1;
+}
+
+template <typename T, typename E>
 void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
 {
     if (!m_pool)
         throw "Cannot dispatch without a ThreadPool attached.";
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        m_pool->enqueueWork([&s](shared_ptr<T> data) -> E {
-            (*s)(1, data);
-        }, inputData);
+        // int index = this->prepareDispatch(/* fetchedData */);
+        int index = 0;
+        if (index > -1) {
+            m_workersData.at(index) = true;
+            m_pool->enqueueWork([&s, this, index](shared_ptr<T> data) -> E {
+                (*s)(1, data);
+                this->m_workersData[index] = false;
+            }, inputData);
+        }
     }
-    m_pool->join();
 }
 
 template <typename T, typename E>
 Dispatcher<T, E>::Dispatcher()
     : m_pool(nullptr)
     , m_systems()
+    , m_workersData()
 {}
 
 template <typename T, typename E>
@@ -86,6 +104,9 @@ void Dispatcher<T, E>::registerSystem()
 template <typename T, typename E>
 void Dispatcher<T, E>::attachThreadPool(ThreadPool<T, E> *pool)
 {
+    m_workersData.reserve(pool->m_nbThread);
+    for (uint32_t i = 0; i < pool->m_nbThread; ++i)
+        m_workersData.push_back(false);
     m_pool = pool;
 }
 template <typename T, typename E>

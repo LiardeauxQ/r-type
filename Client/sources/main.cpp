@@ -17,6 +17,7 @@
 #include "DrawSystem.hpp"
 #include "MovementSystem.hpp"
 #include "WithParameterSystem.hpp"
+#include "SystemNetworkEvent.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -24,6 +25,8 @@ int main(int argc, char* argv[])
         auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
         dispatcher->registerSystem<DrawSystem>();
         dispatcher->registerSystem<MovementSystem>();
+        // dispatcher->registerSystem<SystemNetworkEvent>();
+        dispatcher->registerSystem<WithParameterSystem>(100);
         auto initialState = make_unique<MainMenuState>(move(dispatcher));
 
         ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
