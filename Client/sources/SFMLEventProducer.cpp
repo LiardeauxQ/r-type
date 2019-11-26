@@ -4,18 +4,18 @@
 
 #include "includes/SFMLEventProducer.hpp"
 
-SFMLEventProducer::SFMLEventProducer(sf::RenderWindow& window)
-    : m_window(window)
-{
+#include <utility>
 
+SFMLEventProducer::SFMLEventProducer(sf::RenderWindow& window, shared_ptr<deque<sf::Event>> queue)
+    : m_window(window)
+    , m_events(move(queue))
+{
 }
 
-vector<ecs::Event> SFMLEventProducer::fetchEvents()
+void SFMLEventProducer::pollEvents()
 {
-    vector<ecs::Event> events;
     sf::Event event;
 
     while (m_window.pollEvent(event))
-        events.emplace_back("sfml", event);
-    return events;
+        m_events->emplace_back(event);
 }
