@@ -1,29 +1,9 @@
-use std::fmt;
+use crate::common::{Point};
 
 pub trait Collision {
     type Collider: Collision;
 
     fn is_colliding_with(&self, object: &Self::Collider) -> bool;
-}
-
-pub struct Point {
-    pub x: f32,
-    pub y: f32
-}
-
-impl Point {
-    pub fn new(x: f32, y: f32) -> Point {
-        Point {
-            x,
-            y
-        }
-    }
-}
-
-impl fmt::Display for Point {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Point<{};{}>", self.x, self.y)
-    }
 }
 
 pub struct SphereCollision {
