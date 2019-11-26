@@ -15,10 +15,11 @@ void SystemNetworkEvent::operator()(any entities, shared_ptr<ecs::StateData<stri
     auto& listener = data->world.fetchResource<TcpListener>("listener");
     auto optStream = listener.acceptNonBlocking();
 
-    cout << "Network: " << this_thread::get_id() << endl;
     if (optStream) {
         auto stream = optStream.value();
+        cout << "new connection." << endl;
         stream.setNonBlocking();
+        data->world.writeResource("Client", stream);
         // data->world.createEntity().with<Client>(stream);
     }
 }

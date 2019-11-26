@@ -60,9 +60,14 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 template <typename T, typename E>
 int Dispatcher<T, E>::prepareDispatch(/* fetchedData */) const
 {
-    for (int i = 0; i < m_workersData.size(); ++i)
+    int i = 0;
+
+    while (true) {
         if (!m_workersData[i] /* workerData.conflict(fetchedData) */)
             return i;
+        i++;
+        i %= m_pool->m_nbThread;
+    }
     return -1;
 }
 
@@ -73,8 +78,8 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
         throw "Cannot dispatch without a ThreadPool attached.";
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        // int index = this->prepareDispatch(/* fetchedData */);
-        int index = 0;
+        int index = this->prepareDispatch(/* fetchedData */);
+        // int index = 0;
         if (index > -1) {
             m_workersData.at(index) = true;
             m_pool->enqueueWork([&s, this, index](shared_ptr<T> data) -> E {
