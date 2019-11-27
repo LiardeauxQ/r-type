@@ -49,10 +49,7 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
         initialState->attachThreadPool(this->m_threadPool);
         return move(initialState);
     }())
-    , m_world([]() {
-        auto ptr = unique_ptr<IEntityComponentStorage>(new BasicEntityComponentStorage());
-        return
-    }())
+    , m_world(unique_ptr<IEntityComponentStorage>(new BasicEntityComponentStorage()))
 {
     m_world.writeResource<deque<Transition<T, E>> *>("transitionQueue", &m_transitions);
 }

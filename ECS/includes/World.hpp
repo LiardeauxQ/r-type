@@ -22,7 +22,7 @@ using Id = size_t;
 
 class World {
 public:
-    explicit World(unique_ptr<BasicEntityComponentStorage> storage);
+    explicit World(unique_ptr<IEntityComponentStorage> storage);
     ~World() = default;
 
     void registerComponent(string schema);
@@ -76,7 +76,7 @@ void World::storeEntity(Entity entity)
     m_storage->store({ move(entity) }); //TODO: use store unique.
 }
 
-World::World(unique_ptr<BasicEntityComponentStorage> storage)
+World::World(unique_ptr<IEntityComponentStorage> storage)
     : m_storage(move(storage))
 {}
 
