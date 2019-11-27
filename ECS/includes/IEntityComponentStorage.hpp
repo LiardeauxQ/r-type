@@ -14,30 +14,31 @@
 namespace ecs {
 
 struct ComponentDoesNotComplyWithSchema : public std::exception {
-    const char* what() const throw()
+    [[nodiscard]] const char* what() const noexcept final
     {
         return "Component does not comply with schema";
     }
 };
 
 struct SchemaNameAlreadyExistsException : public std::exception {
-    const char* what() const throw()
+    [[nodiscard]] const char* what() const noexcept final
     {
         return "Schema already exists";
     }
 };
 
 struct SchemaNotFound : public std::exception {
-    const char* what() const throw()
+    [[nodiscard]] const char* what() const noexcept final
     {
         return "Schema was not found";
     }
 };
 
 class IEntityComponentStorage {
-
 public:
+    virtual ~IEntityComponentStorage() = default;
     virtual Vec<Entity> request(EntityRequest request) = 0;
+
     virtual void store(const Vec<Entity>& entities) = 0;
 
     virtual void addComponentSchema(ComponentSchema schema) = 0;
