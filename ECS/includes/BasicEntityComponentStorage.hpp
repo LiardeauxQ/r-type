@@ -4,36 +4,36 @@
 
 #pragma once
 
-#include <ostream>
 #include "IEntityComponentStorage.hpp"
+#include <ostream>
 
 namespace ecs {
 
-    class BasicEntityComponentStorage {
+class BasicEntityComponentStorage : public IEntityComponentStorage {
 
-        public:
-            BasicEntityComponentStorage();
+public:
+    BasicEntityComponentStorage();
 
-            bool hasSchema(const String &name) const;
-            ComponentSchema getSchema(const String &name) const;
+    [[nodiscard]] bool hasSchema(const String& name) const;
+    [[nodiscard]] const ComponentSchema& getSchema(const String& name) const;
 
-            Vec<Entity> request(const EntityRequest &request);
-            void store(const Vec<Entity> &entities);
+    Vec<Entity> request(const EntityRequest& request);
+    void store(const Vec<Entity>& entities);
 
-            void addComponentSchema(const ComponentSchema &schema);
-            void removeComponentSchema(const String &componentName);
+    void addComponentSchema(ComponentSchema schema);
+    void removeComponentSchema(const String& componentName);
 
-            Map<String, Component> getComponents(const String &name) const;
+    [[nodiscard]] Map<String, Component> getComponents(const String& name) const;
+    Vec<ecs::Entity> request(Box<EntityRequest> request) override;
+    void addComponentSchema(Box<ComponentSchema> schema) override;
+    void removeComponentSchema(String& componentName) override;
 
-            Vec<ComponentSchema> getComponentsSchemas() const { return m_schemas; }
+    Vec<ComponentSchema> m_schemas;
 
-        private:
-
-            Vec<ComponentSchema> m_schemas;
-            Map<String, Map<String, Component>> m_components;
-
-    };
+private:
+    Map<String, Map<String, Component>> m_components;
+};
 
 }
 
-std::ostream &operator<<(std::ostream &stream, const ecs::BasicEntityComponentStorage &components);
+std::ostream& operator<<(std::ostream& stream, const ecs::BasicEntityComponentStorage& components);

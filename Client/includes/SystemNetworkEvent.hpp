@@ -12,7 +12,7 @@
 class SystemNetworkEvent : public ecs::ISystem<ecs::StateData<string>> {
 public:
     ~SystemNetworkEvent() override = default;
-    ecs::EntityRequest getDependencies() const override;
+    [[nodiscard]] ecs::EntityRequest getDependencies() const override;
     void operator()(any entities, shared_ptr<ecs::StateData<string>> data) override;
 };
 

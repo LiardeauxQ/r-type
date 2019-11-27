@@ -7,6 +7,7 @@
 
 #include "World.hpp"
 #include "EventHandler.hpp"
+#include "IEntityComponentStorage.hpp"
 
 namespace ecs {
 

@@ -4,45 +4,46 @@
 
 #pragma once
 
-#include <iostream>
-#include "Definitions.hpp"
 #include "Component.hpp"
+#include "Definitions.hpp"
+#include <iostream>
 
 namespace ecs {
 
-    class Entity {
-        
-        public:
-            Entity(Vec<Component> components);
-            Entity(Vec<Component> components, String name);
+class Entity {
 
-            Entity(const Entity &entity);
+public:
+    explicit Entity(Vec<Component> components);
+    Entity(Vec<Component> components, String name);
 
-            Component &getComponent(String componentName);
-            Map<String, Component> getComponents() const { return m_components; }
-            String getName() const { return m_name; }
+    Entity(Entity&& entity) noexcept;
+    Entity& operator=(Entity&& entity) noexcept;
 
-            void markDirty();
-            bool isDirty() const;
+    Entity(const Entity& entity);
 
-        private:
-            Map<String, Component> m_components;
-            bool m_isDirty;
-            String m_name;
+    Component& getComponent(String componentName);
+    [[nodiscard]] Map<String, Component> getComponents() const { return m_components; }
+    [[nodiscard]] String getName() const { return m_name; }
 
-    };
+    void markDirty();
+    [[nodiscard]] bool isDirty() const;
 
-    class EntityBuilder {
+private:
+    Map<String, Component> m_components;
+    bool m_isDirty;
+    String m_name;
+};
 
-        public:
-            EntityBuilder();
-            EntityBuilder with(Component &component);
-            Entity build();
-            Entity build(const String &name);
+class EntityBuilder {
 
-        private:
-            Vec<Component> m_components;
+public:
+    EntityBuilder();
+    EntityBuilder with(Component& component);
+    Entity build();
+    Entity build(const String& name);
 
-    };
+private:
+    Vec<Component> m_components;
+};
 
 }

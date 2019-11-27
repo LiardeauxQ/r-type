@@ -3,39 +3,48 @@
 //
 
 #include <iostream>
+#include <utility>
 #include "Component.hpp"
 
 namespace ecs {
 
-    ComponentAttribute::ComponentAttribute(const String &name, const AttributeType type, std::any value)
-    : m_name(name)
-    , m_type(type)
-    , m_value(value)
+    ComponentAttribute::ComponentAttribute(String name, AttributeType type, std::any value)
+        : m_name(move(name))
+        , m_type(type)
+        , m_value(move(value))
     {}
 
     Component::Component()
-    : m_name("")
-    , m_attributes()
+        : m_name()
+        , m_attributes()
     {}
 
-    Component::Component(const String &name)
-    : m_name(name)
-    , m_attributes()
+
+    ComponentSchema& ComponentSchema::operator=(ComponentSchema&& rhs) noexcept
+    {
+        m_name.swap(rhs.m_name);
+        m_attributesSchema.swap(rhs.m_attributesSchema);
+        return *this;
+    }
+
+    Component::Component(String name)
+        : m_name(move(name))
+        , m_attributes()
     {}
 
     Vec<ComponentAttribute> Component::getAttributes() const {
         auto attributes = Vec<ComponentAttribute>();
-        for (auto attribute : m_attributes) {
+        for (const auto& attribute : m_attributes) {
             attributes.push_back(attribute.second);
         }
         return attributes;
     }
 
     void Component::addAttribute(ComponentAttribute attribute) {
-        m_attributes.insert({attribute.getName(), attribute});
+        m_attributes.insert({ attribute.getName(), move(attribute) });
     }
 
-    void Component::removeAttribute(String name) {
+    void Component::removeAttribute(const String& name) {
         m_attributes.erase(name);
     }
 
@@ -43,7 +52,7 @@ namespace ecs {
         return m_name;
     }
 
-    bool Component::complyWith(const ComponentSchema &schema) {
+    bool Component::complyWith(const ComponentSchema &schema) const {
         for (auto attributes : m_attributes) {
         }
         return true;
@@ -54,22 +63,28 @@ namespace ecs {
     }
 
     
-    ComponentAttributeSchema::ComponentAttributeSchema(const String &name, AttributeType type)
-    : m_name(name)
-    , m_type(type)
+    ComponentAttributeSchema::ComponentAttributeSchema(String name, AttributeType type)
+        : m_name(move(name))
+        , m_type(type)
     {}
 
-    ComponentSchema::ComponentSchema(const String &name, Vec<ComponentAttributeSchema> &attributesSchema)
-    : m_name(name)
-    , m_attributesSchema(attributesSchema)
+    ComponentSchema::ComponentSchema(String name, Vec<ComponentAttributeSchema> attributesSchema)
+        : m_name(move(name))
+        , m_attributesSchema(move(attributesSchema))
     {}
 
-    ComponentSchemaBuilder::ComponentSchemaBuilder(const String &name)
-    : m_name(name)
+    ComponentSchema::ComponentSchema(ComponentSchema&& rhs) noexcept
+        : m_name(move(rhs.m_name))
+        , m_attributesSchema(move(rhs.m_attributesSchema))
+    {
+    }
+
+    ComponentSchemaBuilder::ComponentSchemaBuilder(String name)
+        : m_name(move(name))
     {}
 
     ComponentSchemaBuilder ComponentSchemaBuilder::with(ComponentAttributeSchema attributeSchema) {
-        m_attributesSchema.push_back(attributeSchema);
+        m_attributesSchema.push_back(move(attributeSchema));
         return *this;
     }
 
@@ -81,7 +96,7 @@ namespace ecs {
 
 std::ostream &operator<<(std::ostream &stream, const ecs::Component &comp) {
     stream << "{ ";
-    for (auto attribute : comp.getAttributes()) {
+    for (const auto& attribute : comp.getAttributes()) {
         stream << attribute << ", ";
     }
     stream << " }";

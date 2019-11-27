@@ -19,7 +19,7 @@ class ISystem {
 
 public:
     virtual ~ISystem() = default;
-    virtual EntityRequest getDependencies() const = 0;
+    [[nodiscard]] virtual EntityRequest getDependencies() const = 0;
     virtual void operator()(any entities, shared_ptr<T> data) = 0;
 };
 

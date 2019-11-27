@@ -5,13 +5,12 @@ project(ecs LANGUAGES CXX)
 set(ECS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(ECS
-    ${ECS_SOURCES}/World.cpp
     ${ECS_SOURCES}/Entity.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp
     ${ECS_SOURCES}/Event.cpp
     ${ECS_SOURCES}/EventHandler.cpp
-    ${ECS_SOURCES}/BasicEntityComponentStorage.cpp)
+    ${ECS_SOURCES}/BasicEntityComponentStorage.cpp
     ${ECS_SOURCES}/Bundle.cpp
 )
 

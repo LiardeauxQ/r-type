@@ -80,8 +80,8 @@ int main(void) {
 
     auto packets4 = factory.deserialize_packets(vec4);
     std::cout << "Fourth:" << std::endl;
-    for (auto it = packets4.begin(); it != packets4.end(); ++it) {
-        std::cout << (*it).get() << std::endl;
+    for (auto & it : packets4) {
+        std::cout << it.get() << std::endl;
     }
 
     ecs::BasicEntityComponentStorage storage;

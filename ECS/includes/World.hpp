@@ -4,13 +4,15 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
+#include "BasicEntityComponentStorage.hpp"
 #include "Definitions.hpp"
 #include "Entity.hpp"
 #include "IEntityComponentStorage.hpp"
 #include "StopWatch.hpp"
 #include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace ecs {
 
@@ -20,15 +22,10 @@ using Id = size_t;
 
 class World {
 public:
-    //explicit World(unique_ptr<IEntityComponentStorage> database);
-    World() = default;
+    explicit World(unique_ptr<BasicEntityComponentStorage> storage);
     ~World() = default;
 
-    void createEntity();
-
     void registerComponent(string schema);
-
-    Entity* fetchEntity(const string& name);
 
     template<typename T>
     T& fetchResource(const string& name)
@@ -55,19 +52,32 @@ public:
         m_resources.insert_or_assign(name, make_any<T>(forward<Args>(args)...));
     }
 
-    template<typename T>
-    void registerComponent()
+    vector<Entity> fetchStorage(unique_ptr<EntityRequest> request)
     {
-        static_assert(is_base_of<Component, T>::value, "You have to register a Component into the world.");
-        T component;
-        m_components.insert_or_assign(component.getName(), vector<Component>());
+        return m_storage->request(move(request));
     }
 
+    void registerComponent(unique_ptr<ComponentSchema> schema)
+    {
+        m_storage->addComponentSchema(move(schema));
+    }
+
+    void storeEntity(Entity entity);
+
     StopWatch m_timer;
+    unique_ptr<IEntityComponentStorage> m_storage;
 private:
-    unique_ptr<IEntityComponentStorage> database;
     unordered_map<string, any> m_resources;
     unordered_map<string, vector<Component>> m_components;
 };
+
+void World::storeEntity(Entity entity)
+{
+    m_storage->store({ move(entity) }); //TODO: use store unique.
+}
+
+World::World(unique_ptr<BasicEntityComponentStorage> storage)
+    : m_storage(move(storage))
+{}
 
 }
