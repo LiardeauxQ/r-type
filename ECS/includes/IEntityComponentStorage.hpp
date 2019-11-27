@@ -37,7 +37,7 @@ struct SchemaNotFound : public std::exception {
 class IEntityComponentStorage {
 
 public:
-    virtual Vec<Entity> request(const EntityRequest& request) = 0;
+    virtual Vec<Entity> request(EntityRequest request) = 0;
     virtual void store(const Vec<Entity>& entities) = 0;
 
     virtual void addComponentSchema(ComponentSchema schema) = 0;

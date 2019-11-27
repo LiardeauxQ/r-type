@@ -43,7 +43,7 @@ void BasicEntityComponentStorage::removeComponentSchema(const String& name)
     }
 }
 
-Vec<Entity> BasicEntityComponentStorage::request(const EntityRequest& request)
+Vec<Entity> BasicEntityComponentStorage::request(EntityRequest request)
 {
     auto componentList = request.getWiths();
     auto newComponentList = std::vector<std::tuple<String, int>>();

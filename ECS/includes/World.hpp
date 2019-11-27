@@ -52,12 +52,12 @@ public:
         m_resources.insert_or_assign(name, make_any<T>(forward<Args>(args)...));
     }
 
-    vector<Entity> fetchStorage(unique_ptr<EntityRequest> request)
+    vector<Entity> fetchStorage(EntityRequest request)
     {
         return m_storage->request(move(request));
     }
 
-    void registerComponent(unique_ptr<ComponentSchema> schema)
+    void registerComponent(ComponentSchema schema)
     {
         m_storage->addComponentSchema(move(schema));
     }

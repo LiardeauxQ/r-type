@@ -17,7 +17,7 @@ public:
     [[nodiscard]] bool hasSchema(const String& name) const;
     [[nodiscard]] const ComponentSchema& getSchema(const String& name) const;
 
-    Vec<Entity> request(const EntityRequest& request);
+    Vec<Entity> request(EntityRequest request);
     void store(const Vec<Entity>& entities);
 
     void addComponentSchema(ComponentSchema schema);
