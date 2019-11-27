@@ -123,17 +123,6 @@ Map<String, Component> BasicEntityComponentStorage::getComponents(const String& 
     throw SchemaNotFound();
 }
 
-Vec<ecs::Entity> BasicEntityComponentStorage::request(Box<EntityRequest> request)
-{
-    return Vec<ecs::Entity>();
-}
-void BasicEntityComponentStorage::addComponentSchema(Box<ComponentSchema> schema)
-{
-}
-void BasicEntityComponentStorage::removeComponentSchema(String& componentName)
-{
-}
-
 }
 
 std::ostream& operator<<(std::ostream& stream, const ecs::BasicEntityComponentStorage& components)

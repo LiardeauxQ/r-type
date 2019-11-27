@@ -24,9 +24,6 @@ public:
     void removeComponentSchema(const String& componentName);
 
     [[nodiscard]] Map<String, Component> getComponents(const String& name) const;
-    Vec<ecs::Entity> request(Box<EntityRequest> request) override;
-    void addComponentSchema(Box<ComponentSchema> schema) override;
-    void removeComponentSchema(String& componentName) override;
 
     Vec<ComponentSchema> m_schemas;
 
