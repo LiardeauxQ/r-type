@@ -12,7 +12,7 @@ ecs::EntityRequest DrawSystem::getDependencies() const
 void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
     auto window = data->world.fetchResource<sf::RenderWindow *>("window");
-    auto& sfmlEventQueue = data->world.fetchResource<shared_ptr<deque<sf::Event>>>("sfEvent");
+    auto& sfmlEventQueue = data->world.fetchResource<shared_ptr<deque<sf::Event>>>("sfEvents");
     auto& transitionQueue = data->world.fetchResource<deque<ecs::Transition<string, ecs::Event>> *>("transitionQueue");
 
     while (!sfmlEventQueue->empty()) {

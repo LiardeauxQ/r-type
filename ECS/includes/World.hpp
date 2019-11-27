@@ -37,9 +37,9 @@ public:
     }
 
     template<typename T>
-    void writeResource(const string& name, const T data)
+    void writeResource(const string& name, T&& data)
     {
-        m_resources[name] = data;
+        m_resources.insert_or_assign(name, forward<T>(data));
     }
 
     template<typename T>
@@ -52,7 +52,7 @@ public:
     template<typename T, typename... Args>
     void writeResource(const string& name, Args&&... args)
     {
-        m_resources[name] = make_any<T>(forward<Args>(args)...);
+        m_resources.insert_or_assign(name, make_any<T>(forward<Args>(args)...));
     }
 
     template<typename T>

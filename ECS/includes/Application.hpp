@@ -8,6 +8,7 @@
 #include "Event.hpp"
 #include "StateMachine.hpp"
 #include "SFMLEventProducer.hpp"
+#include "Bundle.hpp"
 
 namespace ecs {
 
@@ -21,6 +22,10 @@ public:
 
     void registerState(unique_ptr<AbstractState<T, E>> newState);
     void run();
+    void withBundle(Bundle& bundle);
+
+    template <typename B, typename... Args>
+    void withBundle(Args&&... args);
 
 private:
     void handleTransition(StateData<T> stateData);
@@ -46,13 +51,6 @@ Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, uni
     }())
     , m_world()
 {
-    auto window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "ECSApplication");
-    window->setFramerateLimit(30);
-    window->setActive(false);
-    auto queue = make_shared<deque<sf::Event>>();
-    m_eventHandler.addProducer(make_unique<SFMLEventProducer>(*window, queue));
-    m_world.writeResource<shared_ptr<deque<sf::Event>>>("sfEvent", move(queue));
-    m_world.writeResource<sf::RenderWindow *>("window", window);
     m_world.writeResource<deque<Transition<T, E>> *>("transitionQueue", &m_transitions);
 }
 
@@ -87,6 +85,21 @@ void Application<T, E>::handleTransition(StateData<T> stateData)
         m_stateMachine.transition(move(m_transitions.back()), stateData);
         m_transitions.pop_back();
     }
+}
+
+template <typename T, typename E>
+void ecs::Application<T, E>::withBundle(Bundle& bundle)
+{
+    bundle.load(m_world, m_eventHandler);
+}
+
+template <typename T, typename E>
+template <typename B, typename... Args>
+void Application<T, E>::withBundle(Args&&... args)
+{
+    static_assert(is_base_of<Bundle, B>::value, "Should be a base of Bundle.");
+    B instance(forward<Args>(args)...);
+    this->withBundle(instance);
 }
 
 // template <typename T, typename E>

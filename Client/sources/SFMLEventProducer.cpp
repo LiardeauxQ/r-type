@@ -2,7 +2,7 @@
 // Created by Quentin Liardeaux on 11/19/19.
 //
 
-#include "includes/SFMLEventProducer.hpp"
+#include "SFMLEventProducer.hpp"
 
 #include <utility>
 

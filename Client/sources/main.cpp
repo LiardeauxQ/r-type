@@ -13,6 +13,7 @@
 #include "MainMenuState.hpp"
 #include "Application.hpp"
 #include "ThreadPool.hpp"
+#include "GraphicBundle.hpp"
 
 #include "DrawSystem.hpp"
 #include "MovementSystem.hpp"
@@ -30,6 +31,8 @@ int main(int argc, char* argv[])
         auto initialState = make_unique<MainMenuState>(move(dispatcher));
 
         ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
+        app.withBundle<GraphicBundle>("Rtype");
+
         app.run();
     } catch(const exception& e) {
         cout << e.what() << endl;
