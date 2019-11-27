@@ -13,14 +13,15 @@
 
 using namespace std;
 
-class SFMLEventProducer : public AbstractEventProducer {
+class SFMLEventProducer : public IEventProducer {
 public:
-    SFMLEventProducer(sf::RenderWindow& window);
-    ~SFMLEventProducer() = default;
+    SFMLEventProducer(sf::RenderWindow& window, shared_ptr<deque<sf::Event>>);
+    ~SFMLEventProducer() final = default;
 
-    vector<ecs::Event> fetchEvents() final;
+    void pollEvents() final;
 private:
     sf::RenderWindow& m_window;
+    shared_ptr<deque<sf::Event>> m_events;
 };
 
 #endif //R_TYPE_SFMLEVENTPRODUCER_HPP

@@ -12,7 +12,15 @@ ecs::EntityRequest DrawSystem::getDependencies() const
 void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
     auto window = data->world.fetchResource<sf::RenderWindow *>("window");
+    auto& sfmlEventQueue = data->world.fetchResource<shared_ptr<deque<sf::Event>>>("sfEvents");
+    auto& transitionQueue = data->world.fetchResource<deque<ecs::Transition<string, ecs::Event>> *>("transitionQueue");
 
+    while (!sfmlEventQueue->empty()) {
+        auto& event = sfmlEventQueue->back();
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            transitionQueue->emplace_back(ecs::Transition<string, ecs::Event>::Name::POP, nullptr);
+        sfmlEventQueue->pop_back();
+    }
     if (window->setActive(true)) {
         auto sprite = data->world.fetchResource<sf::Sprite *>("shipSprite");
         window->clear();

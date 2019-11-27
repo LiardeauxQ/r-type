@@ -49,7 +49,7 @@ public:
 
     template <typename S>
     void registerSystem();
-    void attachThreadPool(ThreadPool<ecs::StateData<T>, ecs::Error> *pool);
+    void attachThreadPool(shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> pool);
 
     virtual void onStart(StateData<T>& data) = 0;
     virtual void onStop(StateData<T>& data) = 0;
@@ -95,7 +95,7 @@ AbstractState<T, E>::AbstractState(unique_ptr<ecs::Dispatcher<ecs::StateData<T>,
 {}
 
 template <typename T, typename E>
-void AbstractState<T, E>::attachThreadPool(ThreadPool<ecs::StateData<T>, ecs::Error> *pool)
+void AbstractState<T, E>::attachThreadPool(shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> pool)
 {
     m_dispatcher->attachThreadPool(pool);
 }

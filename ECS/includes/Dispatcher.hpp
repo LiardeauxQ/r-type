@@ -11,6 +11,7 @@
 #include "ISystem.hpp"
 #include <iostream>
 #include <queue>
+#include <array>
 
 namespace ecs {
 
@@ -23,9 +24,9 @@ public:
     Dispatcher(Dispatcher&& dispatcher) noexcept;
     Dispatcher& operator=(Dispatcher&& dispatcher) noexcept;
 
-    ~Dispatcher() = default;
+    ~Dispatcher();
 
-    void attachThreadPool(ThreadPool<T, E> *pool);
+    void attachThreadPool(shared_ptr<ThreadPool<T, E>> pool);
     void dispatch(shared_ptr<T> data);
 
     template<typename S>
@@ -35,8 +36,10 @@ public:
     void registerSystem(Args... args);
 
 private:
-    ThreadPool<T, E> *m_pool;
+    shared_ptr<ThreadPool<T, E>> m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
+    vector<bool> m_workersData;
+    [[nodiscard]] int prepareDispatch() const;
 };
 
 template <typename T, typename E>
@@ -55,23 +58,42 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
+int Dispatcher<T, E>::prepareDispatch(/* fetchedData */) const
+{
+    int i = 0;
+
+    while (true) {
+        if (!m_workersData[i] /* workerData.conflict(fetchedData) */)
+            return i;
+        i++;
+        i %= m_pool->m_nbThread;
+    }
+    return -1;
+}
+
+template <typename T, typename E>
 void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
 {
     if (!m_pool)
         throw "Cannot dispatch without a ThreadPool attached.";
     for (auto& s : m_systems) {
         // auto& fetchedData = m_world.fetch(s.getDependencies());
-        m_pool->enqueueWork([&s](shared_ptr<T> data) -> E {
-            (*s)(1, data);
-        }, inputData);
+        int index = this->prepareDispatch(/* fetchedData */);
+        if (index > -1) {
+            m_workersData[index] = true;
+            m_pool->enqueueWork([&s, this, index](shared_ptr<T> data) -> E {
+                (*s)(1, data);
+                this->m_workersData[index] = false;
+            }, inputData);
+        }
     }
-    m_pool->join();
 }
 
 template <typename T, typename E>
 Dispatcher<T, E>::Dispatcher()
     : m_pool(nullptr)
     , m_systems()
+    , m_workersData()
 {}
 
 template <typename T, typename E>
@@ -84,8 +106,11 @@ void Dispatcher<T, E>::registerSystem()
 }
 
 template <typename T, typename E>
-void Dispatcher<T, E>::attachThreadPool(ThreadPool<T, E> *pool)
+void Dispatcher<T, E>::attachThreadPool(shared_ptr<ThreadPool<T, E>> pool)
 {
+    m_workersData.reserve(pool->m_nbThread);
+    for (uint32_t i = 0; i < pool->m_nbThread; ++i)
+        m_workersData.push_back(false);
     m_pool = pool;
 }
 template <typename T, typename E>
@@ -94,6 +119,16 @@ void Dispatcher<T, E>::registerSystem(Args... args)
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
     m_systems.push_back(make_unique<S>(forward<Args>(args)...));
+}
+
+template <typename T, typename E>
+Dispatcher<T, E>::~Dispatcher()
+{
+    for (int i = 0; i < m_pool->m_nbThread; ++i)
+        if (m_workersData[i]) {
+            i--;
+            continue;
+        }
 }
 
 }

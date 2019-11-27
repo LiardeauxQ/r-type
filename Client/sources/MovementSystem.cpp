@@ -13,5 +13,6 @@ void MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>>
 {
     auto s = data->world.fetchResource<sf::Sprite *>("shipSprite");
     auto pos = s->getPosition();
-    s->move(static_cast<float>(data->delta), 0);
+    s->move(static_cast<float>(data->delta) * 10, 0);
+    cout << "Movement: " << this_thread::get_id() << endl;
 }

@@ -12,10 +12,13 @@ set(ECS
     ${ECS_SOURCES}/Event.cpp
     ${ECS_SOURCES}/EventHandler.cpp
     ${ECS_SOURCES}/BasicEntityComponentStorage.cpp)
+    ${ECS_SOURCES}/Bundle.cpp
+)
 
 add_library(ecs STATIC
     ${ECS}
 )
+
 find_package(Threads)
 
 target_include_directories(ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
