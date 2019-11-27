@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 pub struct Shield {
     pub max: u32,
@@ -9,14 +7,10 @@ pub struct Shield {
 
 impl Shield {
     pub fn new(max: u32, current: u32) -> Shield {
-        Shield {
-            max,
-            current
-        }
+        Shield { max, current }
     }
 }
 
 impl Component for Shield {
     type Storage = DenseVecStorage<Self>;
 }
-

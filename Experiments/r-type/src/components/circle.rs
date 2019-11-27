@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 pub struct Circle {
     pub radius: f32,
@@ -8,13 +6,10 @@ pub struct Circle {
 
 impl Circle {
     pub fn new(radius: f32) -> Circle {
-        Circle {
-            radius,
-        }
+        Circle { radius }
     }
 }
 
 impl Component for Circle {
     type Storage = DenseVecStorage<Self>;
 }
-

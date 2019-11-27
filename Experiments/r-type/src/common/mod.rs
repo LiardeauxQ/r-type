@@ -1,6 +1,8 @@
 mod math;
-mod load_sprite;
+mod asset;
 
 pub use self::math::Point;
 pub use self::math::Size;
-pub use self::load_sprite::load_sprite_sheet;
+pub use self::asset::SpriteSheetList;
+pub use self::asset::AssetType;
+pub use self::asset::SpriteInfo;

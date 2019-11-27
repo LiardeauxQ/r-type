@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 use crate::common::{Point, Size};
 
@@ -11,10 +9,7 @@ pub struct Frame {
 
 impl Frame {
     pub fn new(origin: Point, size: Size) -> Self {
-        Frame {
-            origin,
-            size
-        }
+        Frame { origin, size }
     }
 }
 

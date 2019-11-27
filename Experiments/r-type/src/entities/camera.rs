@@ -1,10 +1,6 @@
-use amethyst::{
-    core::transform::Transform,
-    prelude::*,
-    renderer::{Camera},
-};
+use amethyst::{core::transform::Transform, prelude::*, renderer::Camera};
 
-use crate::rtype::{WIDTH, HEIGHT};
+use crate::rtype::{HEIGHT, WIDTH};
 
 pub fn initialize_camera(world: &mut World) {
     let mut transform = Transform::default();

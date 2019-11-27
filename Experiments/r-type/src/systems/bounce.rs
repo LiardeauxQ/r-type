@@ -1,18 +1,18 @@
 use amethyst::{
-    core::{Transform, SystemDesc},
+    core::{SystemDesc, Transform},
     derive::SystemDesc,
     ecs::prelude::{Entities, Join, ReadStorage, System, SystemData, World, WriteStorage},
 };
 
-use crate::components::{Velocity, Circle, Collidee, Collider};
-use crate::physics::{SphereCollision, Collision};
-use crate::rtype::{WIDTH, HEIGHT};
-use crate::common::{Point};
+use crate::common::Point;
+use crate::components::{Circle, Collidee, Collider};
+use crate::physics::{Collision, SphereCollision};
+use crate::rtype::{HEIGHT, WIDTH};
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
 
-impl <'s> System<'s> for BounceSystem {
+impl<'s> System<'s> for BounceSystem {
     type SystemData = (
         Entities<'s>,
         WriteStorage<'s, Collidee>,
@@ -22,16 +22,11 @@ impl <'s> System<'s> for BounceSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            entities,
-            mut collidees,
-            mut colliders,
-            circles,
-            transforms
-        ) = data;
+        let (entities, mut collidees, mut colliders, circles, transforms) = data;
 
-        for (entity_collidee, trans_collidee, collidee, circle_collidee)
-            in (&entities, &transforms, &mut collidees, &circles).join() {
+        for (entity_collidee, trans_collidee, collidee, circle_collidee) in
+            (&entities, &transforms, &mut collidees, &circles).join()
+        {
             let x = trans_collidee.translation().x;
             let y = trans_collidee.translation().y;
 
@@ -41,15 +36,20 @@ impl <'s> System<'s> for BounceSystem {
             if y > HEIGHT || y < 0.0 {
                 collidee.y_collision = true;
             }
-            for (entity_collider, collider, trans_collider, circle_collider)
-                in (&entities, &mut colliders, &transforms, &circles).join() {
+            for (entity_collider, collider, trans_collider, circle_collider) in
+                (&entities, &mut colliders, &transforms, &circles).join()
+            {
                 if entity_collider == entity_collidee {
                     continue;
                 }
-                let p1 = Point::new(trans_collidee.translation().x,
-                                    trans_collidee.translation().y);
-                let p2 = Point::new(trans_collider.translation().x,
-                                        trans_collider.translation().y);
+                let p1 = Point::new(
+                    trans_collidee.translation().x,
+                    trans_collidee.translation().y,
+                );
+                let p2 = Point::new(
+                    trans_collider.translation().x,
+                    trans_collider.translation().y,
+                );
                 let coll1 = SphereCollision::new(circle_collidee.radius, p1);
                 let coll2 = SphereCollision::new(circle_collider.radius, p2);
 

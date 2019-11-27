@@ -1,12 +1,10 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 pub enum Direction {
     Top,
     Bottom,
     Left,
-    Right
+    Right,
 }
 
 pub struct Player {

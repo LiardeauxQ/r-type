@@ -1,11 +1,11 @@
 use amethyst::{
-    core::{Transform, SystemDesc},
-    derive::SystemDesc,
     core::timing::Time,
+    core::{SystemDesc, Transform},
+    derive::SystemDesc,
     ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
 };
 
-use crate::components::{Velocity, Collidee, Collider};
+use crate::components::{Collidee, Collider, Velocity};
 
 #[derive(SystemDesc)]
 pub struct MovementSystem;
@@ -28,7 +28,7 @@ impl<'s> System<'s> for MovementSystem {
 #[derive(SystemDesc)]
 pub struct UpdateVelocitySystem;
 
-impl <'s> System<'s> for UpdateVelocitySystem {
+impl<'s> System<'s> for UpdateVelocitySystem {
     type SystemData = (
         WriteStorage<'s, Velocity>,
         WriteStorage<'s, Collidee>,
@@ -36,14 +36,11 @@ impl <'s> System<'s> for UpdateVelocitySystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            mut velocities,
-            mut collidees,
-            mut colliders,
-        ) = data;
+        let (mut velocities, mut collidees, mut colliders) = data;
 
-        for (velocity, collider, collidee)
-            in (&mut velocities, &mut collidees, &mut colliders).join() {
+        for (velocity, collider, collidee) in
+            (&mut velocities, &mut collidees, &mut colliders).join()
+        {
             if collidee.x_collision || collider.x_collision {
                 velocity.x *= -1.0;
                 collidee.x_collision = false;

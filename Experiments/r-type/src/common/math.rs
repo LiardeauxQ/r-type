@@ -2,15 +2,12 @@ use std::fmt;
 
 pub struct Point {
     pub x: f32,
-    pub y: f32
+    pub y: f32,
 }
 
 impl Point {
     pub fn new(x: f32, y: f32) -> Self {
-        Point {
-            x,
-            y
-        }
+        Point { x, y }
     }
 }
 
@@ -27,9 +24,6 @@ pub struct Size {
 
 impl Size {
     pub fn new(width: f32, height: f32) -> Self {
-        Size {
-            width,
-            height,
-        }
+        Size { width, height }
     }
 }

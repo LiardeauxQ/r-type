@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 pub struct Velocity {
     pub x: f32,
@@ -9,10 +7,7 @@ pub struct Velocity {
 
 impl Velocity {
     pub fn new(x: f32, y: f32) -> Self {
-        Velocity {
-            x,
-            y
-        }
+        Velocity { x, y }
     }
 }
 

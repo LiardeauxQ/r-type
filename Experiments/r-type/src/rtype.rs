@@ -1,30 +1,25 @@
-use amethyst::{
-    assets::{AssetStorage, Loader, Handle},
-    core::transform::Transform,
-    prelude::*,
-    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
-};
+use amethyst::prelude::*;
 
 pub const WIDTH: f32 = 150.0;
 pub const HEIGHT: f32 = 150.0;
 
-use crate::components::{Velocity, Collidee, Collider, Player, Direction};
-use crate::common;
+use crate::common::{AssetType, SpriteInfo, SpriteSheetList};
 use crate::entities;
 
 pub struct RType;
 
 impl SimpleState for RType {
-
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        let world = data.world; 
-        let sprite_sheet_handle =
-            common::load_sprite_sheet(world,
-                                      "../assets/r-typesheet1.gif",
-                                      "../resources/r-typesheet1.ron");
+        let world = data.world;
+        let sprite_infos = vec![
+            SpriteInfo::new("r-typesheet1.gif", "player.ron", AssetType::Player),
+            SpriteInfo::new("r-typesheet1.gif", "bullet.ron", AssetType::Bullet),
+        ];
+        let mut sprite_sheet_list = SpriteSheetList::default();
 
-        world.register::<Player>();
-        entities::initialize_player(world, sprite_sheet_handle);
+        sprite_sheet_list.load_from(world, sprite_infos);
+        world.insert(sprite_sheet_list);
+        entities::initialize_player(world);
         entities::initialize_camera(world);
     }
 }

@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::prelude::{Component, DenseVecStorage},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 pub struct Health {
     pub max: u32,
@@ -9,10 +7,7 @@ pub struct Health {
 
 impl Health {
     pub fn new(max: u32, current: u32) -> Health {
-        Health {
-            max,
-            current
-        }
+        Health { max, current }
     }
 }
 

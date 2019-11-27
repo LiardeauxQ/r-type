@@ -1,13 +1,13 @@
 use amethyst::{
-    core::{Transform, SystemDesc},
-    derive::SystemDesc,
     core::timing::Time,
+    core::{SystemDesc, Transform},
+    derive::SystemDesc,
     ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
-    renderer::{SpriteRender},
     input::{InputHandler, StringBindings},
+    renderer::SpriteRender,
 };
 
-use crate::components::{Player, Direction, Velocity};
+use crate::components::{Direction, Player, Velocity};
 
 #[derive(SystemDesc)]
 pub struct PlayerSystem;
@@ -19,18 +19,15 @@ impl<'s> System<'s> for PlayerSystem {
         WriteStorage<'s, SpriteRender>,
         WriteStorage<'s, Transform>,
         Read<'s, InputHandler<StringBindings>>,
+        Read<'s, Time>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            velocities,
-            mut players,
-            mut renders,
-            mut transforms,
-            input,
-        ) = data;
+        let (velocities, mut players, mut renders, mut transforms, input, time) = data;
 
-        for (player, velocity, transform, render) in (&mut players, &velocities, &mut transforms, &mut renders).join() {
+        for (player, velocity, transform, render) in
+            (&mut players, &velocities, &mut transforms, &mut renders).join()
+        {
             update_player_direction(player, &input);
             let movement = match player.direction {
                 Direction::Top | Direction::Bottom => input.axis_value("y_movement"),
@@ -38,10 +35,10 @@ impl<'s> System<'s> for PlayerSystem {
             };
             if let Some(mv_amount) = movement {
                 match player.direction {
-                    Direction::Top | Direction::Bottom =>
-                        transform.prepend_translation_y(velocity.x * mv_amount),
-                    Direction::Left | Direction::Right =>
-                        transform.prepend_translation_x(velocity.y * mv_amount),
+                    Direction::Top | Direction::Bottom => transform
+                        .prepend_translation_y(velocity.x * time.delta_seconds() * mv_amount),
+                    Direction::Left | Direction::Right => transform
+                        .prepend_translation_x(velocity.y * time.delta_seconds() * mv_amount),
                 };
             }
         }
