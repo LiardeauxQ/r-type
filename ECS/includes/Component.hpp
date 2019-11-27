@@ -17,41 +17,31 @@ enum AttributeType {
 };
 
 /// TODO: Implements Serialize/Deserialize
-class ComponentAttributeSchema {
+struct ComponentAttributeSchema {
 
-public:
     ComponentAttributeSchema(String name, AttributeType type);
 
-private:
     String m_name;
     AttributeType m_type;
 };
 
 /// TODO: Implements Serialize/Deserialize
-class ComponentSchema {
+struct ComponentSchema {
 
-public:
     ComponentSchema(String name, Vec<ComponentAttributeSchema> attributesSchema);
     ComponentSchema(ComponentSchema&& schema) noexcept;
     ComponentSchema& operator=(ComponentSchema&& rhs) noexcept;
 
-    [[nodiscard]] const String& getName() const { return m_name; }
-
-private:
-    String m_name;
     Vec<ComponentAttributeSchema> m_attributesSchema;
+    String m_name;
 };
 
 /// TODO: Implements Serialize/Deserialize
-class ComponentAttribute {
+struct ComponentAttribute {
 
-public:
     ComponentAttribute(String name, AttributeType type, std::any value);
 
     [[nodiscard]] bool complyWith(const ComponentAttributeSchema& schema) const;
-
-    [[nodiscard]] const String& getName() const { return m_name; }
-    [[nodiscard]] AttributeType getType() const { return m_type; }
 
     template<typename T>
     const T& getValue() const
@@ -60,7 +50,6 @@ public:
     }
 
     std::any m_value;
-private:
     String m_name;
     AttributeType m_type;
 };

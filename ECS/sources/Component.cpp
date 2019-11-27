@@ -40,8 +40,10 @@ namespace ecs {
         return attributes;
     }
 
+
+
     void Component::addAttribute(ComponentAttribute attribute) {
-        m_attributes.insert({ attribute.getName(), move(attribute) });
+        m_attributes.insert({ attribute.m_name, move(attribute) });
     }
 
     void Component::removeAttribute(const String& name) {
@@ -53,7 +55,12 @@ namespace ecs {
     }
 
     bool Component::complyWith(const ComponentSchema &schema) const {
-        for (auto attributes : m_attributes) {
+        if (m_attributes.size() == schema.m_attributesSchema.size()) {
+            for (const auto& attribute : schema.m_attributesSchema) {
+                auto tempAttribute = m_attributes.find(attribute.m_name);
+                if (tempAttribute == m_attributes.end() || !tempAttribute->second.complyWith(attribute))
+                    return false;
+            }
         }
         return true;
     }
@@ -62,6 +69,9 @@ namespace ecs {
         return m_attributes.at(name);
     }
 
+    bool ComponentAttribute::complyWith(const ComponentAttributeSchema& schema) const {
+        return m_type == schema.m_type;
+    }
     
     ComponentAttributeSchema::ComponentAttributeSchema(String name, AttributeType type)
         : m_name(move(name))
@@ -104,8 +114,8 @@ std::ostream &operator<<(std::ostream &stream, const ecs::Component &comp) {
 }
 
 std::ostream &operator<<(std::ostream &stream, const ecs::ComponentAttribute &attr) {
-    stream << attr.getName() << ": ";
-    switch (attr.getType()) {
+    stream << attr.m_name << ": ";
+    switch (attr.m_type) {
         case ecs::AttributeType::INT:
             stream << "Int(" << attr.getValue<int>() << ")";
             break;
