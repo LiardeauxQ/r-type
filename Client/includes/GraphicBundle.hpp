@@ -12,7 +12,7 @@
 class GraphicBundle : public ecs::Bundle {
 public:
     explicit GraphicBundle(string windowName);
-    virtual ~GraphicBundle() = default;
+    ~GraphicBundle() override = default;
     void load(ecs::World& m_world, EventHandler& handler) final;
 
 private:

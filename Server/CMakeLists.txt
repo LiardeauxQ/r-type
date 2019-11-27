@@ -19,6 +19,7 @@ set_property(TARGET r-type_server PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED YES)
 
 target_link_libraries(r-type_server ecs common network)
+
 if (NOT APPLE)
     target_link_libraries(r-type_server crypto)
 endif()

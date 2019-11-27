@@ -12,6 +12,7 @@ set(ECS
     ${ECS_SOURCES}/EventHandler.cpp
     ${ECS_SOURCES}/BasicEntityComponentStorage.cpp
     ${ECS_SOURCES}/Bundle.cpp
+    ${ECS_SOURCES}/World.cpp
 )
 
 add_library(ecs STATIC

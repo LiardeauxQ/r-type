@@ -25,8 +25,6 @@ public:
     explicit World(unique_ptr<IEntityComponentStorage> storage);
     ~World() = default;
 
-    void registerComponent(string schema);
-
     template<typename T>
     T& fetchResource(const string& name)
     {
@@ -70,14 +68,5 @@ private:
     unordered_map<string, any> m_resources;
     unordered_map<string, vector<Component>> m_components;
 };
-
-void World::storeEntity(Entity entity)
-{
-    m_storage->store({ move(entity) }); //TODO: use store unique.
-}
-
-World::World(unique_ptr<IEntityComponentStorage> storage)
-    : m_storage(move(storage))
-{}
 
 }
