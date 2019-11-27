@@ -2,6 +2,8 @@
 // Created by nwmqpa on 13/11/19
 //
 
+#include <iostream>
+#include <algorithm>
 #include "Definitions.hpp"
 #include "MD5Hasher.hpp"
 
@@ -23,5 +25,20 @@ String MD5Hasher::hash(String const &toHash) {
 #endif
     auto str = String(reinterpret_cast<char *>(data));
     delete[] data;
+    return str;
+}
+
+String MD5Hasher::genRandomString(size_t length) {
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[rand() % max_index];
+    };
+    String str(length, 0);
+    std::generate_n(str.begin(), length, randchar);
     return str;
 }

@@ -16,6 +16,9 @@ namespace ecs {
         public:
             EntityRequest(ComponentVector withs, ComponentVector without);
 
+            ComponentVector getWiths() const { return m_withs; }
+            ComponentVector getWithouts() const { return m_withouts; }
+
         private:
             ComponentVector m_withs;
             ComponentVector m_withouts;

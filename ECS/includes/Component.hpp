@@ -16,6 +16,35 @@ namespace ecs {
         STRING = 3
     };
 
+
+    /// TODO: Implements Serialize/Deserialize
+    class ComponentAttributeSchema {
+
+        public:
+            ComponentAttributeSchema(const String &name, AttributeType type);
+
+        private:
+            String m_name;
+            AttributeType m_type;
+
+    };
+
+    /// TODO: Implements Serialize/Deserialize
+    class ComponentSchema {
+
+        public:
+            ComponentSchema(const String &name, Vec<ComponentAttributeSchema> &attributesSchema);
+
+            String getName() const { return m_name; }
+            
+
+        private:
+            String m_name;
+            Vec<ComponentAttributeSchema> m_attributesSchema;
+
+    };
+
+
     /// TODO: Implements Serialize/Deserialize
     class ComponentAttribute {
 
@@ -30,7 +59,10 @@ namespace ecs {
                 m_value = value;
             }
 
+            bool complyWith(const ComponentAttributeSchema &schema);
+
             String getName() const { return m_name; }
+            AttributeType getType() const { return m_type; }
 
         private:
             String m_name;
@@ -43,40 +75,19 @@ namespace ecs {
     class Component {
 
         public:
+            Component();
             Component(const String &name);
 
-            void addAttribute(ComponentAttribute &attribute);
+            void addAttribute(ComponentAttribute attribute);
             void removeAttribute(String name);
             ComponentAttribute &getAttribute(String name);
+            Vec<ComponentAttribute> getAttributes() const;
             String getName() const;
+            bool complyWith(const ComponentSchema &schema);
 
         private:
             String m_name;
             HashMap<String, ComponentAttribute> m_attributes;
-
-    };
-
-    /// TODO: Implements Serialize/Deserialize
-    class ComponentAttributeSchema {
-
-        public:
-            ComponentAttributeSchema(const String &name, AttributeType &type);
-
-        private:
-            String m_name;
-            AttributeType m_type;
-
-    };
-
-    /// TODO: Implements Serialize/Deserialize
-    class ComponentSchema {
-
-        public:
-            ComponentSchema(const String &name, Vec<ComponentAttributeSchema> &attributesSchema);
-
-        private:
-            String m_name;
-            Vec<ComponentAttributeSchema> m_attributesSchema;
 
     };
 
@@ -89,7 +100,7 @@ namespace ecs {
 
         public:
             ComponentSchemaBuilder(const String &name);
-            ComponentSchemaBuilder with(ComponentAttributeSchema &attributeSchema);
+            ComponentSchemaBuilder with(ComponentAttributeSchema attributeSchema);
             ComponentSchema build();
 
         private:
@@ -98,3 +109,6 @@ namespace ecs {
     };
 
 }
+
+std::ostream &operator<<(std::ostream &stream, const ecs::Component &comp);
+std::ostream &operator<<(std::ostream &stream, const ecs::ComponentAttribute &attr);

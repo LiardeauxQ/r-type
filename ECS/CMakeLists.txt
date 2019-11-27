@@ -10,7 +10,8 @@ set(ECS
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp
     ${ECS_SOURCES}/Event.cpp
-    ${ECS_SOURCES}/EventHandler.cpp)
+    ${ECS_SOURCES}/EventHandler.cpp
+    ${ECS_SOURCES}/BasicEntityComponentStorage.cpp)
 
 add_library(ecs STATIC
     ${ECS}

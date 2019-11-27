@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ostream>
 #include "MessageFactory.hpp"
+#include "BasicEntityComponentStorage.hpp"
 /*#include <GameServer.hpp>
 
 #ifndef VERSION
@@ -82,5 +83,48 @@ int main(void) {
     for (auto it = packets4.begin(); it != packets4.end(); ++it) {
         std::cout << (*it).get() << std::endl;
     }
+
+    ecs::BasicEntityComponentStorage storage;
+
+    storage.addComponentSchema(
+        ecs::ComponentSchemaBuilder(String("Position"))
+            .with(ecs::ComponentAttributeSchema("x", ecs::AttributeType::INT))
+            .with(ecs::ComponentAttributeSchema("y", ecs::AttributeType::INT))
+            .with(ecs::ComponentAttributeSchema("z", ecs::AttributeType::STRING))
+            .build()
+    );
+    storage.addComponentSchema(
+        ecs::ComponentSchemaBuilder(String("Velocity"))
+            .with(ecs::ComponentAttributeSchema("x", ecs::AttributeType::INT))
+            .with(ecs::ComponentAttributeSchema("y", ecs::AttributeType::INT))
+            .with(ecs::ComponentAttributeSchema("z", ecs::AttributeType::STRING))
+            .build()
+    );
+    auto entities = Vec<ecs::Entity>();
+    for (int i = 0; i < 10; i++) {
+        auto position = ecs::Component("Position");
+        auto velocity = ecs::Component("Velocity");
+
+        position.addAttribute(ecs::ComponentAttribute(String("x"), ecs::AttributeType::INT, std::any(i)));
+        position.addAttribute(ecs::ComponentAttribute(String("y"), ecs::AttributeType::INT, std::any(i)));
+        position.addAttribute(ecs::ComponentAttribute(String("z"), ecs::AttributeType::STRING, std::any(String("TESTVEL"))));
+        velocity.addAttribute(ecs::ComponentAttribute(String("x"), ecs::AttributeType::INT, std::any(i)));
+        velocity.addAttribute(ecs::ComponentAttribute(String("y"), ecs::AttributeType::INT, std::any(i)));
+        velocity.addAttribute(ecs::ComponentAttribute(String("z"), ecs::AttributeType::STRING, std::any(String("TESTVEL"))));
+        auto entityBuilder = ecs::EntityBuilder().with(position);
+        if (i % 2)
+            entityBuilder.with(velocity);
+        entities.push_back(entityBuilder.build());
+    }
+    storage.store(entities);
+    auto request = ecs::EntityRequestBuilder()
+        .with(String("Position"))
+        .with(String("Velocity"))
+        .build();
+    auto newEntities = storage.request(request);
+    for (auto entity : newEntities) {
+        std::cout << entity.getName() << std::endl;
+    }
+    std::cout << storage << std::endl;
 
 }

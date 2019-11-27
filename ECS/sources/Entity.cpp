@@ -2,16 +2,36 @@
 // Created by nwmqpa on 11/10/19
 //
 
+#include "MD5Hasher.hpp"
 #include "Entity.hpp"
 
 namespace ecs {
 
     Entity::Entity(Vec<Component> components)
     : m_components()
+    , m_isDirty(true)
+    , m_name(MD5Hasher::genRandomString(32))
     {
         for (auto component : components) {
             m_components.insert({component.getName(), component});
         }
+    }
+
+    Entity::Entity(Vec<Component> components, String name)
+    : m_components()
+    , m_isDirty(true)
+    , m_name(name)
+    {
+        for (auto component : components) {
+            m_components.insert({component.getName(), component});
+        }
+    }
+
+    Entity::Entity(const Entity &entity)
+    : m_components(entity.m_components)
+    , m_isDirty(entity.m_isDirty)
+    , m_name(entity.m_name)
+    {
     }
 
     Component &Entity::getComponent(String componentName) {
@@ -37,6 +57,10 @@ namespace ecs {
 
     Entity EntityBuilder::build() {
         return Entity(m_components);
+    }
+
+    Entity EntityBuilder::build(const String &name) {
+        return Entity(m_components, name);
     }
 
 }
