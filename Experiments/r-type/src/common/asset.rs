@@ -9,6 +9,7 @@ use std::collections::HashMap;
 pub enum AssetType {
     Player,
     Bullet,
+    Button,
 }
 
 pub struct SpriteInfo<'a> {

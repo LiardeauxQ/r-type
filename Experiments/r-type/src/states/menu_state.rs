@@ -3,6 +3,14 @@ use amethyst::{
     prelude::*,
 };
 
+use crate::entities;
+
+pub enum MenuButton {
+    StartGame = 0,
+    Options = 2,
+    ExitGame = 4,
+}
+
 pub struct MenuState;
 
 impl SimpleState for MenuState {
