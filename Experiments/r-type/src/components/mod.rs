@@ -7,6 +7,7 @@ mod collisions;
 mod player;
 mod frame;
 mod bullet;
+mod attack;
 
 pub use self::circle::Circle;
 pub use self::velocity::Velocity;
@@ -19,3 +20,4 @@ pub use self::player::Player;
 pub use self::player::Direction;
 pub use self::frame::Frame;
 pub use self::bullet::Bullet;
+pub use self::attack::AttackSpeed;

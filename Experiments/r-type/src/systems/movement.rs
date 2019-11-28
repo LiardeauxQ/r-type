@@ -5,22 +5,23 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
 };
 
-use crate::components::{Collidee, Collider, Velocity};
+use crate::components::{Player, Collidee, Collider, Velocity};
 
 #[derive(SystemDesc)]
 pub struct MovementSystem;
 
 impl<'s> System<'s> for MovementSystem {
     type SystemData = (
+        ReadStorage<'s, Player>,
         ReadStorage<'s, Velocity>,
         WriteStorage<'s, Transform>,
         Read<'s, Time>,
     );
 
-    fn run(&mut self, (velocities, mut locals, time): Self::SystemData) {
-        for (velocity, local) in (&velocities, &mut locals).join() {
-            local.prepend_translation_x(velocity.x * time.delta_seconds());
-            local.prepend_translation_y(velocity.y * time.delta_seconds());
+    fn run(&mut self, (players, velocities, mut transforms, time): Self::SystemData) {
+        for (velocity, transform, ()) in (&velocities, &mut transforms, !&players).join() {
+            transform.prepend_translation_x(velocity.x * time.delta_seconds());
+            transform.prepend_translation_y(velocity.y * time.delta_seconds());
         }
     }
 }

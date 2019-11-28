@@ -7,7 +7,7 @@ use amethyst::{
 use crate::common::Point;
 use crate::components::{Circle, Collidee, Collider};
 use crate::physics::{Collision, SphereCollision};
-use crate::rtype::{HEIGHT, WIDTH};
+use crate::states::{HEIGHT, WIDTH};
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;

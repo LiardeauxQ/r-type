@@ -1,4 +1,5 @@
 extern crate amethyst;
+
 use amethyst::{
     core::transform::TransformBundle,
     input::{InputBundle, StringBindings},
@@ -16,10 +17,10 @@ mod common;
 mod components;
 mod entities;
 mod physics;
-mod rtype;
+mod states;
 mod systems;
 
-use crate::rtype::RType;
+use crate::states::LoadState;
 
 fn init_game_data<'a, 'b>() -> Result<GameDataBuilder<'a, 'b>, Error> {
     let app_root = application_root_dir()?;
@@ -39,8 +40,9 @@ fn init_game_data<'a, 'b>() -> Result<GameDataBuilder<'a, 'b>, Error> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
-        .with(systems::PlayerSystem, "player_system", &["input_system"]))
-    //.with(systems::MovementSystem, "movement_system", &[])
+        .with(systems::PlayerSystem, "player_system", &["input_system"])
+        .with(systems::FireSystem, "fire_system", &["input_system"])
+        .with(systems::MovementSystem, "movement_system", &[]))
     //.with(systems::BounceSystem, "bounce_system", &["movement_system"])
     //.with(systems::UpdateVelocitySystem, "update_velocity_system", &["movement_system", "bounce_system"]);
 }
@@ -51,8 +53,7 @@ fn main() -> Result<(), amethyst::Error> {
     let app_root = application_root_dir()?;
     let assets_dir = app_root.join("assets");
     let game_data = init_game_data()?;
-    let mut world = World::new();
-    let mut game = Application::new(assets_dir, RType, game_data)?;
+    let mut game = Application::new(assets_dir, LoadState::default(), game_data)?;
 
     game.run();
     Ok(())
