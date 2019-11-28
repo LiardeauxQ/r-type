@@ -12,8 +12,8 @@ impl SimpleState for RType {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
         let sprite_infos = vec![
-            SpriteInfo::new("r-typesheet1.gif", "player.ron", AssetType::Player),
-            SpriteInfo::new("r-typesheet1.gif", "bullet.ron", AssetType::Bullet),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", AssetType::Player),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", AssetType::Bullet),
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
