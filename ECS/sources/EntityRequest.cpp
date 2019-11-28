@@ -11,6 +11,11 @@ namespace ecs {
     , m_withouts(without)
     {}
 
+    EntityRequest::EntityRequest(EntityRequest&& entity) noexcept
+        : m_withs(move(entity.m_withs))
+        , m_withouts(move(entity.m_withouts))
+    {}
+
     EntityRequestBuilder::EntityRequestBuilder()
     : m_withs()
     , m_withouts()
