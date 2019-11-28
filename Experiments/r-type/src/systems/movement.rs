@@ -42,7 +42,7 @@ impl<'s> System<'s> for UpdateVelocitySystem {
         for (velocity, collider, collidee) in
             (&mut velocities, &mut collidees, &mut colliders).join()
         {
-            if collidee.x_collision || collider.x_collision {
+            /*if collidee.x_collision || collider.x_collision {
                 velocity.x *= -1.0;
                 collidee.x_collision = false;
                 collider.x_collision = false;
@@ -51,7 +51,7 @@ impl<'s> System<'s> for UpdateVelocitySystem {
                 velocity.y *= -1.0;
                 collidee.y_collision = false;
                 collider.y_collision = false;
-            }
+            }*/
         }
     }
 }

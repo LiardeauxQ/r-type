@@ -8,8 +8,8 @@ use amethyst::{
     input::{InputHandler, StringBindings},
 };
 
-use crate::common::{AssetType, SpriteSheetList};
-use crate::components::{Player, AttackSpeed};
+use crate::common::{SpriteSheetList};
+use crate::components::{Player, AttackSpeed, Team};
 use crate::entities;
 
 #[derive(SystemDesc)]
@@ -21,6 +21,7 @@ impl<'s> System<'s> for FireSystem {
         ReadStorage<'s, Player>,
         WriteStorage<'s, AttackSpeed>,
         ReadStorage<'s, Transform>,
+        ReadStorage<'s, Team>,
         ReadExpect<'s, LazyUpdate>,
         ReadExpect<'s, SpriteSheetList>,
         Read<'s, InputHandler<StringBindings>>,
@@ -32,21 +33,22 @@ impl<'s> System<'s> for FireSystem {
             players,
             mut attack_speeds,
             transforms,
+            teams,
             lazy_update,
             sprite_sheet_list,
             input,
         ) = data;
 
-        for (player, transform, attack_speed) in (&players, &transforms, &mut attack_speeds).join() {
+        for (player, transform, attack_speed, team) in (&players, &transforms, &mut attack_speeds, &teams).join() {
             if let Some(action) = input.action_is_down("flex") {
                 if !action || (attack_speed.elapsed_time.elapsed() < attack_speed.frequency) {
                     continue;
                 }
                 if let Some(sprite_sheet) = sprite_sheet_list
-                    .get(AssetType::Bullet)
+                    .get("bullet")
                     .ok_or("Cannot fetch sprite sheet")
                     .ok() {
-                    entities::spawn_bullet(&entities, sprite_sheet.clone(), &lazy_update, &transform);
+                    entities::spawn_bullet(&entities, sprite_sheet.clone(), &lazy_update, &transform, &team);
                     attack_speed.elapsed_time.restart();
                 }
             }

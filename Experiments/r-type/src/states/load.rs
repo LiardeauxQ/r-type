@@ -3,8 +3,8 @@ use amethyst::{
     prelude::*,
 };
 
-use crate::common::{AssetType, SpriteInfo, SpriteSheetList};
-use crate::components::{Bullet};
+use crate::common::{SpriteInfo, SpriteSheetList};
+use crate::components::{Bullet, Enemy, Shield};
 use crate::states::RType;
 
 #[derive(Default)]
@@ -16,8 +16,9 @@ impl SimpleState for LoadState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
         let sprite_infos = vec![
-            SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", AssetType::Player),
-            SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", AssetType::Bullet),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", "player"),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", "bullet"),
+            SpriteInfo::new("r-typesheet5.gif", "../resources/enemy.ron", "enemy"),
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
@@ -27,6 +28,8 @@ impl SimpleState for LoadState {
         });
         world.insert(sprite_sheet_list);
         world.register::<Bullet>();
+        world.register::<Enemy>();
+        world.register::<Shield>();
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
