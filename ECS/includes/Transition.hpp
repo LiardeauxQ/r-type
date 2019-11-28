@@ -14,25 +14,28 @@ namespace ecs {
 template <typename T, typename E>
 class AbstractState;
 
+
+enum TransitionName {
+    POP,
+    QUIT,
+    PUSH,
+    NONE,
+};
+
 template <typename T, typename E>
 struct Transition {
-    enum Name {
-        POP,
-        QUIT,
-        PUSH,
-        NONE,
-    };
 
-    explicit Transition(Name trans = NONE, unique_ptr<AbstractState<T, E>> newState = nullptr);
+
+    explicit Transition(TransitionName trans = NONE, unique_ptr<AbstractState<T, E>> newState = nullptr);
     Transition(Transition&& trans) noexcept;
     Transition& operator=(Transition&& trans) noexcept;
 
-    Name m_transition;
+    TransitionName m_transition;
     unique_ptr<AbstractState<T, E>> m_newState;
 };
 
 template <typename T, typename E>
-Transition<T, E>::Transition(Transition::Name trans, unique_ptr<AbstractState<T, E>> newState)
+Transition<T, E>::Transition(TransitionName trans, unique_ptr<AbstractState<T, E>> newState)
     : m_transition(trans)
     , m_newState(move(newState))
 {

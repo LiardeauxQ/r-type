@@ -18,7 +18,7 @@ void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> dat
     while (!sfmlEventQueue->empty()) {
         auto& event = sfmlEventQueue->back();
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-            transitionQueue->emplace_back(ecs::Transition<string, ecs::Event>::Name::POP, nullptr);
+            transitionQueue->emplace_back(ecs::TransitionName::POP, nullptr);
         sfmlEventQueue->pop_back();
     }
     if (window->setActive(true)) {

@@ -78,7 +78,7 @@ void StateMachine<T, E>::update(StateData<T> stateData)
         if (!m_states.empty()) {
             trans = m_states.back()->update(stateData);
         } else {
-            trans = Transition<T, E>(Transition<T, E>::Name::QUIT);
+            trans = Transition<T, E>(TransitionName::QUIT);
             m_running = false;
         }
         for (auto& s : m_states)
@@ -91,18 +91,18 @@ template <typename T, typename E>
 void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 {
     switch (trans.m_transition) {
-    case Transition<T, E>::Name::POP:
+    case TransitionName::POP:
         this->pop(data);
         break;
-    case Transition<T, E>::Name::PUSH:
+    case TransitionName::PUSH:
         this->push(move(trans.m_newState), data);
         break;
-    case Transition<T, E>::Name::QUIT:
+    case TransitionName::QUIT:
         for (auto& s : m_states)
             s->onStop(data);
         m_running = false;
         break;
-    case Transition<T, E>::NONE:
+    case TransitionName::NONE:
         break;
     }
 }
