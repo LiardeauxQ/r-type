@@ -18,7 +18,7 @@ BasicEntityComponentStorage::BasicEntityComponentStorage()
 bool BasicEntityComponentStorage::hasSchema(const String& name) const
 {
     for (const auto& m_schema : m_schemas) {
-        if (m_schema.getName() == name) {
+        if (m_schema.m_name == name) {
             return true;
         }
     }
@@ -27,16 +27,16 @@ bool BasicEntityComponentStorage::hasSchema(const String& name) const
 
 void BasicEntityComponentStorage::addComponentSchema(ComponentSchema schema)
 {
-    if (hasSchema(schema.getName()))
+    if (hasSchema(schema.m_name))
         throw SchemaNameAlreadyExistsException();
     m_schemas.push_back(move(schema));
-    m_components[schema.getName()] = Map<String, Component>();
+    m_components[schema.m_name] = Map<String, Component>();
 }
 
 void BasicEntityComponentStorage::removeComponentSchema(const String& name)
 {
     for (auto it = m_schemas.begin(); it != m_schemas.end(); it++) {
-        if (it->getName() == name) {
+        if (it->m_name == name) {
             m_schemas.erase(it, it + 1);
             break;
         }
@@ -109,7 +109,7 @@ void BasicEntityComponentStorage::store(const Vec<Entity>& entities)
 const ComponentSchema& BasicEntityComponentStorage::getSchema(const String& name) const
 {
     for (const auto &m_schema : m_schemas) {
-        if (m_schema.getName() == name) {
+        if (m_schema.m_name == name) {
             return m_schema;
         }
     }
@@ -128,8 +128,8 @@ Map<String, Component> BasicEntityComponentStorage::getComponents(const String& 
 std::ostream& operator<<(std::ostream& stream, const ecs::BasicEntityComponentStorage& components)
 {
     for (const auto& schema : components.m_schemas) {
-        stream << schema.getName() << ":" << std::endl;
-        for (const auto& map : components.getComponents(schema.getName())) {
+        stream << schema.m_name << ":" << std::endl;
+        for (const auto& map : components.getComponents(schema.m_name)) {
             stream << "\t" << map.first << ": " << map.second << std::endl;
         }
         stream << std::endl;
