@@ -26,40 +26,19 @@ public:
     ~World() = default;
 
     template<typename T>
-    T& fetchResource(const string& name)
-    {
-        return any_cast<T&>(m_resources.at(name));
-    }
+    T& fetchResource(const string& name);
 
     template<typename T>
-    void writeResource(const string& name, T&& data)
-    {
-        m_resources.insert_or_assign(name, forward<T>(data));
-    }
+    void writeResource(const string& name, T&& data);
 
     template<typename T>
-    void writeResource(const string& name)
-    {
-        static_assert(is_default_constructible<T>::value, "To write a resource without argument the class need to implement a default constructor.");
-        m_resources[name] = make_any<T>();
-    }
+    void writeResource(const string& name);
 
     template<typename T, typename... Args>
-    void writeResource(const string& name, Args&&... args)
-    {
-        m_resources.insert_or_assign(name, make_any<T>(forward<Args>(args)...));
-    }
+    void writeResource(const string& name, Args&&... args);
 
-    vector<Entity> fetchStorage(EntityRequest request)
-    {
-        return m_storage->request(move(request));
-    }
-
-    void registerComponent(ComponentSchema schema)
-    {
-        m_storage->addComponentSchema(move(schema));
-    }
-
+    vector<Entity> fetchStorage(EntityRequest request);
+    void registerComponent(ComponentSchema schema);
     void storeEntity(Entity entity);
 
     StopWatch m_timer;
@@ -68,5 +47,30 @@ private:
     unordered_map<string, any> m_resources;
     unordered_map<string, vector<Component>> m_components;
 };
+
+template<typename T>
+T& World::fetchResource(const string& name)
+{
+    return any_cast<T&>(m_resources.at(name));
+}
+
+template<typename T>
+void World::writeResource(const string& name, T&& data)
+{
+    m_resources.insert_or_assign(name, forward<T>(data));
+}
+
+template<typename T>
+void World::writeResource(const string& name)
+{
+    static_assert(is_default_constructible<T>::value, "To write a resource without argument the class need to implement a default constructor.");
+    m_resources[name] = make_any<T>();
+}
+
+template<typename T, typename... Args>
+void World::writeResource(const string& name, Args&&... args)
+{
+    m_resources.insert_or_assign(name, make_any<T>(forward<Args>(args)...));
+}
 
 }
