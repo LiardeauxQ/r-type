@@ -25,3 +25,19 @@ impl AttackSpeed {
 impl Component for AttackSpeed {
     type Storage = DenseVecStorage<Self>;
 }
+
+pub struct Damage {
+    pub amount: i32,
+}
+
+impl Damage {
+    pub fn new(amount: i32) -> Self {
+        Damage {
+            amount
+        }
+    }
+}
+
+impl Component for Damage {
+    type Storage = DenseVecStorage<Self>;
+}
