@@ -5,9 +5,10 @@ use amethyst::{
 };
 
 use crate::common::Point;
-use crate::components::{Circle, Collidee, Collider};
-use crate::physics::{Collision, SphereCollision};
+use crate::components::{Circle, Collidee, Collider, Damage, Health, Team};
+use crate::physics::SphereCollision;
 use crate::states::{HEIGHT, WIDTH};
+use std::ptr;
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
@@ -16,75 +17,62 @@ impl<'s> System<'s> for BounceSystem {
     type SystemData = (
         Entities<'s>,
         WriteStorage<'s, Collidee>,
-        WriteStorage<'s, Collider>,
-        ReadStorage<'s, Circle>,
+        ReadStorage<'s, Collider>,
+        ReadStorage<'s, Damage>,
         ReadStorage<'s, Transform>,
+        ReadStorage<'s, Team>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (entities, mut collidees, mut colliders, circles, transforms) = data;
+        let (entities, mut collidees, colliders, damages, transforms, teams) = data;
 
-        for (entity_collidee, trans_collidee, collidee, circle_collidee) in
-            (&entities, &transforms, &mut collidees, &circles).join()
+        for (entity, collider, damage, transform, team) in
+            (&entities, &colliders, &damages, &transforms, &teams).join()
         {
-            let x = trans_collidee.translation().x;
-            let y = trans_collidee.translation().y;
-
-            if x > WIDTH || x < 0.0 {
-                collidee.x_collision = true;
-            }
-            if y > HEIGHT || y < 0.0 {
-                collidee.y_collision = true;
-            }
-            for (entity_collider, collider, trans_collider, circle_collider) in
-                (&entities, &mut colliders, &transforms, &circles).join()
+            for (entity_collidee, collidee, damage_collidee, transform_collidee, team_collidee) in
+                (&entities, &mut collidees, &damages, &transforms, &teams).join()
             {
-                if entity_collider == entity_collidee {
+                if entity == entity_collidee || team.id == team_collidee.id {
                     continue;
                 }
-                let p1 = Point::new(
-                    trans_collidee.translation().x,
-                    trans_collidee.translation().y,
-                );
-                let p2 = Point::new(
-                    trans_collider.translation().x,
-                    trans_collider.translation().y,
-                );
-                let coll1 = SphereCollision::new(circle_collidee.radius, p1);
-                let coll2 = SphereCollision::new(circle_collider.radius, p2);
-
-                if coll1.is_colliding_with(&coll2) {
-                    *collider = update_collision_from(&coll1.center, &coll2.center);
+                let x = transform_collidee.translation().x;
+                let y = transform_collidee.translation().y;
+                let cx = transform.translation().x;
+                let cy = transform.translation().y;
+                if x >= cx - 30.0 && x <= cx + 30.0 && y >= cy - 30.0 && y <= cy + 30.0 {
+                    collidee.x_collision = true;
+                    collidee.y_collision = true;
+                    collidee.data.damage_amount = damage.amount;
                 }
             }
         }
     }
 }
 
-fn update_collision_from(p1: &Point, p2: &Point) -> Collider {
-    let mut collider = Collider::default();
+#[derive(SystemDesc)]
+pub struct CollisionSystem;
 
-    if come_from_x_axe(p1, p2, 15.0 * 0.5) {
-        collider.x_collision = true;
-    } else if come_from_y_axe(p1, p2, 15.0 * 0.5) {
-        collider.y_collision = true;
-    } else {
-        collider.x_collision = true;
-        collider.y_collision = true;
-    }
-    collider
-}
+impl<'s> System<'s> for CollisionSystem {
+    type SystemData = (
+        Entities<'s>,
+        WriteStorage<'s, Collidee>,
+        ReadStorage<'s, Collider>,
+        WriteStorage<'s, Health>,
+    );
 
-fn come_from_x_axe(p1: &Point, p2: &Point, range: f32) -> bool {
-    if p2.y >= (p1.y - range) && p2.y <= (p1.y + range) {
-        return true;
-    }
-    return false;
-}
+    fn run(&mut self, data: Self::SystemData) {
+        let (entities, mut collidees, colliders, mut healths) = data;
 
-fn come_from_y_axe(p1: &Point, p2: &Point, range: f32) -> bool {
-    if p2.x >= (p1.x - range) && p2.x <= (p1.x + range) {
-        return true;
+        for (entity, collidee, collider, health) in
+            (&entities, &mut collidees, &colliders, &mut healths).join()
+        {
+            if collidee.x_collision || collidee.y_collision {
+                health.current -= collidee.data.damage_amount;
+                collidee.reset();
+                if health.current <= 0 {
+                    entities.delete(entity);
+                }
+            }
+        }
     }
-    return false;
 }
