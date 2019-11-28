@@ -1,7 +1,7 @@
 use amethyst::prelude::*;
 
-pub const WIDTH: f32 = 150.0;
-pub const HEIGHT: f32 = 150.0;
+pub const WIDTH: f32 = 500.0;
+pub const HEIGHT: f32 = 500.0;
 
 use crate::entities;
 
@@ -12,6 +12,7 @@ impl SimpleState for RType {
         let world = data.world;
 
         entities::initialize_player(world);
+        entities::initialize_spawners(world);
         entities::initialize_camera(world);
     }
 }
