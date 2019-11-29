@@ -121,7 +121,7 @@ int main(void) {
         .with(String("Position"))
         .with(String("Velocity"))
         .build();
-    auto newEntities = storage.request(request);
+    auto newEntities = storage.request(move(request));
     for (auto entity : newEntities) {
         std::cout << entity.getName() << std::endl;
     }

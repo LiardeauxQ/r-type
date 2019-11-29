@@ -29,8 +29,8 @@ void BasicEntityComponentStorage::addComponentSchema(ComponentSchema schema)
 {
     if (hasSchema(schema.m_name))
         throw SchemaNameAlreadyExistsException();
-    m_schemas.push_back(move(schema));
     m_components[schema.m_name] = Map<String, Component>();
+    m_schemas.push_back(move(schema));
 }
 
 void BasicEntityComponentStorage::removeComponentSchema(const String& name)
@@ -99,6 +99,9 @@ void BasicEntityComponentStorage::store(const Vec<Entity>& entities)
                     throw SchemaNotFound();
                 if (!component.second.complyWith(getSchema(component.first))) {
                     throw ComponentDoesNotComplyWithSchema();
+                }
+                for (const auto& name: m_schemas) {
+                    std::cout << name.m_name << std::endl;
                 }
                 m_components.at(component.first)[entity.getName()] = component.second;
             }
