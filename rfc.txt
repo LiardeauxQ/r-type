@@ -149,16 +149,53 @@ Internet-Draft              Abbreviated Title              December 2015
 2.2.  Body
 
    +-----------------------------------------------------------------------+
-   | +------------------------------+ +------------------------------+ ... |
+   | BODY                                                                  |
+   | +------------------------------+ +------------------------------+     |
    | |  type   | type_info |  data  | |  type   | type_info |  data  | ... |
    | +------------------------------+ +------------------------------+ ... |
    | | 1 bytes |  depend   | depend | | 1 bytes |  depend   | depend | ... |
-   | +------------------------------+ +------------------------------+ ... |
+   | +------------------------------+ +------------------------------+     |
    +-----------------------------------------------------------------------+
 
    Each packet contains a BODY, which contain sub-body.
 
-   Each sub-body contain information about the type ...
+   Each sub-body contain the type to be deserialized, the type_info linked
+   to the previously defined type and the data.
+
+   type_info marked as None has a len of 0.
+
+2.2.0. Char
+    
+    type:       0x1
+    type_info:  None
+    size:       1 byte
+
+2.2.2. Int
+
+    type:       0x2
+    type_info:  None
+    size:       8 bytes
+
+2.2.3. Float
+
+    type:       0x3
+    type_info:  None
+    size:       8 bytes
+
+2.2.4. List
+
+   type:        0x4
+   type_info:
+     type:      uint8_t
+     length:    uint64_t (8 bytes)
+   size:        `type.size` * `length`
+
+   For example "Hello, World" string is serialized as:
+   type:        0x4
+   type_info:
+     type:      0x1
+     length:    0xC
+   size:        0xC
 
 3.  TCP Communications
 
@@ -171,8 +208,6 @@ Internet-Draft              Abbreviated Title              December 2015
 
    In other words, every command related to the management of a room
    MUST be sent using the TCP network protocol
-
-
 
 
 
