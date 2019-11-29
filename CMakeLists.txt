@@ -58,6 +58,7 @@ add_subdirectory(ECS)
 add_subdirectory(Physics)
 add_subdirectory(Parser)
 add_subdirectory(Network)
+add_subdirectory(Loader)
 
 # Client link
 
