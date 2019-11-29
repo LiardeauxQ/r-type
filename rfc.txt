@@ -1,0 +1,571 @@
+
+
+
+
+Internet Engineering Task Force                   A. Kilian Perrier, Ed.
+Internet-Draft                                                   EPITECH
+Intended status: Experimental                              December 2015
+Expires: June 3, 2016
+
+
+                 Binary protocol for the R-Type project
+
+Abstract
+
+   This document describes the binary protocol used for the R-Type
+   project.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on June 3, 2016.
+
+Copyright Notice
+
+   Copyright (c) 2015 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+Kilian Perrier            Expires June 3, 2016                  [Page 1]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
+   2.  Data Format . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Header  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.2.  Body  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  TCP Communications  . . . . . . . . . . . . . . . . . . . . .   3
+     3.1.  ERROR . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.2.  CREATE_GAME . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.3.  JOIN_GAME . . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.4.  ROOM_INFO . . . . . . . . . . . . . . . . . . . . . . . .   5
+     3.5.  ROOM_PLAYER_JOIN, ROOM_PLAYER_QUIT  . . . . . . . . . . .   6
+     3.6.  ROOM_PLAYER_STATE . . . . . . . . . . . . . . . . . . . .   6
+     3.7.  GAME_START  . . . . . . . . . . . . . . . . . . . . . . .   7
+     3.8.  LIST_STAGES . . . . . . . . . . . . . . . . . . . . . . .   7
+     3.9.  LIST_OF_STAGES  . . . . . . . . . . . . . . . . . . . . .   7
+     3.10. LIST_GAMES  . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.11. LIST_OF_GAMES . . . . . . . . . . . . . . . . . . . . . .   8
+   4.  UDP Communications  . . . . . . . . . . . . . . . . . . . . .   8
+     4.1.  GAME_READY  . . . . . . . . . . . . . . . . . . . . . . .   8
+     4.2.  FIRE_ENTITY . . . . . . . . . . . . . . . . . . . . . . .   9
+     4.3.  STATE_ENTITY  . . . . . . . . . . . . . . . . . . . . . .   9
+     4.4.  MOVE  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     4.5.  SYNC_DIST . . . . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
+
+1.  Introduction
+
+   This memo documents every aspect of the binary protocol used in the
+   R-Type game.
+
+   Every package will be documented below, classified by its network
+   protocol it MUST be sent with: TCP (described in RFC 0793 [RFC0793])
+   or UDP (described in RFC 0768 [RFC0768]).
+
+1.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119 [RFC2119].
+
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 2]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+2.  Data Format
+
+   Each packet, regardless of it's network protocol MUST be preceded by
+   a common header described below.
+
+   +-------------------+
+   | MESSAGE           |
+   | +---------------+ |
+   | | HEADER | BODY | |
+   | +---------------+ |
+   +-------------------+
+
+2.1.  Header
+
+                 +--------------+-------------+-------------+
+                 | magic_number | packet_size | hashed_name |
+                 +--------------+-------------+-------------+
+                 |   4 bytes    |   4 bytes   |  16 bytes   |
+                 +--------------+-------------+-------------+
+
+                           Structure of a header
+
+   The header is composed of a magic number which SHOULD be used to do a
+   primary sanity check of the packet.
+
+   The value of magic_number MUST be 0x522d545950 (ASCII R-TYP)
+
+   The packet_size is used to allocate memory for the message and handle
+   it properly.
+
+   The hashed_name is used to know in which packet it must be deserialized.
+
+2.2.  Body
+
+   +-----------------------------------------------------------------------+
+   | +------------------------------+ +------------------------------+ ... |
+   | |  type   | type_info |  data  | |  type   | type_info |  data  | ... |
+   | +------------------------------+ +------------------------------+ ... |
+   | | 1 bytes |  depend   | depend | | 1 bytes |  depend   | depend | ... |
+   | +------------------------------+ +------------------------------+ ... |
+   +-----------------------------------------------------------------------+
+
+   Each packet contains a BODY, which contain sub-body.
+
+   Each sub-body contain information about the type ...
+
+3.  TCP Communications
+
+   The following packets MUST be implemented as described below.
+   Strings MUST be null terminated.
+   Each packet MUST be preceded by a common header.
+
+   The TCP protocol is used for all communication that is not a direct
+   game action.
+
+   In other words, every command related to the management of a room
+   MUST be sent using the TCP network protocol
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 3]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+   This protocol has been chosen to provide a reliable communication
+   tunnel between a client and the server during crucial actions, where
+   packet loss is not tolerable (unlike game actions).
+
+3.1.  ERROR
+
+   Command code: 0x00
+   Direction: client <=> server
+
+   This command is sent whenever an error was found during the
+   processing of an other command.
+
+                       +--------------+------------+
+                       | command_code | error_code |
+                       +--------------+------------+
+                       | uint8_t      | uint8_t    |
+                       +--------------+------------+
+
+                       Structure of a ERROR message
+
+3.2.  CREATE_GAME
+
+   Command code: 0x01
+   Direction: client => server
+
+   Error codes:
+   0x01: A room with this name already exists
+
+   This command allows the client to create a room to which other
+   clients can join and prepare before actually playing.
+
+   The client creating the room becomes the owner of the said room.
+
+   In case of success, the server answers with a ROOM_INFO packet.
+
+              +--------------+--------------+--------------+
+              | name         | password     | nickname     |
+              +--------------+--------------+--------------+
+              | uint8_t[256] | uint8_t[256] | uint8_t[256] |
+              +--------------+--------------+--------------+
+
+                    Structure of a CREATE_GAME message
+
+3.3.  JOIN_GAME
+
+   Command code: 0x02
+   Direction: client => server
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 4]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+   Error codes:
+   0x01: Unknown room
+   0x02: Wrong password / no password provided for a private room
+   0x03: Nickname is already taken
+   0x04: Game is full
+
+   This command allows a client to join an existing room.  The
+   associated game must be waiting for clients (i.e. not started) for
+   this command to succeed.  The client MUST provide a valid id_game
+   (fetch-able from the LIST_OF_GAMES packet).
+
+   If the room is protected by a password, the client can provide it
+   with the password field, or leave it empty.
+
+   The client MUST choose a unique and valid nickname.
+
+   Upon success, the server answers with a ROOM_INFO packet.
+
+                +----------+--------------+--------------+
+                | id_game  | password     | nickname     |
+                +----------+--------------+--------------+
+                | uint32_t | uint8_t[256] | uint8_t[256] |
+                +----------+--------------+--------------+
+
+                     Structure of a JOIN_GAME message
+
+3.4.  ROOM_INFO
+
+   Command code: 0x03
+   Direction: server => client
+
+   This packet is sent by the server when a client successfully joins a
+   room (either with CREATE_GAME or JOIN_GAME).
+
+    +----------+--------------+------------+-------------+-----------+
+    | id_game  | name         | nb_players | max_players | id_player |
+    +----------+--------------+------------+-------------+-----------+
+    | uint32_t | uint8_t[256] | uint8_t    | uint8_t     | uint8_t   |
+    +----------+--------------+------------+-------------+-----------+
+
+                     Structure of a ROOM_INFO message
+
+   This packet is then followed by nb_players times the following data
+   structure:
+
+
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 5]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+                  +-----------+--------------+----------+
+                  | id_player | nickname     | is_ready |
+                  +-----------+--------------+----------+
+                  | uint8_t   | uint8_t[256] | uint8_t  |
+                  +-----------+--------------+----------+
+
+                        PLAYER_INFO data structure
+
+3.5.  ROOM_PLAYER_JOIN, ROOM_PLAYER_QUIT
+
+   Command codes:
+   0x04 - ROOM_PLAYER_JOIN
+   0x05 - ROOM_PLAYER_QUIT
+
+   Direction: server => client
+
+   ROOM_PLAYER_JOIN:  This packet is sent to every client in a room when
+      a new client joins the room.
+
+   ROOM_PLAYER_QUIT:  This packet is sent to every client in a room when
+      a new client quits the room.
+
+                  +-----------+--------------+----------+
+                  | id_player | nickname     | is_ready |
+                  +-----------+--------------+----------+
+                  | uint8_t   | uint8_t[256] | uint8_t  |
+                  +-----------+--------------+----------+
+
+        Structure of a ROOM_PLAYER_JOIN or ROOM_PLAYER_QUIT message
+
+3.6.  ROOM_PLAYER_STATE
+
+   Command code: 0x06
+   Direction: client <=> server
+
+   Error codes:
+   0x01: Nickname is already taken
+
+   This packet is sent from the server to every client when a client
+   changes its state (ready or not).
+
+   This packet is also sent from a client to the server to change a
+   client's state.  The server MUST answer with a ROOM_PLAYER_STATE
+   packet confirming the action.
+
+
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 6]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+                  +-----------+--------------+----------+
+                  | id_player | nickname     | is_ready |
+                  +-----------+--------------+----------+
+                  | uint8_t   | uint8_t[256] | uint8_t  |
+                  +-----------+--------------+----------+
+
+                 Structure of a ROOM_PLAYER_STATE message
+
+3.7.  GAME_START
+
+   Command code: 0x07
+   Direction: server => client
+
+   This packet is sent to every client in the room when the server
+   decides that the game should start.  The message provides an UDP port
+   which MUST be opened on the server for the clients to connect with
+   the GAME_READY packet described later.
+
+                               +----------+
+                               | udp_port |
+                               +----------+
+                               | uint16_t |
+                               +----------+
+
+                     Structure of a GAME_START message
+
+3.8.  LIST_STAGES
+
+   Command code: 0x08
+   Direction: client => server
+
+3.9.  LIST_OF_STAGES
+
+   Command code: 0x09
+   Direction: server => client
+
+                      +----------+-----------------+
+                      | nb_games | games           |
+                      +----------+-----------------+
+                      | uint32_t | game_list_info* |
+                      +----------+-----------------+
+
+                   Structure of a LIST_OF_STAGES message
+
+
+
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 7]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+    +----------+--------------+------------+------------+-------------+
+    | id_game  | name         | is_private | nb_players | max_players |
+    +----------+--------------+------------+------------+-------------+
+    | uint32_t | uint8_t[256] | uint8_t    | uint8_t    | uint8_t     |
+    +----------+--------------+------------+------------+-------------+
+
+                              game_list_info
+
+3.10.  LIST_GAMES
+
+   Command code: 0x0A
+   Direction: client => server
+
+3.11.  LIST_OF_GAMES
+
+   Command code: 0x0B
+   Direction: server => client
+
+                      +----------+-----------------+
+                      | nb_games | games           |
+                      +----------+-----------------+
+                      | uint32_t | game_list_info* |
+                      +----------+-----------------+
+
+                   Structure of a LIST_OF_GAMES message
+
+    +----------+--------------+------------+------------+-------------+
+    | id_game  | name         | is_private | nb_players | max_players |
+    +----------+--------------+------------+------------+-------------+
+    | uint32_t | uint8_t[256] | uint8_t    | uint8_t    | uint8_t     |
+    +----------+--------------+------------+------------+-------------+
+
+                              game_list_info
+
+4.  UDP Communications
+
+   The following packets MUST be implemented as described below.
+   Strings MUST be null terminated.
+   Each packet MUST be preceded by a common header.
+
+4.1.  GAME_READY
+
+   Command code: 0x0C
+   Direction: client => server
+
+
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 8]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+                               +-----------+
+                               | id_player |
+                               +-----------+
+                               | uint8_t   |
+                               +-----------+
+
+                     Structure of a GAME_READY message
+
+4.2.  FIRE_ENTITY
+
+   Command code: 0x0D
+   Direction: client => server
+
+                       +---------------+----------+
+                       | id_new_entity | type     |
+                       +---------------+----------+
+                       | uint16_t      | FireType |
+                       +---------------+----------+
+
+                    Structure of a FIRE_ENTITY message
+
+4.3.  STATE_ENTITY
+
+   Command code: 0x0E
+   Direction: server => client
+
+    +-----------+--------------------+--------------------+----------+
+    | id_entity | position           | velocity           | angle    |
+    +-----------+--------------------+--------------------+----------+
+    | uint16_t  | vector2d<uint32_t> | vector2d<uint32_t> | uint16_t |
+    +-----------+--------------------+--------------------+----------+
+
+                    Structure of a STATE_ENTITY message
+
+4.4.  MOVE
+
+   Command code: 0x0F
+   Direction: client => server
+
+                               +-----------+
+                               | dir       |
+                               +-----------+
+                               | Direction |
+                               +-----------+
+
+                        Structure of a MOVE message
+
+
+
+
+
+Kilian Perrier             Expires June 3, 2016                  [Page 9]
+
+Internet-Draft              Abbreviated Title              December 2015
+
+
+4.5.  SYNC_DIST
+
+   Command code: 0x10
+   Direction: server => client
+
+                               +----------+
+                               | dist     |
+                               +----------+
+                               | uint64_t |
+                               +----------+
+
+                        Structure of a MOVE message
+
+5.  Security Considerations
+
+   This RFC raises no security issues.  However, security protocols are
+   subject to the fundamental networking truths.
+
+6.  References
+
+6.1.  Normative References
+
+   [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+6.2.  Informative References
+
+   [RFC0768]  Postel, J., "User Datagram Protocol", STD 6, RFC 768,
+              DOI 10.17487/RFC0768, August 1980,
+              <http://www.rfc-editor.org/info/rfc768>.
+
+   [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
+              RFC 793, DOI 10.17487/RFC0793, September 1981,
+              <http://www.rfc-editor.org/info/rfc793>.
+
+Author's Address
+
+   Kilian Perrier (editor)
+   EPITECH
+   156 Rue Paul Bert
+   Lyon  69003
+   FR
+
+   Email: bolvy_a@epitech.eu
+
+
+
+Kilian Perrier             Expires June 3, 2016                 [Page 10]
