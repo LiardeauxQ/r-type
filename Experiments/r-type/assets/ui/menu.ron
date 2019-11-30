@@ -15,7 +15,6 @@ Container(
                 id: "background",
                 width: 2000.,
                 height: 1475.,
-                rotation: (0.5, -0.5, -0.5, 0.5),
                 tab_order: 1,
                 anchor: Middle,
                 z: 0,
