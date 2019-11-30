@@ -10,10 +10,10 @@
 struct Handle {
 
     Handle(void *handle)
-    : m_handle(handle)
+    : ptr(handle)
     {}
 
-    void *m_handle;
+    void *ptr;
 };
 
 using LibraryHandle = Box<Handle>;
@@ -32,9 +32,8 @@ private:
     const String m_error;
 };
 
-class Library {
+struct Library {
 
-public:
     explicit Library(const std::filesystem::path &path);
 
     ~Library();
@@ -46,7 +45,6 @@ public:
 
     static LibraryHandle loadFilename(const std::filesystem::path &path);
 
-private:
     LibraryHandle m_handle;
     String m_name;
 };

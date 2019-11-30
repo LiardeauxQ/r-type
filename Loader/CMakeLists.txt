@@ -19,4 +19,4 @@ set_property(TARGET loader PROPERTY CXX_STANDARD 17)
 set_property(TARGET loader PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET loader PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(loader common ecs)
+target_link_libraries(loader common dl)

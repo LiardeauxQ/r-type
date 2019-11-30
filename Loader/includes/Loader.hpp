@@ -36,9 +36,9 @@ public:
 
     template<typename T, typename... Args>
     Vec<T> useSymbol(const String &name, Args... args) {
-        auto results();
+        Vec<T> results;
         for (const auto& library : m_libraries) {
-            auto handle = dlsym(library.m_handle->m_handle, name.c_str());
+            T (*handle)(Args...) = reinterpret_cast<T (*)(Args...)>(dlsym(library.m_handle->ptr, name.c_str()));
             if (handle == nullptr) {
                 throw LoadingException(String("Error reading ") + name + String(" on ") + library.m_name + String(": ") + dlerror());
             }

@@ -14,3 +14,8 @@ Loader& Loader::operator=(Loader&& loader) noexcept
     this->m_libraries = move(loader.m_libraries);
     return *this;
 }
+
+void Loader::registerLibrary(Library library)
+{
+    m_libraries.push_back(std::move(library));
+}

@@ -11,6 +11,7 @@ version = "=0.2.6"
 
 [dependencies.amethyst]
 version = "0.13"
+features = ["nightly"]
 
 [features]
 empty = ["amethyst/empty"]

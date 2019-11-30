@@ -3,6 +3,7 @@
 //
 
 #include <dlfcn.h>
+#include <iostream>
 #include "Library.hpp"
 
 LibraryHandle Library::loadFilename(const std::filesystem::path &path)
@@ -10,7 +11,7 @@ LibraryHandle Library::loadFilename(const std::filesystem::path &path)
     if (std::filesystem::exists(path)) {
         if (std::filesystem::is_regular_file(path)) {
             // TODO: Make Windows.
-            auto handle = dlopen(path.c_str(), RTLD_NOW);
+            auto handle = dlopen(path.c_str(), RTLD_LAZY);
             if (handle == nullptr) {
                 throw LibraryException(String("Error opening ") + path.c_str() + String(": ") + dlerror());
             }
@@ -26,7 +27,8 @@ LibraryHandle Library::loadFilename(const std::filesystem::path &path)
 
 Library::~Library()
 {
-    dlclose(m_handle->m_handle);
+    if (m_handle.get() != nullptr)
+        dlclose(m_handle->ptr);
 }
 
 Library::Library(const std::filesystem::path &path)
