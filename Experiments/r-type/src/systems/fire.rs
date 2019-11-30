@@ -1,5 +1,6 @@
 use amethyst::{
     core::{SystemDesc, Transform},
+    core::timing::Time,
     derive::SystemDesc,
     ecs::prelude::{
         Entities, Join, LazyUpdate, Read, ReadExpect, ReadStorage, System, SystemData, World,
@@ -9,7 +10,7 @@ use amethyst::{
 };
 
 use crate::common::{SpriteSheetList};
-use crate::components::{Player, AttackSpeed, Team};
+use crate::components::{Player, AttackSpeed, Team, Movable, TimeAnimationList};
 use crate::entities;
 
 #[derive(SystemDesc)]
@@ -24,7 +25,6 @@ impl<'s> System<'s> for FireSystem {
         ReadStorage<'s, Team>,
         ReadExpect<'s, LazyUpdate>,
         ReadExpect<'s, SpriteSheetList>,
-        Read<'s, InputHandler<StringBindings>>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -36,21 +36,18 @@ impl<'s> System<'s> for FireSystem {
             teams,
             lazy_update,
             sprite_sheet_list,
-            input,
         ) = data;
 
         for (player, transform, attack_speed, team) in (&players, &transforms, &mut attack_speeds, &teams).join() {
-            if let Some(action) = input.action_is_down("flex") {
-                if !action || (attack_speed.elapsed_time.elapsed() < attack_speed.frequency) {
-                    continue;
-                }
-                if let Some(sprite_sheet) = sprite_sheet_list
-                    .get("bullet")
-                    .ok_or("Cannot fetch sprite sheet")
-                    .ok() {
-                    entities::spawn_bullet(&entities, sprite_sheet.clone(), &lazy_update, &transform, &team);
-                    attack_speed.elapsed_time.restart();
-                }
+            if attack_speed.elapsed_time.elapsed() < attack_speed.frequency || !player.can_fire {
+                continue;
+            }
+            if let Some(sprite_sheet) = sprite_sheet_list.get("bullet") {
+                let mut position = transform.clone();
+
+                position.prepend_translation_x(player.width / 2.0);
+                entities::spawn_bullet(&entities, sprite_sheet.clone(), &lazy_update, position, &team);
+                attack_speed.elapsed_time.restart();
             }
         }
     }

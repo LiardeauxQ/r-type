@@ -5,10 +5,8 @@ use amethyst::{
 };
 
 use crate::common::Point;
-use crate::components::{Circle, Collidee, Collider, Damage, Health, Team};
+use crate::components::{Collidee, Collider, Damage, Health, Team};
 use crate::physics::SphereCollision;
-use crate::states::{HEIGHT, WIDTH};
-use std::ptr;
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
@@ -24,7 +22,14 @@ impl<'s> System<'s> for BounceSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (entities, mut collidees, colliders, damages, transforms, teams) = data;
+        let (
+            entities,
+            mut collidees,
+            colliders,
+            damages,
+            transforms,
+            teams
+        ) = data;
 
         for (entity, collider, damage, transform, team) in
             (&entities, &colliders, &damages, &transforms, &teams).join()
@@ -35,6 +40,7 @@ impl<'s> System<'s> for BounceSystem {
                 if entity == entity_collidee || team.id == team_collidee.id {
                     continue;
                 }
+                //println!("{} {}", damage.amount, damage_collidee.amount);
                 let x = transform_collidee.translation().x;
                 let y = transform_collidee.translation().y;
                 let cx = transform.translation().x;
@@ -61,7 +67,12 @@ impl<'s> System<'s> for CollisionSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (entities, mut collidees, colliders, mut healths) = data;
+        let (
+            entities,
+            mut collidees,
+            colliders,
+            mut healths
+        ) = data;
 
         for (entity, collidee, collider, health) in
             (&entities, &mut collidees, &colliders, &mut healths).join()

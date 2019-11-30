@@ -1,22 +1,17 @@
 use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
-pub enum Direction {
-    Top,
-    Bottom,
-    Left,
-    Right,
-}
-
 pub struct Player {
-    pub direction: Direction,
-    pub max_sprites: usize,
+    pub can_fire: bool,
+    pub width: f32,
+    pub height: f32,
 }
 
 impl Player {
-    pub fn new(direction: Direction, max_sprites: usize) -> Self {
+    pub fn new(width: f32, height: f32) -> Self {
         Player {
-            direction,
-            max_sprites,
+            can_fire: true,
+            width,
+            height,
         }
     }
 }
@@ -24,8 +19,9 @@ impl Player {
 impl Default for Player {
     fn default() -> Self {
         Player {
-            direction: Direction::Right,
-            max_sprites: 0,
+            can_fire: true,
+            width: 0.0,
+            height: 0.0,
         }
     }
 }

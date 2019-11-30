@@ -14,3 +14,23 @@ impl Velocity {
 impl Component for Velocity {
     type Storage = DenseVecStorage<Self>;
 }
+
+#[derive(PartialEq)]
+pub enum Direction {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+}
+
+impl Component for Direction {
+    type Storage = DenseVecStorage<Self>;
+}
+
+pub struct Movable {
+    pub is_movable: bool,
+}
+
+impl Component for Movable {
+    type Storage = DenseVecStorage<Self>;
+}
