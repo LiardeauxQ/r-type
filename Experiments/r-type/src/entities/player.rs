@@ -12,6 +12,7 @@ use crate::components::{
     Health,
     Shield,
     Team,
+    Movable,
 };
 use crate::states::{HEIGHT, WIDTH};
 
@@ -29,17 +30,19 @@ pub fn initialize_player(world: &mut World) -> Result<(), &'static str> {
     transform_s1.set_translation_xyz(WIDTH * 0.5, HEIGHT * 0.5, 0.0);
     world
         .create_entity()
-        .with(Player::new(Direction::Right, 10))
+        .with(Player::new(33.0, 17.0))
+        .with(Direction::RIGHT)
         .with(Velocity::new(70.0, 70.0))
         .with(transform_s1)
         .with(sprite_render.clone())
-        .with(AttackSpeed::new(1))
+        .with(AttackSpeed::new(240))
         .with(Collidee::default())
         .with(Collider)
         .with(Damage::new(300))
         .with(Health::new(400, 400))
         .with(Shield::new(100, 100))
         .with(Team::new(1))
+        .with(Movable{is_movable: true})
         .build();
     Ok(())
 }

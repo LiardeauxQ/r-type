@@ -16,8 +16,12 @@ use crate::components::{
     Damage,
     Health,
     Team,
+    Direction,
+    Movable,
 };
 use crate::states::{WIDTH, HEIGHT};
+
+const SPAWN_SPEED: u64= 1200;
 
 pub fn initialize_spawners(world: &mut World) -> Result<(), &'static str> {
     let mut transform_s1 = Transform::default();
@@ -28,7 +32,7 @@ pub fn initialize_spawners(world: &mut World) -> Result<(), &'static str> {
         .create_entity()
         .with(Spawner)
         .with(transform_s1)
-        .with(AttackSpeed::new(1))
+        .with(AttackSpeed::new(SPAWN_SPEED))
         .with(Team::new(2))
         .build();
     transform_s2.set_translation_xyz(WIDTH, HEIGHT * 0.75, 0.0);
@@ -36,7 +40,7 @@ pub fn initialize_spawners(world: &mut World) -> Result<(), &'static str> {
         .create_entity()
         .with(Spawner)
         .with(transform_s2)
-        .with(AttackSpeed::new(1))
+        .with(AttackSpeed::new(SPAWN_SPEED))
         .with(Team::new(2))
         .build();
     Ok(())
@@ -61,5 +65,7 @@ pub fn spawn_enemy(entities: &Entities,
     lazy_update.insert(enemy_entity, Collider);
     lazy_update.insert(enemy_entity, Damage::new(300));
     lazy_update.insert(enemy_entity, Health::new(400, 400));
-    lazy_update.insert(enemy_entity, Team::new(team.id))
+    lazy_update.insert(enemy_entity, Team::new(team.id));
+    lazy_update.insert(enemy_entity, Direction::LEFT);
+    lazy_update.insert(enemy_entity, Movable{is_movable: true});
 }

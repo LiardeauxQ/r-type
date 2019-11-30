@@ -42,10 +42,12 @@ fn init_game_data<'a, 'b>() -> Result<GameDataBuilder<'a, 'b>, Error> {
         .with_bundle(input_bundle)?
         .with(systems::PlayerSystem, "player_system", &["input_system"])
         .with(systems::EnemySystem, "enemy_system", &[])
-        .with(systems::FireSystem, "fire_system", &["input_system"])
+        .with(systems::FireSystem, "fire_system", &[])
         .with(systems::MovementSystem, "movement_system", &[])
         .with(systems::BounceSystem, "bounce_system", &["movement_system"])
         .with(systems::CollisionSystem, "collision_system", &["bounce_system"])
+        .with(systems::AnimationSystem, "animation_system", &[])
+        .with(systems::DestroySystem, "destroy_system", &[])
     )
     //.with(systems::UpdateVelocitySystem, "update_velocity_system", &["movement_system", "bounce_system"]);
 }
