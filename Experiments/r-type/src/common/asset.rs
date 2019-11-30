@@ -5,21 +5,14 @@ use amethyst::{
 };
 use std::collections::HashMap;
 
-#[derive(Hash, PartialEq, Eq, Copy, Clone)]
-pub enum AssetType {
-    Player,
-    Bullet,
-    Button,
-}
-
 pub struct SpriteInfo<'a> {
     file_name: &'a str,
     ron_name: &'a str,
-    asset_type: AssetType,
+    asset_type: &'a str,
 }
 
 impl<'a> SpriteInfo<'a> {
-    pub fn new(file_name: &'a str, ron_name: &'a str, asset_type: AssetType) -> Self {
+    pub fn new(file_name: &'a str, ron_name: &'a str, asset_type: &'a str) -> Self {
         SpriteInfo {
             file_name,
             ron_name,
@@ -56,13 +49,13 @@ impl<'a> TextureLoader<'a> {
 
 struct SpriteLoader<'a> {
     ron_name: &'a str,
-    asset_type: AssetType,
+    asset_type: &'a str,
     texture_handler: Handle<Texture>,
     sprite_handler: Option<Handle<SpriteSheet>>,
 }
 
 impl<'a> SpriteLoader<'a> {
-    fn new(ron_name: &'a str, asset_type: AssetType, texture_handler: Handle<Texture>) -> Self {
+    fn new(ron_name: &'a str, asset_type: &'a str, texture_handler: Handle<Texture>) -> Self {
         SpriteLoader {
             ron_name,
             asset_type,
@@ -85,7 +78,7 @@ impl<'a> SpriteLoader<'a> {
 }
 
 pub struct SpriteSheetList {
-    sprite_sheets: HashMap<AssetType, Handle<SpriteSheet>>,
+    sprite_sheets: HashMap<String, Handle<SpriteSheet>>,
 }
 
 impl SpriteSheetList {
@@ -95,8 +88,8 @@ impl SpriteSheetList {
         }
     }
 
-    pub fn get(&self, asset: AssetType) -> Option<Handle<SpriteSheet>> {
-        match self.sprite_sheets.get(&asset) {
+    pub fn get(&self, asset: &str) -> Option<Handle<SpriteSheet>> {
+        match self.sprite_sheets.get(asset) {
             Some(sheet) => Some(Handle::from(sheet.clone())),
             None => None,
         }
@@ -129,7 +122,7 @@ impl SpriteSheetList {
                 sprite_safe.load(world, &mut progress_counter);
 
                 let handler = sprite_safe.sprite_handler.unwrap();
-                self.sprite_sheets.insert(sprite_safe.asset_type, handler);
+                self.sprite_sheets.insert(sprite_safe.asset_type.to_string(), handler);
             }
         }
         Ok(progress_counter)

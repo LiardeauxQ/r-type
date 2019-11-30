@@ -11,7 +11,7 @@ set(ECS
     ${ECS_SOURCES}/Transition.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp
-    ${ECS_SOURCES}/AbstractEvent.cpp
+    ${ECS_SOURCES}/Event.cpp
     ${ECS_SOURCES}/EventHandler.cpp)
 
 add_library(ecs STATIC

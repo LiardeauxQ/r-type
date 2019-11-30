@@ -11,17 +11,33 @@ pub struct AttackSpeed {
 }
 
 impl AttackSpeed {
-    pub fn new(frequency: u64) -> Self {
+    pub fn new(micros: u64) -> Self {
         let mut elapsed_time = Stopwatch::new();
 
         elapsed_time.start();
         AttackSpeed {
-            frequency: Duration::new(frequency, 0),
+            frequency: Duration::from_millis(micros),
             elapsed_time
         }
     }
 }
 
 impl Component for AttackSpeed {
+    type Storage = DenseVecStorage<Self>;
+}
+
+pub struct Damage {
+    pub amount: i32,
+}
+
+impl Damage {
+    pub fn new(amount: i32) -> Self {
+        Damage {
+            amount
+        }
+    }
+}
+
+impl Component for Damage {
     type Storage = DenseVecStorage<Self>;
 }
