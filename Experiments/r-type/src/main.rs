@@ -1,6 +1,7 @@
 extern crate amethyst;
 
 use amethyst::{
+    assets::HotReloadBundle,
     core::transform::TransformBundle,
     input::{InputBundle, StringBindings},
     prelude::*,
@@ -10,6 +11,7 @@ use amethyst::{
         RenderingBundle,
     },
     utils::application_root_dir,
+    ui::{RenderUi, UiBundle},
     {Error, LoggerConfig},
 };
 
@@ -36,9 +38,12 @@ fn init_game_data<'a, 'b>() -> Result<GameDataBuilder<'a, 'b>, Error> {
                     RenderToWindow::from_config_path(display_config_path)
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
                 )
-                .with_plugin(RenderFlat2D::default()),
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderUi::default()),
         )?
         .with_bundle(TransformBundle::new())?
+        .with_bundle(HotReloadBundle::default())?
+        .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(input_bundle)?
         .with(systems::PlayerSystem, "player_system", &["input_system"])
         .with(systems::FireSystem, "fire_system", &["input_system"])
