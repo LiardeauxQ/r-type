@@ -16,5 +16,4 @@ public:
     virtual bool isCollidingWith(shared_ptr<CollisionDetection> object) const = 0;
 };
 
-
 #endif //R_TYPE_SERVER_COLLISIONDETECTION_HPP
