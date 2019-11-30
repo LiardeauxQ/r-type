@@ -26,6 +26,7 @@ impl SimpleState for MenuState {
         println!("Entering MenuState");
         let world = data.world;
 
+        self.ui_load = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/load.ron", ())));
         self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     }
 
