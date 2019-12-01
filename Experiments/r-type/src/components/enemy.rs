@@ -1,7 +1,8 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::prelude::{Component, NullStorage};
 
+#[derive(Default)]
 pub struct Enemy;
 
 impl Component for Enemy {
-    type Storage = DenseVecStorage<Self>;
+    type Storage = NullStorage<Self>;
 }

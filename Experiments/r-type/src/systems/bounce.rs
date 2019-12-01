@@ -1,12 +1,12 @@
 use amethyst::{
     core::{SystemDesc, Transform},
     derive::SystemDesc,
-    ecs::prelude::{Entities, Join, ReadStorage, System, SystemData, World, WriteStorage},
+    ecs::prelude::{Entities, Join, ReadStorage, ReadExpect, LazyUpdate, System, SystemData, World, WriteStorage},
 };
 
-use crate::common::Point;
-use crate::components::{Collidee, Collider, Damage, Health, Team};
-use crate::physics::SphereCollision;
+use crate::common::{SpriteSheetList};
+use crate::components::{Collidee, Collider, Damage, Health, Team, Bullet};
+use crate::entities;
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
@@ -40,7 +40,6 @@ impl<'s> System<'s> for BounceSystem {
                 if entity == entity_collidee || team.id == team_collidee.id {
                     continue;
                 }
-                //println!("{} {}", damage.amount, damage_collidee.amount);
                 let x = transform_collidee.translation().x;
                 let y = transform_collidee.translation().y;
                 let cx = transform.translation().x;
@@ -62,28 +61,77 @@ impl<'s> System<'s> for CollisionSystem {
     type SystemData = (
         Entities<'s>,
         WriteStorage<'s, Collidee>,
-        ReadStorage<'s, Collider>,
         WriteStorage<'s, Health>,
+        ReadStorage<'s, Collider>,
+        ReadStorage<'s, Transform>,
+        ReadStorage<'s, Bullet>,
+        ReadExpect<'s, LazyUpdate>,
+        ReadExpect<'s, SpriteSheetList>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
         let (
             entities,
             mut collidees,
+            mut healths,
             colliders,
-            mut healths
+            transforms,
+            bullets,
+            lazy_update,
+            sprite_sheet_list,
         ) = data;
 
-        for (entity, collidee, collider, health) in
-            (&entities, &mut collidees, &colliders, &mut healths).join()
+        for (entity, collidee, health, collider, transform, ()) in
+            (&entities, &mut collidees, &mut healths, &colliders, &transforms, !&bullets).join()
         {
-            if collidee.x_collision || collidee.y_collision {
-                health.current -= collidee.data.damage_amount;
-                collidee.reset();
-                if health.current <= 0 {
-                    entities.delete(entity);
+            if handle_collision(collidee, health) {
+                if let Some(sprite_sheet) = sprite_sheet_list.get("explosion") {
+                    entities::spawn_explosion(&entities, sprite_sheet, &lazy_update, transform.clone());
                 }
+                entities.delete(entity);
             }
         }
     }
+}
+
+#[derive(SystemDesc)]
+pub struct BulletCollisionSystem;
+
+impl<'s> System<'s> for BulletCollisionSystem {
+    type SystemData = (
+        Entities<'s>,
+        WriteStorage<'s, Collidee>,
+        WriteStorage<'s, Health>,
+        ReadStorage<'s, Collider>,
+        ReadStorage<'s, Bullet>,
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (
+            entities,
+            mut collidees,
+            mut healths,
+            colliders,
+            bullets,
+        ) = data;
+
+        for (entity, collidee, health, collider, bullet) in
+            (&entities, &mut collidees, &mut healths, &colliders, &bullets).join()
+            {
+                if handle_collision(collidee, health) {
+                    entities.delete(entity);
+                }
+            }
+    }
+}
+
+fn handle_collision(collidee: &mut Collidee, health: &mut Health) -> bool {
+    if collidee.x_collision || collidee.y_collision {
+        health.current -= collidee.data.damage_amount;
+        collidee.reset();
+        if health.current <= 0 {
+            return true;
+        }
+    }
+    false
 }

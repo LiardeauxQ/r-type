@@ -4,8 +4,8 @@ use amethyst::{
 };
 
 use crate::common::{SpriteInfo, SpriteSheetList};
-use crate::components::{Bullet, Enemy, Shield};
-use crate::states::RType;
+use crate::components::{Bullet, Enemy, Shield, Explosion};
+use crate::states::{MenuState};
 
 #[derive(Default)]
 pub struct LoadState {
@@ -19,6 +19,7 @@ impl SimpleState for LoadState {
             SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", "player"),
             SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", "bullet"),
             SpriteInfo::new("r-typesheet5.gif", "../resources/enemy.ron", "enemy"),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/explosion.ron", "explosion"),
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
@@ -30,13 +31,14 @@ impl SimpleState for LoadState {
         world.register::<Bullet>();
         world.register::<Enemy>();
         world.register::<Shield>();
+        world.register::<Explosion>();
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
         if let Some(ref progress_counter) = self.progress_counter {
-            if progress_counter.num_loading() == 0 {
+            if progress_counter.is_complete() {
                 self.progress_counter = None;
-                return Trans::Switch(Box::new(RType));
+                return Trans::Switch(Box::new(MenuState::default()));
             }
         }
         Trans::None

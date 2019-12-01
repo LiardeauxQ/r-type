@@ -5,7 +5,8 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
 };
 
-use crate::components::{Player, Collidee, Collider, Velocity, Movable};
+use crate::components::{Player, Collidee, Collider, Velocity, Movable, AttackPattern};
+use crate::states::{HEIGHT, WIDTH};
 
 #[derive(SystemDesc)]
 pub struct MovementSystem;
@@ -13,19 +14,53 @@ pub struct MovementSystem;
 impl<'s> System<'s> for MovementSystem {
     type SystemData = (
         ReadStorage<'s, Player>,
+        ReadStorage<'s, AttackPattern>,
         ReadStorage<'s, Velocity>,
         ReadStorage<'s, Movable>,
         WriteStorage<'s, Transform>,
         Read<'s, Time>,
     );
 
-    fn run(&mut self, (players, velocities, movables, mut transforms, time): Self::SystemData) {
-        for (velocity, movable, transform, ()) in (&velocities, &movables, &mut transforms, !&players).join() {
+    fn run(&mut self, data: Self::SystemData) {
+        let (
+            players,
+            patterns,
+            velocities,
+            movables,
+            mut transforms,
+            time
+        ) = data;
+        for (velocity, movable, transform, (), ())
+            in (&velocities, &movables, &mut transforms, !&players, !&patterns).join() {
             if !movable.is_movable {
                 continue;
             }
             transform.prepend_translation_x(velocity.x * time.delta_seconds());
             transform.prepend_translation_y(velocity.y * time.delta_seconds());
+        }
+    }
+}
+
+#[derive(SystemDesc)]
+pub struct PatternMovementSystem;
+
+impl<'s> System<'s> for PatternMovementSystem {
+    type SystemData = (
+        ReadStorage<'s, AttackPattern>,
+        ReadStorage<'s, Velocity>,
+        ReadStorage<'s, Movable>,
+        WriteStorage<'s, Transform>,
+        Read<'s, Time>,
+    );
+
+    fn run(&mut self, (patterns, velocities, movables, mut transforms, time): Self::SystemData) {
+        for (velocity, movable, transform, pattern) in (&velocities, &movables, &mut transforms, &patterns).join() {
+            if !movable.is_movable {
+                continue;
+            }
+            transform.prepend_translation_x(velocity.x * time.delta_seconds());
+            transform.prepend_translation_y(pattern
+                .compute(transform.translation().x) * time.delta_seconds());
         }
     }
 }

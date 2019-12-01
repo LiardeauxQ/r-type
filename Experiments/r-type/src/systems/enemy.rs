@@ -5,7 +5,6 @@ use amethyst::{
         Entities, Join, LazyUpdate, ReadExpect, ReadStorage, System, SystemData, World,
         WriteStorage,
     },
-    input::{InputHandler, StringBindings},
 };
 
 use crate::common::SpriteSheetList;

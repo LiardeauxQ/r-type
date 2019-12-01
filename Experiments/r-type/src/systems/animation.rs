@@ -1,9 +1,9 @@
 use amethyst::{
     core::timing::Time,
-    core::{SystemDesc, Transform},
+    core::{SystemDesc},
     derive::SystemDesc,
     renderer::{SpriteRender},
-    ecs::prelude::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage},
+    ecs::prelude::{Join, Read, System, SystemData, World, WriteStorage},
 };
 
 use crate::components::{
