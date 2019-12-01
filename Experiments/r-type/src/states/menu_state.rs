@@ -7,6 +7,7 @@ use amethyst::{
 };
 
 use crate::states::delete_hierarchy;
+use crate::states::RType;
 
 const START_GAME_BUTTON: &str = "start_game";
 const OPTIONS_BUTTON: &str = "options";
@@ -64,14 +65,16 @@ impl SimpleState for MenuState {
             }) => {
                 if Some(target) == self.start_game_button {
                     println!("START GAME PRESSED!");
-                }
-                if Some(target) == self.options_button {
+                    Trans::Switch(Box::new(RType))
+                } else if Some(target) == self.options_button {
                     println!("OPTIONS PRESSED!");
-                }
-                if Some(target) == self.exit_game_button {
+                    Trans::None
+                } else if Some(target) == self.exit_game_button {
                     println!("EXIT GAME PRESSED!");
+                    Trans::Quit
+                } else {
+                    Trans::None
                 }
-                Trans::None
             }
             _ => Trans::None
         }
