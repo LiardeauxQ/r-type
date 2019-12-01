@@ -6,7 +6,6 @@
 */
 
 #include "EventHandler.hpp"
-#include "TestEvent.hpp"
 #include <criterion/criterion.h>
 
 Test(EventHandler, test_event_handler) {

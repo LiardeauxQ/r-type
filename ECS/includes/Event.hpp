@@ -16,14 +16,16 @@ namespace ecs {
     public:
         Event(string const &type, any value);
         Event(const Event &other);
+        Event(Event&& other) noexcept;
         ~Event() = default;
 
         [[nodiscard]] bool isOfType(string const &type) const;
 
         template <typename T>
-        [[nodiscard]] const T& getValue() const { return any_cast<T>(m_value); }
+        [[nodiscard]] const T& getValue() { return any_cast<T&>(m_value); }
 
-        Event &operator=(const Event &);
+        Event& operator=(const Event &) = default;
+        Event& operator=(Event&& other) noexcept;
     private:
         size_t m_type;
         any m_value;

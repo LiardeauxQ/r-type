@@ -4,97 +4,93 @@
 
 #pragma once
 
-#include <any>
 #include "Definitions.hpp"
+#include <any>
 
 namespace ecs {
 
-    enum AttributeType {
-        BOOL = 0,
-        INT = 1,
-        FLOAT = 2,
-        STRING = 3
-    };
+enum AttributeType {
+    BOOL = 0,
+    INT = 1,
+    FLOAT = 2,
+    STRING = 3
+};
 
-    /// TODO: Implements Serialize/Deserialize
-    class ComponentAttribute {
+/// TODO: Implements Serialize/Deserialize
+struct ComponentAttributeSchema {
 
-        public:
-            ComponentAttribute(const String &name, const AttributeType type, std::any value);
+    ComponentAttributeSchema(String name, AttributeType type);
 
-            template<typename T>
-            T getValue() const { return std::any_cast<T>(m_value); }
+    String m_name;
+    AttributeType m_type;
+};
 
-            template<typename T>
-            void setValue(T value) {
-                m_value = value;
-            }
+/// TODO: Implements Serialize/Deserialize
+struct ComponentSchema {
 
-            String getName() const { return m_name; }
+    ComponentSchema(String name, Vec<ComponentAttributeSchema> attributesSchema);
+    ComponentSchema(ComponentSchema&& schema) noexcept;
+    ComponentSchema& operator=(ComponentSchema&& rhs) noexcept;
 
-        private:
-            String m_name;
-            AttributeType m_type;
-            std::any m_value;
+    Vec<ComponentAttributeSchema> m_attributesSchema;
+    String m_name;
+};
 
-    };
+/// TODO: Implements Serialize/Deserialize
+struct ComponentAttribute {
 
-    /// TODO: Implements Serialize/Deserialize
-    class Component {
+    ComponentAttribute(String name, AttributeType type, std::any value);
 
-        public:
-            Component(const String &name);
+    [[nodiscard]] bool complyWith(const ComponentAttributeSchema& schema) const;
 
-            void addAttribute(ComponentAttribute &attribute);
-            void removeAttribute(String name);
-            ComponentAttribute &getAttribute(String name);
-            String getName() const;
+    template<typename T>
+    const T& getValue() const
+    {
+        return any_cast<const T&>(m_value);
+    }
 
-        private:
-            String m_name;
-            HashMap<String, ComponentAttribute> m_attributes;
+    std::any m_value;
+    String m_name;
+    AttributeType m_type;
+};
 
-    };
+/// TODO: Implements Serialize/Deserialize
+class Component {
 
-    /// TODO: Implements Serialize/Deserialize
-    class ComponentAttributeSchema {
+public:
+    Component();
+    Component(String name);
 
-        public:
-            ComponentAttributeSchema(const String &name, AttributeType &type);
+    void addAttribute(ComponentAttribute attribute);
+    void removeAttribute(const String& name);
+    ComponentAttribute& getAttribute(String name);
+    Vec<ComponentAttribute> getAttributes() const;
+    String getName() const;
+    bool complyWith(const ComponentSchema& schema) const;
 
-        private:
-            String m_name;
-            AttributeType m_type;
+private:
+    String m_name;
+    HashMap<String, ComponentAttribute> m_attributes;
+};
 
-    };
+/// auto componentSchema = ComponentSchemaBuilder("Position")
+///                             .with(ComponentSchema("X"), AttributeType::INT)
+///   String              .with(ComponentSchema("Y"), AttributeType::INT)
+///                             .with(ComponentSchema("X"), AttributeType::INT)
+///                             .build()
+class ComponentSchemaBuilder {
 
-    /// TODO: Implements Serialize/Deserialize
-    class ComponentSchema {
+public:
+    ComponentSchemaBuilder(String name);
+    ComponentSchemaBuilder with(ComponentAttributeSchema attributeSchema);
+    ComponentSchema build();
 
-        public:
-            ComponentSchema(const String &name, Vec<ComponentAttributeSchema> &attributesSchema);
-
-        private:
-            String m_name;
-            Vec<ComponentAttributeSchema> m_attributesSchema;
-
-    };
-
-    /// auto componentSchema = ComponentSchemaBuilder("Position")
-    ///                             .with(ComponentSchema("X"), AttributeType::INT)
-    ///                             .with(ComponentSchema("Y"), AttributeType::INT)
-    ///                             .with(ComponentSchema("X"), AttributeType::INT)
-    ///                             .build()
-    class ComponentSchemaBuilder {
-
-        public:
-            ComponentSchemaBuilder(const String &name);
-            ComponentSchemaBuilder with(ComponentAttributeSchema &attributeSchema);
-            ComponentSchema build();
-
-        private:
-            String m_name;
-            Vec<ComponentAttributeSchema> m_attributesSchema;
-    };
+private:
+    String m_name;
+    Vec<ComponentAttributeSchema> m_attributesSchema;
+};
 
 }
+
+std::ostream& operator<<(std::ostream& stream, const ecs::Component& comp);
+std::ostream& operator<<(std::ostream& stream, const ecs::ComponentAttribute& attr);

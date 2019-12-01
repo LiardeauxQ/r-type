@@ -1,5 +1,6 @@
 use amethyst::{
     ecs::prelude::Entity,
+    core::timing::Time,
     input::{is_close_requested, is_key_down},
     prelude::*,
     assets::Handle,
@@ -22,6 +23,7 @@ pub struct GameState {
     spawners: Option<Vec<Entity>>,
     camera: Option<Entity>,
     paused: bool,
+    desired_time_scale: f32,
 }
 
 impl GameState {
@@ -33,7 +35,18 @@ impl GameState {
             spawners: None,
             camera: None,
             paused: false,
+            desired_time_scale: 1.0,
         }
+    }
+
+    fn update_time_scale(&self, world: &mut World) {
+        world
+            .write_resource::<Time>()
+            .set_time_scale(if self.paused {
+                0.0
+            } else {
+                self.desired_time_scale
+            });
     }
 }
 
@@ -52,6 +65,7 @@ impl SimpleState for GameState {
 
     fn on_resume(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         self.paused = false;
+        self.update_time_scale(data.world);
     }
 
     fn handle_event(&mut self, data: StateData<'_, GameData<'_, '_>>, event: StateEvent) -> SimpleTrans {
@@ -60,6 +74,8 @@ impl SimpleState for GameState {
                 if is_close_requested(&event) {
                     Trans::Quit
                 } else if is_key_down(&event, VirtualKeyCode::Escape) {
+                    self.paused = true;
+                    self.update_time_scale(data.world);
                     Trans::Push(Box::new(PauseState::new(
                         data.world.create_entity().with(self.pause_ui.clone()).build(),
                     )))

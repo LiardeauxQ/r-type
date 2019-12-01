@@ -3,6 +3,11 @@
 //
 
 #include "Socket.hpp"
+
+#include <fcntl.h>
+#ifdef LINUX
+#else
+#endif
 #include <iostream>
 
 Socket::Socket(Socket::Type type, RawSocket handle)
@@ -102,3 +107,8 @@ Socket::Socket(uint8_t base0, uint8_t base1, uint8_t base2, uint8_t base3, uint8
 Socket::Socket(Socket::Type type, const string& addr, uint16_t port)
     : Socket(type, parseStringAddr(addr, port))
 {}
+
+int Socket::setNonBlocking(bool active)
+{
+    return ::fcntl(m_handle, F_SETFL, active ? O_NONBLOCK : ~O_NONBLOCK);
+}

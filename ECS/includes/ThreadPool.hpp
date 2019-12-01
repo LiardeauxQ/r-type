@@ -11,6 +11,7 @@
 #include <future>
 #include <iostream>
 #include <thread>
+#include <tuple>
 
 namespace ecs {
 
@@ -19,32 +20,33 @@ using namespace std;
 template <typename Resources, typename E>
 class ThreadPool {
 public:
-    explicit ThreadPool(shared_ptr<Resources> res, uint32_t nbThread = thread::hardware_concurrency());
+    explicit ThreadPool(uint32_t nbThread = thread::hardware_concurrency());
     ~ThreadPool();
 
-    void enqueueWork(function<E(shared_ptr<Resources>)> work);
+    void enqueueWork(function<E(shared_ptr<Resources>)> work, shared_ptr<Resources> data);
+    void join();
     uint32_t m_nbThread;
 
 private:
-    deque<function<E(shared_ptr<Resources>)>> m_works;
-    shared_ptr<Resources> m_sharedData;
+    using Func = function<E(shared_ptr<Resources>)>;
+    using Work = tuple<Func, shared_ptr<Resources>>;
+    deque<Work> m_works;
     vector<thread> m_threads;
     mutex m_worksLock;
     bool m_isRunning;
 };
 
 template <typename Resources, typename E>
-ThreadPool<Resources, E>::ThreadPool(shared_ptr<Resources> res, uint32_t nbThread)
+ThreadPool<Resources, E>::ThreadPool(uint32_t nbThread)
     : m_nbThread(nbThread)
     , m_works()
-    , m_sharedData(res)
     , m_threads()
     , m_worksLock()
     , m_isRunning(true)
 {
     auto worker = [&]() {
         size_t size = 0;
-        function<E(shared_ptr<Resources>)> f = nullptr;
+        Work f;
         m_worksLock.lock();
         size = m_works.size();
         m_worksLock.unlock();
@@ -56,9 +58,9 @@ ThreadPool<Resources, E>::ThreadPool(shared_ptr<Resources> res, uint32_t nbThrea
                 m_works.pop_back();
             }
             m_worksLock.unlock();
-            if (f) {
-                f(m_sharedData);
-                f = nullptr;
+            if (get<0>(f)) {
+                get<0>(f)(get<1>(f));
+                get<0>(f) = nullptr;
             }
         }
     };
@@ -76,10 +78,22 @@ ThreadPool<T, E>::~ThreadPool()
 }
 
 template <typename T, typename E>
-void ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work)
+void ThreadPool<T, E>::enqueueWork(function<E(shared_ptr<T>)> work, shared_ptr<T> data)
 {
     lock_guard<mutex> lock(m_worksLock);
-    m_works.push_front(work);
+    m_works.push_front(make_tuple(work, data));
+}
+template <typename Resources, typename E>
+void ThreadPool<Resources, E>::join() // TODO: Change return type
+{
+    m_worksLock.lock();
+    size_t size = m_works.size();
+    m_worksLock.unlock();
+    while (size != 0) {
+        m_worksLock.lock();
+        size = m_works.size();
+        m_worksLock.unlock();
+    }
 }
 
 }

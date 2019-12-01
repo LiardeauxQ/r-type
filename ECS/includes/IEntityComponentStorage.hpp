@@ -4,23 +4,45 @@
 
 #pragma once
 
-#include <vector>
-#include "Definitions.hpp"
-#include "EntityRequest.hpp"
-#include "Entity.hpp"
 #include "Component.hpp"
+#include "Definitions.hpp"
+#include "Entity.hpp"
+#include "EntityRequest.hpp"
+#include <exception>
+#include <vector>
 
 namespace ecs {
 
-    class IEntityComponentStorage {
+struct ComponentDoesNotComplyWithSchema : public std::exception {
+    [[nodiscard]] const char* what() const noexcept final
+    {
+        return "Component does not comply with schema";
+    }
+};
 
-        public:
-            Vec<Entity> request(Box<EntityRequest> request);
-            void store(const Vec<Entity> &entities);
+struct SchemaNameAlreadyExistsException : public std::exception {
+    [[nodiscard]] const char* what() const noexcept final
+    {
+        return "Schema already exists";
+    }
+};
 
-            void addComponentSchema(Box<ComponentSchema> schema);
-            void removeComponentSchema(String &componentName);
+struct SchemaNotFound : public std::exception {
+    [[nodiscard]] const char* what() const noexcept final
+    {
+        return "Schema was not found";
+    }
+};
 
-    };
+class IEntityComponentStorage {
+public:
+    virtual ~IEntityComponentStorage() = default;
+    virtual Vec<Entity> request(EntityRequest request) = 0;
+
+    virtual void store(const Vec<Entity>& entities) = 0;
+
+    virtual void addComponentSchema(ComponentSchema schema) = 0;
+    virtual void removeComponentSchema(const String& componentName) = 0;
+};
 
 }
