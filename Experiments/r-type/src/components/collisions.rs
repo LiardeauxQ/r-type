@@ -1,4 +1,4 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::prelude::{Component, DenseVecStorage, NullStorage};
 
 pub struct CollisionData {
     pub damage_amount: i32,
@@ -52,8 +52,9 @@ impl Default for Collidee {
     }
 }
 
+#[derive(Default)]
 pub struct Collider;
 
 impl Component for Collider {
-    type Storage = DenseVecStorage<Self>;
+    type Storage = NullStorage<Self>;
 }

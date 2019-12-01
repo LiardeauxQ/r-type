@@ -7,8 +7,7 @@ use amethyst::{
     winit::VirtualKeyCode,
 };
 
-use crate::states::delete_hierarchy;
-use crate::states::GameState;
+use crate::states::{delete_hierarchy, GameState};
 
 const M_START_GAME_BUTTON: &str = "m_start_game";
 const M_OPTIONS_BUTTON: &str = "m_options";
@@ -40,7 +39,6 @@ impl MenuState {
 impl SimpleState for MenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         println!("Entering MenuState");
-        let world = data.world;
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
@@ -77,7 +75,7 @@ impl SimpleState for MenuState {
             }) => {
                 if Some(target) == self.start_game_button {
                     println!("START GAME PRESSED!");
-                    Trans::Push(Box::new(GameState::new(
+                    Trans::Switch(Box::new(GameState::new(
                         data.world.create_entity().with(self.game_ui.clone()).build(),
                         self.pause_ui.clone()),
                     ))

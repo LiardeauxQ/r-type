@@ -1,4 +1,5 @@
 extern crate amethyst;
+extern crate rand;
 
 use amethyst::{
     assets::HotReloadBundle,
@@ -49,12 +50,14 @@ fn init_game_data<'a, 'b>() -> Result<GameDataBuilder<'a, 'b>, Error> {
         .with(systems::EnemySystem, "enemy_system", &[])
         .with(systems::FireSystem, "fire_system", &[])
         .with(systems::MovementSystem, "movement_system", &[])
+        .with(systems::PatternMovementSystem, "pattern_movement_system", &[])
         .with(systems::BounceSystem, "bounce_system", &["movement_system"])
         .with(systems::CollisionSystem, "collision_system", &["bounce_system"])
+        .with(systems::BulletCollisionSystem, "bullet_collision_system", &["bounce_system"])
         .with(systems::AnimationSystem, "animation_system", &[])
-        .with(systems::DestroySystem, "destroy_system", &[])
+        .with(systems::DirectionDestroySystem, "direction_destroy_system", &[])
+        .with(systems::AnimationDestroySystem, "animation_destroy_system", &[])
     )
-    //.with(systems::UpdateVelocitySystem, "update_velocity_system", &["movement_system", "bounce_system"]);
 }
 
 fn main() -> Result<(), amethyst::Error> {

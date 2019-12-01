@@ -1,16 +1,14 @@
 use amethyst::{
     core::{SystemDesc, Transform},
-    core::timing::Time,
     derive::SystemDesc,
     ecs::prelude::{
-        Entities, Join, LazyUpdate, Read, ReadExpect, ReadStorage, System, SystemData, World,
+        Entities, Join, LazyUpdate, ReadExpect, ReadStorage, System, SystemData, World,
         WriteStorage,
     },
-    input::{InputHandler, StringBindings},
 };
 
 use crate::common::{SpriteSheetList};
-use crate::components::{Player, AttackSpeed, Team, Movable, TimeAnimationList};
+use crate::components::{Player, AttackSpeed, Team};
 use crate::entities;
 
 #[derive(SystemDesc)]

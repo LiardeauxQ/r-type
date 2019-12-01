@@ -9,11 +9,18 @@ use amethyst::{
 
 use crate::states::delete_hierarchy;
 use crate::states::PauseState;
+use crate::entities;
+
+pub const WIDTH: f32 = 500.0;
+pub const HEIGHT: f32 = 500.0;
 
 #[derive(Debug)]
 pub struct GameState {
     root_ui: Entity,
     pause_ui: Handle<UiPrefab>,
+    player: Option<Entity>,
+    spawners: Option<Vec<Entity>>,
+    camera: Option<Entity>,
     paused: bool,
 }
 
@@ -22,6 +29,9 @@ impl GameState {
         GameState {
             root_ui: root_ui,
             pause_ui: pause_ui,
+            player: None,
+            spawners: None,
+            camera: None,
             paused: false,
         }
     }
@@ -29,7 +39,11 @@ impl GameState {
 
 impl SimpleState for GameState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        println!("Entering GameState");
+        let world = data.world;
+
+        self.player = entities::initialize_player(world).ok();
+        self.spawners = entities::initialize_spawners(world).ok();
+        self.camera = Some(entities::initialize_camera(world));
     }
 
     fn on_pause(&mut self, data: StateData<'_, GameData<'_, '_>>) {
@@ -58,7 +72,18 @@ impl SimpleState for GameState {
     }
 
     fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        delete_hierarchy(self.root_ui, data.world).expect("Failed to remove game state");
+        let mut world = data.world;
+
+        delete_hierarchy(self.root_ui, world).expect("Failed to remove game state");
+        if let Some(player) = self.player {
+            world.delete_entity(player);
+        }
+        if let Some(ref spawners) = self.spawners {
+            world.delete_entities(spawners.as_slice());
+        }
+        if let Some(camera) = self.camera {
+            world.delete_entity(camera);
+        }
         println!("Leaving GameState");
     }
 }

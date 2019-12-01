@@ -1,7 +1,8 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::prelude::{Component, NullStorage};
 
+#[derive(Default)]
 pub struct Spawner;
 
 impl Component for Spawner {
-    type Storage = DenseVecStorage<Self>;
+    type Storage = NullStorage<Self>;
 }

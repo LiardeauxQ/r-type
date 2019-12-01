@@ -5,7 +5,6 @@ use amethyst::{
         Entities, Join, LazyUpdate, ReadExpect, ReadStorage, System, SystemData, World,
         WriteStorage,
     },
-    input::{InputHandler, StringBindings},
 };
 
 use crate::common::SpriteSheetList;
@@ -42,9 +41,7 @@ impl<'s> System<'s> for EnemySystem {
             if spawn_rate.elapsed_time.elapsed() < spawn_rate.frequency {
                 continue;
             }
-            if let Some(sprite_sheet) = sprite_sheet_list.get("enemy")
-            {
-                entities::spawn_enemy(&entities, sprite_sheet.clone(), &lazy_update, &transform, &team);
+            if entities::spawn_enemy(&entities, &sprite_sheet_list, &lazy_update, &transform, &team) {
                 spawn_rate.elapsed_time.restart();
             }
         }
