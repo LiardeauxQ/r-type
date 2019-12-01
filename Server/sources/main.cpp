@@ -134,7 +134,7 @@ int main(void) {
 
     try {
         Loader loader;
-        auto lib = Library(std::filesystem::path(String("Experiments/dummy_mod.so")));
+        auto lib = Library(std::filesystem::path(String("../../Experiments/dummy_mod.so")));
         loader.registerLibrary(std::move(lib));
         //auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
         //loader.useSymbol<int, Box<ecs::Dispatcher<ecs::StateData<std::string>, ecs::Error>> &>(String("registerSystems"), dispatcher);

@@ -47,7 +47,7 @@ public:
     AbstractState& operator=(AbstractState&&) noexcept;
     AbstractState(AbstractState&&) noexcept;
 
-    virtual ~AbstractState() = default;
+    ~AbstractState() override = default;
 
     template <typename S>
     void registerSystem();
@@ -98,7 +98,7 @@ AbstractState<T, E>::AbstractState(unique_ptr<ecs::Dispatcher<ecs::StateData<T>,
 
 template<typename T, typename E>
 AbstractState<T, E>::AbstractState()
-    : m_dispatcher()
+    : m_dispatcher(make_unique<Dispatcher<StateData<T>, Error>>())
 {
 }
 

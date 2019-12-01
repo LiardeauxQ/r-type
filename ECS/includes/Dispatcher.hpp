@@ -37,7 +37,7 @@ public:
 
     Box<Dispatcher<T, E>> copy() const;
 
-    vector<string> getSystemNames() const;
+    [[nodiscard]] vector<string> getSystemNames() const;
 
 
 private:

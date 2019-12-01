@@ -23,8 +23,8 @@ public:
     ecs::Transition<string, ecs::Event> fixedUpdate(ecs::StateData<string>& data) override;
     void shadowUpdate(ecs::StateData<string>& data) override;
     void shadowFixedUpdate(ecs::StateData<string>& data) override;
-    String getKey() const;
-    Box<IFactorizable<String>> copy() const;
+    [[nodiscard]] string getKey() const final;
+    [[nodiscard]] unique_ptr<IFactorizable<string>> copy() const final;
 };
 
 #endif //R_TYPE_MAINMENUSTATE_HPP
