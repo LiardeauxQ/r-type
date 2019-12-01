@@ -7,6 +7,7 @@ use amethyst::{
     winit::VirtualKeyCode,
 };
 use crate::states::delete_hierarchy;
+use crate::states::LoadState;
 
 const P_RESUME_GAME_BUTTON: &str = "p_resume_game";
 const P_OPTIONS_BUTTON: &str = "p_options";
@@ -64,7 +65,7 @@ impl SimpleState for PauseState {
                     println!("BACK MENU PRESSED!");
                     data.world
                         .write_resource::<EventChannel<TransEvent<GameData, StateEvent>>>()
-                        .single_write(Box::new(|| Trans::Pop));
+                        .single_write(Box::new(|| Trans::Switch(Box::new(LoadState::default()))));
                     Trans::Pop
                 } else if Some(target) == self.exit_game_button {
                     println!("EXIT GAME PRESSED!");
