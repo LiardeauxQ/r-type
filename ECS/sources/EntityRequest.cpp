@@ -7,8 +7,13 @@
 namespace ecs {
 
     EntityRequest::EntityRequest(ComponentVector withs, ComponentVector without)
-    : m_withs()
-    , m_withouts()
+    : m_withs(withs)
+    , m_withouts(without)
+    {}
+
+    EntityRequest::EntityRequest(EntityRequest&& entity) noexcept
+        : m_withs(move(entity.m_withs))
+        , m_withouts(move(entity.m_withouts))
     {}
 
     EntityRequestBuilder::EntityRequestBuilder()

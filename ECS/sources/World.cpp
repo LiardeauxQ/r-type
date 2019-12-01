@@ -1,30 +1,24 @@
 //
-// Created by alex on 11/8/19.
+// Created by alex on 11/27/19.
 //
 
 #include "World.hpp"
 
-// ecs::World::World(Box<ecs::IEntityComponentStorage> database)
-// {
-//
-// }
-
-void ecs::World::createEntity()
+void ecs::World::storeEntity(Entity entity)
 {
-
+    m_storage->store({ move(entity) }); //TODO: use store unique.
 }
 
-ecs::Entity* ecs::World::fetchEntity(const std::string& name)
+ecs::World::World(unique_ptr<IEntityComponentStorage> storage)
+    : m_storage(move(storage))
+{}
+
+vector<ecs::Entity> ecs::World::fetchStorage(ecs::EntityRequest request)
 {
-    return nullptr;
+    return m_storage->request(move(request));
 }
 
-void ecs::World::createResource(std::string name)
+void ecs::World::registerComponent(ecs::ComponentSchema schema)
 {
-    m_resources.insert_or_assign(move(name), any());
-}
-
-void ecs::World::registerComponent(std::string schema)
-{
-    m_resources.insert_or_assign(move(schema), any());
+    m_storage->addComponentSchema(move(schema));
 }

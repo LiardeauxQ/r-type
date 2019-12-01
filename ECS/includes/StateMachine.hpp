@@ -2,100 +2,141 @@
 // Created by alex on 11/13/19.
 //
 
-#ifndef R_TYPE_STATESSTACK_HPP
-#define R_TYPE_STATESSTACK_HPP
+#pragma once
 
-#include "Definitions.hpp"
-#include "AbstactState.hpp"
+#include "AbstractState.hpp"
+#include "StopWatch.hpp"
 #include "Transition.hpp"
-
-template<typename T> struct Transition;
-template<typename T> class AbstractState;
-
-using namespace std;
+#include "StateFactory.hpp"
+#include "World.hpp"
 
 namespace ecs {
 
-template<typename T>
+template <typename T, typename E>
+struct Transition;
+template <typename T, typename E>
+class AbstractState;
+template <typename T>
+struct StateData;
+
+using namespace std;
+
+template <typename T, typename E>
 class StateMachine {
 public:
-    StateMachine(unique_ptr<AbstractState<T>> initial);
+    explicit StateMachine();
 
-    void run();
-private:
-    void transition(Transition<T> trans);
-    void push(Box<AbstractState<T>> newState);
-    Box<AbstractState<T>> pop();
-    vector<Box<AbstractState<T>>> m_states;
+    void update(StateData<T> data);
+    void start(const String &name, StateData<T> data);
+
+    template<typename S>
+    void registerState();
+
+    Transition<T, E> handleEvent(StateData<T> data, const E& event);
+    void transition(Transition<T, E> trans, StateData<T>& data);
     bool m_running;
+
+private:
+    void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
+    unique_ptr<AbstractState<T, E>> pop(StateData<T>& data);
+    vector<unique_ptr<AbstractState<T, E>>> m_states;
+    StateFactory<T, E> m_factory;
 };
 
-template<typename T>
-void StateMachine<T>::push(Box<AbstractState<T>> newState)
+template <typename T, typename E>
+void StateMachine<T, E>::push(unique_ptr<AbstractState<T, E>> newState, StateData<T>& data)
 {
     if (!m_states.empty())
-        m_states.back()->onPause();
-    newState->onStart();
+        m_states.back()->onPause(data);
+    newState->onStart(data);
     m_states.push_back(move(newState));
 }
 
-template<typename T>
-unique_ptr<AbstractState<T>> StateMachine<T>::pop()
+template <typename T, typename E>
+unique_ptr<AbstractState<T, E>> StateMachine<T, E>::pop(StateData<T>& data)
 {
-    if (m_states.empty())
+    if (m_states.empty()) {
+        m_running = false;
         return nullptr;
+    }
     auto ret = move(m_states.back());
-    ret->onStop();
+    ret->onStop(data);
     m_states.pop_back();
     if (!m_states.empty())
-        m_states.back()->onResume();
+        m_states.back()->onResume(data);
+    else
+        m_running = false;
     return ret;
 }
 
-template<typename T>
-void StateMachine<T>::run()
+template <typename T, typename E>
+Transition<T, E> StateMachine<T, E>::handleEvent(StateData<T> stateData, const E& event)
 {
-    while (m_running) {
-        Transition<T> trans;
+    return m_states.back()->handleEvent(stateData, event);
+}
 
-        if (!m_states.empty())
-            trans = m_states.back()->update();
-        else
-            break;
+template <typename T, typename E>
+void StateMachine<T, E>::update(StateData<T> stateData)
+{
+    if (m_running) {
+        Transition<T, E> trans;
+
+        if (!m_states.empty()) {
+            trans = m_states.back()->update(stateData);
+        } else {
+            trans = Transition<T, E>(TransitionName::QUIT);
+            m_running = false;
+        }
         for (auto& s : m_states)
-            s->shadowUpdate();
-        this->transition(move(trans));
+            s->shadowUpdate(stateData);
+        this->transition(move(trans), stateData);
     }
 }
 
-template<typename T>
-void StateMachine<T>::transition(Transition<T> trans)
+template <typename T, typename E>
+void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 {
     switch (trans.m_transition) {
-    case Transition<T>::Name::POP:
-        this->pop();
+    case TransitionName::POP:
+        this->pop(data);
         break;
-    case Transition<T>::Name::PUSH:
-        this->push(move(trans.m_newState));
+    case TransitionName::PUSH:
+        this->push(move(trans.m_newState), data);
         break;
-    case Transition<T>::Name::QUIT:
-        for (auto &s: m_states)
-            s->onStop();
+    case TransitionName::QUIT:
+        for (auto& s : m_states)
+            s->onStop(data);
         m_running = false;
         break;
-    case Transition<T>::NONE:
+    case TransitionName::NONE:
         break;
     }
 }
 
-template<typename T>
-StateMachine<T>::StateMachine(unique_ptr<AbstractState<T>> initial)
-    : m_states()
-    , m_running(true)
+template <typename T, typename E>
+StateMachine<T, E>::StateMachine()
+    : m_running(true)
+    , m_states()
+    , m_factory()
 {
-    m_states.push_back(move(initial));
+}
+
+template <typename T, typename E>
+void StateMachine<T, E>::start(const String &name, StateData<T> stateData)
+{
+    auto state = m_factory.queryState(name);
+    std::cout << state->getKey() << std::endl;
+    m_states.push_back(move(state));
+    m_states.back()->onStart(stateData);
+}
+
+template<typename T, typename E>
+template<typename S>
+void StateMachine<T, E>::registerState()
+{
+    static_assert(is_base_of<AbstractState<T, E>, S>::value, "Should be a base of AbstractState.");
+    static_assert(is_default_constructible<S>::value);
+    m_factory.template registerState<S>();
 }
 
 }
-
-#endif //R_TYPE_STATESSTACK_HPP

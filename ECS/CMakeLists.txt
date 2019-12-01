@@ -5,18 +5,20 @@ project(ecs LANGUAGES CXX)
 set(ECS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(ECS
-    ${ECS_SOURCES}/World.cpp
-    ${ECS_SOURCES}/StateMachine.cpp
     ${ECS_SOURCES}/Entity.cpp
-    ${ECS_SOURCES}/Transition.cpp
     ${ECS_SOURCES}/EntityRequest.cpp
     ${ECS_SOURCES}/Component.cpp
     ${ECS_SOURCES}/Event.cpp
-    ${ECS_SOURCES}/EventHandler.cpp)
+    ${ECS_SOURCES}/EventHandler.cpp
+    ${ECS_SOURCES}/BasicEntityComponentStorage.cpp
+    ${ECS_SOURCES}/Bundle.cpp
+    ${ECS_SOURCES}/World.cpp
+)
 
 add_library(ecs STATIC
     ${ECS}
 )
+
 find_package(Threads)
 
 target_include_directories(ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)

@@ -7,6 +7,7 @@ set(COMMON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 set(COMMON
     ${COMMON_SOURCES}/MD5Hasher.cpp
     ${COMMON_SOURCES}/Frame.cpp
+    ${COMMON_SOURCES}/StopWatch.cpp
 )
 
 add_library(common STATIC

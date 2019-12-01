@@ -5,41 +5,39 @@
 ** Main file.
 */
 
-#include <iostream>
-
 #ifndef VERSION
-    #define VERSION "NOT DEFINED"
+#define VERSION "NOT DEFINED"
 #endif
 
-#include "StateMachine.hpp"
+#include "Dispatcher.hpp"
 #include "MainMenuState.hpp"
-#include "World.hpp"
-#include <chrono>
-#include <memory>
+#include "Application.hpp"
+#include "ThreadPool.hpp"
+#include "GraphicBundle.hpp"
 
-shared_ptr<ecs::World> initializeWorld() {
-    auto world = make_shared<ecs::World>();
-    auto stateData = make_shared<ecs::StateData<string>>(ecs::StateData<string> { world, "Salut"});
-    auto pool = new ecs::ThreadPool<ecs::StateData<string>, ecs::Error>(stateData);
-    world->createResource("threadPool");
-    world->writeResource("threadPool", pool);
-    world->createResource("delta");
-    world->writeResource("delta", chrono::duration<double>(0));
-    return world;
-}
+#include "DrawSystem.hpp"
+#include "MovementSystem.hpp"
+#include "WithParameterSystem.hpp"
+#include "SystemNetworkEvent.hpp"
 
-unique_ptr<ecs::AbstractState<string>> initializeMainMenu(shared_ptr<ecs::World> world) {
-    auto pool = world->fetchResource<ecs::ThreadPool<ecs::StateData<string>, ecs::Error> *>("threadPool");
-    ecs::Dispatcher<ecs::StateData<string>, ecs::Error> dispatcher(*pool);
-    auto state = make_unique<MainMenuState>();
-    return state;
-}
+int main(int argc, char* argv[])
+{
+    try {
+        auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
+        dispatcher->registerSystem<DrawSystem>();
+        dispatcher->registerSystem<MovementSystem>();
+        dispatcher->registerSystem<WithParameterSystem>(100);
+        dispatcher->registerSystem<SystemNetworkEvent>();
+        auto initialState = make_unique<MainMenuState>(move(dispatcher));
 
-int main(int argc, char *argv[]) {
-    auto world = initializeWorld();
-    auto initialState = initializeMainMenu(world);
-    ecs::StateMachine states(move(initialState));
+        ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
+        app.withBundle<GraphicBundle>("Rtype");
 
-    // states.run();
+        app.run();
+    } catch(const exception& e) {
+        cout << e.what() << endl;
+    } catch(const char *str) {
+        cout << str << endl;
+    }
     return 0;
 }
