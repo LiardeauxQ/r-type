@@ -78,8 +78,11 @@ impl SimpleState for MenuState {
     }
 
     fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+        if let Some(entity) = self.ui_load {
+            delete_hierarchy(entity, data.world).expect("Failed to remove loading");
+        }
         if let Some(entity) = self.ui_root {
-            delete_hierarchy(entity, data.world).expect("Failed to remove Menu");
+            delete_hierarchy(entity, data.world).expect("Failed to remove menu");
         }
         self.ui_load = None;
         self.ui_root = None;
