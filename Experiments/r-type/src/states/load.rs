@@ -1,6 +1,5 @@
 use amethyst::{
     ecs::prelude::Entity,
-    prelude::*,
     ui::{UiCreator, UiLoader, UiPrefab},
     assets::{ProgressCounter, Completion, Handle},
     prelude::*,
@@ -16,6 +15,8 @@ pub struct LoadState {
     sheet_counter: Option<ProgressCounter>,
     load_ui: Option<Entity>,
     menu_ui: Option<Handle<UiPrefab>>,
+    game_ui: Option<Handle<UiPrefab>>,
+    pause_ui: Option<Handle<UiPrefab>>,
 }
 
 impl SimpleState for LoadState {
@@ -30,6 +31,8 @@ impl SimpleState for LoadState {
 
         self.load_ui = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/load.ron", &mut self.ui_counter)));
         self.menu_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/menu.ron", &mut self.ui_counter)));
+        self.game_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/game.ron", &mut self.ui_counter)));
+        self.pause_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/pause.ron", &mut self.ui_counter)));
 
         self.sheet_counter = Some(match sprite_sheet_list.load_from(world, sprite_infos) {
             Ok(counter) => counter,
@@ -58,9 +61,9 @@ impl SimpleState for LoadState {
                     let _ = data.world.delete_entity(entity);
                 }
                 Trans::Switch(Box::new(MenuState::new(
-                    data.world.create_entity()
-                    .with(self.menu_ui.as_ref().unwrap().clone())
-                    .build()
+                    data.world.create_entity().with(self.menu_ui.as_ref().unwrap().clone()).build(),
+                    self.game_ui.as_ref().unwrap().clone(),
+                    self.pause_ui.as_ref().unwrap().clone(),
                 )))
             }
             Completion::Loading => Trans::None,
