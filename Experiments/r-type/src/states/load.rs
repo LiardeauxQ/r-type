@@ -4,7 +4,7 @@ use amethyst::{
 };
 
 use crate::common::{SpriteInfo, SpriteSheetList};
-use crate::components::{Bullet, Enemy, Shield};
+use crate::components::{Bullet, Enemy, Shield, Explosion};
 use crate::states::RType;
 
 #[derive(Default)]
@@ -19,6 +19,7 @@ impl SimpleState for LoadState {
             SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", "player"),
             SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", "bullet"),
             SpriteInfo::new("r-typesheet5.gif", "../resources/enemy.ron", "enemy"),
+            SpriteInfo::new("r-typesheet1.gif", "../resources/explosion.ron", "explosion"),
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
@@ -30,6 +31,7 @@ impl SimpleState for LoadState {
         world.register::<Bullet>();
         world.register::<Enemy>();
         world.register::<Shield>();
+        world.register::<Explosion>();
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
