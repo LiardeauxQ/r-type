@@ -3,12 +3,12 @@ use amethyst::{
     input::{is_close_requested, is_key_down},
     prelude::*,
     ui::{UiCreator, UiEvent, UiEventType, UiFinder, UiPrefab},
-    assets::{Completion, Handle, Prefab},
+    assets::Handle,
     winit::VirtualKeyCode,
 };
 
 use crate::states::delete_hierarchy;
-use crate::states::{GameState, PauseState};
+use crate::states::GameState;
 
 const M_START_GAME_BUTTON: &str = "m_start_game";
 const M_OPTIONS_BUTTON: &str = "m_options";
@@ -17,6 +17,7 @@ const M_EXIT_GAME_BUTTON: &str = "m_exit_game";
 #[derive(Debug)]
 pub struct MenuState {
     root_ui: Entity,
+    game_ui: Handle<UiPrefab>,
     pause_ui: Handle<UiPrefab>,
     start_game_button: Option<Entity>,
     options_button: Option<Entity>,
@@ -24,9 +25,10 @@ pub struct MenuState {
 }
 
 impl MenuState {
-    pub fn new(root_ui: Entity, pause_ui: Handle<UiPrefab>) -> MenuState {
+    pub fn new(root_ui: Entity, game_ui: Handle<UiPrefab>, pause_ui: Handle<UiPrefab>) -> MenuState {
         MenuState {
             root_ui: root_ui,
+            game_ui: game_ui,
             pause_ui: pause_ui,
             start_game_button: None,
             options_button: None,
@@ -75,7 +77,10 @@ impl SimpleState for MenuState {
             }) => {
                 if Some(target) == self.start_game_button {
                     println!("START GAME PRESSED!");
-                    Trans::Push(Box::new(GameState::default()))
+                    Trans::Push(Box::new(GameState::new(
+                        data.world.create_entity().with(self.game_ui.clone()).build(),
+                        self.pause_ui.clone()),
+                    ))
                 } else if Some(target) == self.options_button {
                     println!("OPTIONS PRESSED!");
                     Trans::None
@@ -91,7 +96,7 @@ impl SimpleState for MenuState {
     }
 
     fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        delete_hierarchy(self.root_ui, data.world).expect("Failed to remove menu");
+        delete_hierarchy(self.root_ui, data.world).expect("Failed to remove menu state");
         self.start_game_button = None;
         self.options_button = None;
         self.exit_game_button = None;
