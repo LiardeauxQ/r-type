@@ -1,0 +1,128 @@
+#![enable(implicit_some)]
+Container(
+    transform: (
+        id: "background",
+        anchor: Middle,
+        stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
+        width: 20.,
+        height: 20.,
+        z: 0,
+    ),
+    children: [
+
+        Image(
+            transform: (
+                id: "background",
+                width: 2000.,
+                height: 1475.,
+                rotation: (0.5, -0.5, -0.5, 0.5),
+                tab_order: 1,
+                anchor: Middle,
+                z: 0,
+            ),
+            image: Texture(File("stars.png", ("IMAGE", ()))),
+        ),
+
+        Container(
+            transform: (
+                id: "container_start",
+                y: 210,
+                width: 755.,
+                height: 150.,
+                anchor: Middle,
+                z: 2,
+            ),
+            background: SolidColor(1.0, 1.0, 1.0, 1.0),
+            children: [
+
+                Button(
+                    transform: (
+                        id: "start_game",
+                        width: 750.,
+                        height: 145.,
+                        tab_order: 1,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "START GAME",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 75.,
+                        normal_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 1.0),
+                        hover_image: SolidColor(0.0, 0.0, 0.05, 1.0),
+                        press_image: SolidColor(0.0, 0.2, 0.5, 1.0),
+                    )
+                ),
+            ]
+        ),
+
+        Container(
+            transform: (
+                id: "container_options",
+                y: 50,
+                width: 755.,
+                height: 150.,
+                anchor: Middle,
+            ),
+            background: SolidColor(1.0, 1.0, 1.0, 1.0),
+            children: [
+
+                Button(
+                    transform: (
+                        id: "options",
+                        width: 750.,
+                        height: 145.,
+                        tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "OPTIONS",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 75.,
+                        normal_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 1.0),
+                        hover_image: SolidColor(0.0, 0.0, 0.05, 1.0),
+                        press_image: SolidColor(0.0, 0.2, 0.5, 1.0),
+                    )
+                ),
+            ]
+        ),
+
+        Container(
+            transform: (
+                id: "container_exit",
+                y: -110,
+                width: 755.,
+                height: 150.,
+                anchor: Middle,
+            ),
+            background: SolidColor(1.0, 1.0, 1.0, 1.0),
+            children: [
+
+                Button(
+                    transform: (
+                        id: "exit_game",
+                        width: 750.,
+                        height: 145.,
+                        tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                        tansparent: true,
+                    ),
+                    button: (
+                        text: "EXIT GAME",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 75.,
+                        normal_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 1.0),
+                        hover_image: SolidColor(0.0, 0.0, 0.05, 1.0),
+                        press_image: SolidColor(0.0, 0.2, 0.5, 1.0),
+                    )
+                ),
+            ]
+        ),
+
+    ],
+)

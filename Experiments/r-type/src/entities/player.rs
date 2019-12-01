@@ -1,4 +1,9 @@
-use amethyst::{core::transform::Transform, prelude::*, renderer::SpriteRender};
+use amethyst::{
+    core::transform::Transform,
+    prelude::*,
+    renderer::SpriteRender,
+    ecs::Entity,
+};
 
 use crate::common::{SpriteSheetList};
 use crate::components::{
@@ -16,7 +21,7 @@ use crate::components::{
 };
 use crate::states::{HEIGHT, WIDTH};
 
-pub fn initialize_player(world: &mut World) -> Result<(), &'static str> {
+pub fn initialize_player(world: &mut World) -> Result<Entity, &'static str> {
     let mut transform_s1 = Transform::default();
     let player_sheet = world
         .fetch::<SpriteSheetList>()
@@ -28,7 +33,7 @@ pub fn initialize_player(world: &mut World) -> Result<(), &'static str> {
     };
 
     transform_s1.set_translation_xyz(WIDTH * 0.5, HEIGHT * 0.5, 0.0);
-    world
+    Ok(world
         .create_entity()
         .with(Player::new(33.0, 17.0))
         .with(Direction::RIGHT)
@@ -43,6 +48,5 @@ pub fn initialize_player(world: &mut World) -> Result<(), &'static str> {
         .with(Shield::new(100, 100))
         .with(Team::new(1))
         .with(Movable{is_movable: true})
-        .build();
-    Ok(())
+        .build())
 }

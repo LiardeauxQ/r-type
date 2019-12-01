@@ -7,8 +7,6 @@ use amethyst::{
 
 use crate::components::{Bullet, Velocity, Collidee, Collider, Damage, Team, Health, TimeAnimation, TimeAnimationList, SheetPosition, Direction, Movable};
 
-use std::time::Duration;
-
 pub fn spawn_bullet(entities: &Entities,
                     sprite_sheet: Handle<SpriteSheet>,
                     lazy_update: &ReadExpect<LazyUpdate>,
@@ -20,7 +18,7 @@ pub fn spawn_bullet(entities: &Entities,
     };
     let mut animations = TimeAnimationList::default();
 
-    animations.insert("shoot", TimeAnimation::new(SheetPosition::new(8, 10, 8), 250));
+    animations.insert("shoot", TimeAnimation::new(SheetPosition::new(8, 10, 8), 250, false));
     animations.run("shoot");
     let bullet_entity = entities.create();
     lazy_update.insert(bullet_entity, Bullet);
