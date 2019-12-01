@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <any>
 #include "Definitions.hpp"
 
 template<typename To, typename From>
@@ -22,4 +23,5 @@ class IFactorizable {
         virtual ~IFactorizable() = default;
         virtual Box<IFactorizable> copy() const = 0;
         virtual T getKey() const = 0;
+
 };

@@ -3,26 +3,38 @@
 //
 
 #include "DummySystem.hpp"
-#include "Dispatcher.hpp"
+#include "DummyBundle.hpp"
+#include "MainMenuState.hpp"
+#include "Application.hpp"
 
 extern "C" {
 
-    int registerSystems(Box<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>> &dispatcher) {
-        dispatcher->registerSystem<DummySystem>();
+    int registerStates(ecs::Application<string, ecs::Event> &app) {
+        app.registerState<MainMenuState>();
         return 1;
     }
 
-    int registerSchemas(ecs::World &world) {
-        world.registerComponent(ecs::ComponentSchemaBuilder(String("Position"))
+    int registerSystems(ecs::Application<string, ecs::Event> &app) {
+        app.registerSystem<DummySystem>("base::MainMenuState");
+        return 1;
+    }
+
+    int registerSchemas(ecs::Application<string, ecs::Event> &app) {
+        app.registerComponent(ecs::ComponentSchemaBuilder(String("Position"))
             .with(ecs::ComponentAttributeSchema("x", ecs::AttributeType::INT))
             .with(ecs::ComponentAttributeSchema("y", ecs::AttributeType::INT))
             .with(ecs::ComponentAttributeSchema("z", ecs::AttributeType::INT))
             .build());
-        world.registerComponent(ecs::ComponentSchemaBuilder(String("Velocity"))
+        app.registerComponent(ecs::ComponentSchemaBuilder(String("Velocity"))
             .with(ecs::ComponentAttributeSchema("x", ecs::AttributeType::INT))
             .with(ecs::ComponentAttributeSchema("y", ecs::AttributeType::INT))
             .with(ecs::ComponentAttributeSchema("z", ecs::AttributeType::INT))
             .build());
+        return 1;
+    }
+
+    int addBundle(ecs::Application<string, ecs::Event> &app) {
+        app.withBundle<DummyBundle>();
         return 1;
     }
 

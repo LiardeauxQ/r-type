@@ -53,6 +53,8 @@ public:
     void registerSystem();
     void attachThreadPool(shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> pool);
 
+    void registerOn(const String &name);
+
     virtual void onStart(StateData<T>& data) = 0;
     virtual void onStop(StateData<T>& data) = 0;
     virtual void onPause(StateData<T>& data) = 0;

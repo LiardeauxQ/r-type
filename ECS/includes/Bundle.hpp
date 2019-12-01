@@ -15,7 +15,7 @@ class Bundle {
 public:
     virtual ~Bundle() = default;
 
-    virtual void configure(const string& path);
+    //virtual void configure(const string& path);
 
     virtual void load(World& m_world, EventHandler& handler) = 0;
 
