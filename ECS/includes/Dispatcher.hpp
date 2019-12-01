@@ -128,6 +128,8 @@ void Dispatcher<T, E>::registerSystem(Args... args)
 template <typename T, typename E>
 Dispatcher<T, E>::~Dispatcher()
 {
+    if (m_pool.get() == nullptr)
+        return;
     for (uint32_t i = 0; i < m_pool->m_nbThread; ++i)
         if (m_workersData[i]) {
             i--;
@@ -139,7 +141,6 @@ template <typename T, typename E>
 Box<Dispatcher<T, E>> Dispatcher<T, E>::copy() const
 {
     Box<Dispatcher<T, E>> dispatcher = std::make_unique<Dispatcher<T, E>>();
-    std::cout << m_systems.size() << std::endl;
     for (const auto& system : m_systems) {
         dispatcher->m_systems.push_back(static_unique_pointer_cast<ISystem<T>>(move(system->copy())));
     }

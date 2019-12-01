@@ -11,7 +11,8 @@ void ecs::World::storeEntity(Entity entity)
 
 ecs::World::World(unique_ptr<IEntityComponentStorage> storage)
     : m_storage(move(storage))
-{}
+{
+}
 
 vector<ecs::Entity> ecs::World::fetchStorage(ecs::EntityRequest request)
 {

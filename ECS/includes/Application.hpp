@@ -22,19 +22,22 @@ public:
     template<typename S>
     void registerState();
 
+    template<typename S>
+    void registerSystem(const String &name);
+
     void run(const String &stateName);
     void withBundle(Bundle& bundle);
 
     template <typename B, typename... Args>
     void withBundle(Args&&... args);
 
-    World &getWorld() { return m_world; }
+    void registerComponent(ComponentSchema schema);
+
 
 private:
     void handleTransition(StateData<T> stateData);
     // void handleEvent(StateData<T> stateData);
 
-    shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> m_threadPool;
     deque<Transition<T, E>> m_transitions;
     EventHandler m_eventHandler;
     unique_ptr<T> m_data;
@@ -44,8 +47,7 @@ private:
 
 template <typename T, typename E>
 Application<T, E>::Application(unique_ptr<T> data)
-    : m_threadPool{make_shared<ThreadPool<ecs::StateData<T>, ecs::Error>>(1)} // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
-    , m_transitions()
+    : m_transitions()
     , m_eventHandler()
     , m_data(move(data))
     , m_stateMachine()
@@ -76,10 +78,21 @@ template<typename S>
 void Application<T, E>::registerState()
 {
     static_assert(is_base_of<AbstractState<T, E>, S>::value, "Should be a base of AbstractState.");
-    static_assert(is_default_constructible<S>::value);
     m_stateMachine.template registerState<S>();
-    /*newState->attachThreadPool(&m_threadPool);
-    m_stateMachine.push(move(newState));*/
+}
+
+template<typename T, typename E>
+template<typename S>
+void Application<T, E>::registerSystem(const String &name)
+{
+    static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
+    m_stateMachine.template registerSystem<S>(name);
+}
+
+template<typename T, typename E>
+void Application<T, E>::registerComponent(ComponentSchema schema)
+{
+    m_world.registerComponent(move(schema));
 }
 
 template <typename T, typename E>

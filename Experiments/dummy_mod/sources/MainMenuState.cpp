@@ -3,7 +3,7 @@
 //
 
 #include "MainMenuState.hpp"
-#include <TcpListener.hpp>
+#include "TcpListener.hpp"
 
 void MainMenuState::onStart(ecs::StateData<string>& data)
 {
@@ -74,7 +74,6 @@ String MainMenuState::getKey() const
 }
 
 Box<IFactorizable<String>> MainMenuState::copy() const {
-    std::cout << m_dispatcher->getSystemNames().at(0) << std::endl;
     return static_unique_pointer_cast<IFactorizable<String>>(
         std::make_unique<MainMenuState>(
             m_dispatcher->copy()

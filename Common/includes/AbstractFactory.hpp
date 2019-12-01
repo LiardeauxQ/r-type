@@ -9,6 +9,7 @@
 #include "Definitions.hpp"
 #include "IFactorizable.hpp"
 
+using namespace std;
 
 template<typename KeyType, typename Hasher>
 class AbstractFactory {
@@ -22,7 +23,7 @@ class AbstractFactory {
 
         template<typename U>
         void registerFactorizable() {
-            auto data = std::make_unique<U>();
+            auto data = make_unique<U>();
             registerFactorizableInstance(move(static_unique_pointer_cast<IFactorizable<KeyType>>(move(data))));
         }
 
@@ -37,6 +38,18 @@ class AbstractFactory {
                 return m_factorizables.at(key)->copy();
             }
             throw "Factorizable not found";
+        }
+
+        Box<IFactorizable<KeyType>> &getHashedBaseInstance(KeyType key) {
+            if (m_factorizables.find(key) != m_factorizables.end()) {
+                return m_factorizables.at(key);
+            }
+            throw "Factorizable not found";
+        }
+
+        Box<IFactorizable<KeyType>> &getBaseInstance(KeyType key) {
+            KeyType hashedKey = Hasher::hash(key);
+            return this->getHashedBaseInstance(hashedKey);
         }
 
         Box<IFactorizable<KeyType>> create(KeyType key) {

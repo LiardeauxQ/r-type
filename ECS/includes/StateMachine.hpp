@@ -5,10 +5,14 @@
 #pragma once
 
 #include "AbstractState.hpp"
+#include "Event.hpp"
+#include "Bundle.hpp"
 #include "StopWatch.hpp"
 #include "Transition.hpp"
 #include "StateFactory.hpp"
+#include "ThreadPool.hpp"
 #include "World.hpp"
+#include "ISystem.hpp"
 
 namespace ecs {
 
@@ -18,6 +22,8 @@ template <typename T, typename E>
 class AbstractState;
 template <typename T>
 struct StateData;
+
+struct Error;
 
 using namespace std;
 
@@ -32,6 +38,9 @@ public:
     template<typename S>
     void registerState();
 
+    template<typename S>
+    void registerSystem(const String &name);
+
     Transition<T, E> handleEvent(StateData<T> data, const E& event);
     void transition(Transition<T, E> trans, StateData<T>& data);
     bool m_running;
@@ -39,6 +48,7 @@ public:
 private:
     void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
     unique_ptr<AbstractState<T, E>> pop(StateData<T>& data);
+    shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> m_threadPool;
     vector<unique_ptr<AbstractState<T, E>>> m_states;
     StateFactory<T, E> m_factory;
 };
@@ -116,6 +126,7 @@ void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 template <typename T, typename E>
 StateMachine<T, E>::StateMachine()
     : m_running(true)
+    , m_threadPool{make_shared<ThreadPool<ecs::StateData<T>, Error>>(1)} // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
     , m_states()
     , m_factory()
 {
@@ -124,9 +135,9 @@ StateMachine<T, E>::StateMachine()
 template <typename T, typename E>
 void StateMachine<T, E>::start(const String &name, StateData<T> stateData)
 {
-    auto state = m_factory.queryState(name);
-    std::cout << state->getKey() << std::endl;
-    m_states.push_back(move(state));
+    auto newState = m_factory.queryState(name);
+    newState->attachThreadPool(m_threadPool);
+    m_states.push_back(move(newState));
     m_states.back()->onStart(stateData);
 }
 
@@ -135,8 +146,15 @@ template<typename S>
 void StateMachine<T, E>::registerState()
 {
     static_assert(is_base_of<AbstractState<T, E>, S>::value, "Should be a base of AbstractState.");
-    static_assert(is_default_constructible<S>::value);
     m_factory.template registerState<S>();
+}
+
+template<typename T, typename E>
+template<typename S>
+void StateMachine<T, E>::registerSystem(const String &name)
+{
+    static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
+    m_factory.template registerSystem<S>(name);
 }
 
 }

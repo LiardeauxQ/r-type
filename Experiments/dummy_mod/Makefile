@@ -16,12 +16,14 @@ NAME	=			../dummy_mod.so
 BUILD	=			$(ROOT)/build
 
 SRC		=			$(SRC_DIR)/entrypoint.cpp \
-					$(SRC_DIR)/DummySystem.cpp
+					$(SRC_DIR)/DummySystem.cpp \
+					$(SRC_DIR)/MainMenuState.cpp \
+					$(SRC_DIR)/DummyBundle.cpp \
 
 
-CXXFLAGS=			-g -I $(ROOT)/includes -I $(ROOT)/../../ECS/includes -I $(ROOT)/../../Loader/includes $(WARN) -std=gnu++17 -fPIC -I $(ROOT)/../../Common/includes
+CXXFLAGS=			-g -I $(ROOT)/includes -I $(ROOT)/../../ECS/includes -I $(ROOT)/../../Loader/includes -I $(ROOT)/../../Common/includes -I $(ROOT)/../../Network/includes $(WARN) -std=gnu++17 -fPIC 
 
-LDFLAGS	=			-shared
+LDFLAGS	=			-shared -L $(ROOT)/../../build/Network -lnetwork
 
 LIB 	?=			1
 
