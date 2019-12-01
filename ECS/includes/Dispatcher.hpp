@@ -35,11 +35,16 @@ public:
     template<typename S, typename... Args>
     void registerSystem(Args... args);
 
+    Box<Dispatcher<T, E>> copy() const;
+
+    vector<string> getSystemNames() const;
+
+
 private:
     shared_ptr<ThreadPool<T, E>> m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
     vector<bool> m_workersData;
-    [[nodiscard]] int prepareDispatch(const vector<Entity>&) const;
+    [[nodiscard]] uint32_t prepareDispatch(const vector<Entity>&) const;
 };
 
 template <typename T, typename E>
@@ -58,9 +63,9 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
-int Dispatcher<T, E>::prepareDispatch(const vector<Entity>& entites) const
+uint32_t Dispatcher<T, E>::prepareDispatch(const vector<Entity>& entites) const
 {
-    int i = 0;
+    uint32_t i = 0;
 
     while (true) {
         if (!m_workersData[i] /* workerData.conflict(fetchedData) */)
@@ -78,14 +83,12 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
     for (auto& s : m_systems) {
         auto dependencies = s->getDependencies();
         vector<Entity> fetchedData = inputData->world.fetchStorage(move(dependencies));
-        int index = this->prepareDispatch(fetchedData);
-        if (index > -1) {
-            m_workersData[index] = true;
-            m_pool->enqueueWork([&s, this, index, fetched{ move(fetchedData) }](shared_ptr<T> data) -> E {
-                (*s)(fetched, data);
-                this->m_workersData[index] = false;
-            }, inputData);
-        }
+        uint32_t index = this->prepareDispatch(fetchedData);
+        m_workersData[index] = true;
+        m_pool->enqueueWork([&s, this, index, fetched{ move(fetchedData) }](shared_ptr<T> data) -> E {
+            (*s)(fetched, data);
+            this->m_workersData[index] = false;
+        }, inputData);
     }
 }
 
@@ -94,7 +97,8 @@ Dispatcher<T, E>::Dispatcher()
     : m_pool(nullptr)
     , m_systems()
     , m_workersData()
-{}
+{
+}
 
 template <typename T, typename E>
 template <typename S>
@@ -124,11 +128,30 @@ void Dispatcher<T, E>::registerSystem(Args... args)
 template <typename T, typename E>
 Dispatcher<T, E>::~Dispatcher()
 {
-    for (int i = 0; i < m_pool->m_nbThread; ++i)
+    for (uint32_t i = 0; i < m_pool->m_nbThread; ++i)
         if (m_workersData[i]) {
             i--;
             continue;
         }
+}
+
+template <typename T, typename E>
+Box<Dispatcher<T, E>> Dispatcher<T, E>::copy() const
+{
+    Box<Dispatcher<T, E>> dispatcher = std::make_unique<Dispatcher<T, E>>();
+    std::cout << m_systems.size() << std::endl;
+    for (const auto& system : m_systems) {
+        dispatcher->m_systems.push_back(static_unique_pointer_cast<ISystem<T>>(move(system->copy())));
+    }
+    return dispatcher;
+}
+
+
+template <typename T, typename E>
+vector<string> Dispatcher<T, E>::getSystemNames() const
+{
+    std::cout << m_systems.size() << std::endl;
+    return vector<string>();
 }
 
 }

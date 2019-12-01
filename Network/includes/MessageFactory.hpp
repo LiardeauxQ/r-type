@@ -16,8 +16,8 @@ class MessageFactory {
         }
 
         template<typename T>
-        void register_message() {
-            m_factory.register_factorizable<T>();
+        void registerMessage() {
+            m_factory.registerFactorizable<T>();
         }
 
         Vec<Box<Message>> deserialize_packets(Vec<u8> const &bytes);

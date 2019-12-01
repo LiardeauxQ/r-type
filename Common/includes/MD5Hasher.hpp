@@ -2,6 +2,8 @@
 // Created by nwmqpa on 13/11/19
 //
 
+#pragma once
+
 #include "Definitions.hpp"
 
 class MD5Hasher {

@@ -7,8 +7,12 @@
 
 #include <iostream>
 #include <ostream>
+#include "MainMenuState.hpp"
+#include "Dispatcher.hpp"
+#include "Application.hpp"
 #include "MessageFactory.hpp"
 #include "BasicEntityComponentStorage.hpp"
+#include "Loader.hpp"
 /*#include <GameServer.hpp>
 
 #ifndef VERSION
@@ -52,13 +56,13 @@ class CreateRoom : public Message {
 };
 
 int main(void) {
-
+/*
     MessageFactory factory;
     Vec<u8> vec1 = {'R', '-', 'T', 'Y', 0xC4, 0x54, 0xAD, 0xEC, 0xC9, 0xE0, 0x63, 0x69, 0x2A, 0x64, 0xCF, 0xAC, 0xB9, 0x7C, 0x49 };
     Vec<u8> vec2 = {0x34, 0x05, 0x00, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0x00, 'R', '-'};
     Vec<u8> vec3 = {'T', 'Y', 0xC4, 0x54, 0xAD, 0xEC, 0xC9, 0xE0, 0x63, 0x69, 0x2A, 0x64, 0xCF, 0xAC, 0xB9, 0x7C, 0x49};
     Vec<u8> vec4 = {0x34, 0x05, 0x00, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0x00, 'R', '-', 'T', 'Y', 0xC4, 0x54, 0xAD, 0xEC, 0xC9, 0xE0, 0x63, 0x69, 0x2A, 0x64, 0xCF, 0xAC, 0xB9, 0x7C, 0x49, 0x34, 0x05, 0x00, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0x00};
-    factory.register_message<CreateRoom>();
+    factory.registerMessage<CreateRoom>();
 
     auto packets1 = factory.deserialize_packets(vec1);
     std::cout << "First:" << std::endl;
@@ -126,5 +130,42 @@ int main(void) {
         std::cout << entity.getName() << std::endl;
     }
     std::cout << storage << std::endl;
+    */
+
+    try {
+        Loader loader;
+        auto lib = Library(std::filesystem::path(String("Experiments/dummy_mod.so")));
+        loader.registerLibrary(std::move(lib));
+        //auto dispatcher = make_unique<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>();
+        //loader.useSymbol<int, Box<ecs::Dispatcher<ecs::StateData<std::string>, ecs::Error>> &>(String("registerSystems"), dispatcher);
+        //auto initialState = make_unique<MainMenuState>(move(dispatcher));
+
+        ecs::Application<string, ecs::Event> app(make_unique<string>());
+
+        loader.useSymbol<int, ecs::World &>(String("registerSchemas"), app.getWorld());
+        for (int i = 0; i < 10; i++) {
+            auto position = ecs::Component("Position");
+            auto velocity = ecs::Component("Velocity");
+
+            position.addAttribute(ecs::ComponentAttribute(String("x"), ecs::AttributeType::INT, std::any(i)));
+            position.addAttribute(ecs::ComponentAttribute(String("y"), ecs::AttributeType::INT, std::any(i)));
+            position.addAttribute(ecs::ComponentAttribute(String("z"), ecs::AttributeType::INT, std::any(i)));
+            velocity.addAttribute(ecs::ComponentAttribute(String("x"), ecs::AttributeType::INT, std::any(i)));
+            velocity.addAttribute(ecs::ComponentAttribute(String("y"), ecs::AttributeType::INT, std::any(i)));
+            velocity.addAttribute(ecs::ComponentAttribute(String("z"), ecs::AttributeType::INT, std::any(i)));
+            auto entityBuilder = ecs::EntityBuilder().with(position);
+            if (i % 2)
+                entityBuilder.with(velocity);
+            app.getWorld().storeEntity(entityBuilder.build());
+        }
+        app.registerState<MainMenuState>();
+        app.run("base::MainMenuState");
+    } catch(const exception& e) {
+        cout << e.what() << endl;
+    } catch(const char *str) {
+        cout << str << endl;
+    }
+    return 0;
+
 
 }

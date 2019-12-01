@@ -10,6 +10,7 @@
 #include "Event.hpp"
 #include "World.hpp"
 #include "ThreadPool.hpp"
+#include "IFactorizable.hpp"
 
 #include <deque>
 #include <utility>
@@ -38,9 +39,10 @@ template <typename T, typename E>
 class Dispatcher;
 
 template <typename T, typename E>
-class AbstractState {
+class AbstractState : public IFactorizable<String> {
 public:
     explicit AbstractState(unique_ptr<Dispatcher<StateData<T>, ecs::Error>>);
+    explicit AbstractState();
 
     AbstractState& operator=(AbstractState&&) noexcept;
     AbstractState(AbstractState&&) noexcept;
@@ -93,6 +95,12 @@ template <typename T, typename E>
 AbstractState<T, E>::AbstractState(unique_ptr<ecs::Dispatcher<ecs::StateData<T>, ecs::Error>> dispatcher)
     : m_dispatcher(move(dispatcher))
 {}
+
+template<typename T, typename E>
+AbstractState<T, E>::AbstractState()
+    : m_dispatcher()
+{
+}
 
 template <typename T, typename E>
 void AbstractState<T, E>::attachThreadPool(shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> pool)

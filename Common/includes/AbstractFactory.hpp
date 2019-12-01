@@ -2,41 +2,41 @@
 // Created by nwmqpa
 //
 
+#pragma once
+
 #include <tuple>
+#include <iostream>
 #include "Definitions.hpp"
 #include "IFactorizable.hpp"
 
-template<typename To, typename From>
-Box<To> static_unique_pointer_cast(Box<From>&& old){
-    To *ptr = dynamic_cast<To *>(old.get());
-    if (ptr == nullptr) {
-        return Box<To>(nullptr);
-    }
-    old.release();
-    return Box<To>(ptr);
-}
 
 template<typename KeyType, typename Hasher>
 class AbstractFactory {
 
     public:
-        AbstractFactory() = default;
+        AbstractFactory()
+        : m_factorizables()
+        {}
+
         ~AbstractFactory() = default;
 
         template<typename U>
-        void register_factorizable() {
-            IFactorizable<KeyType> *data = new U();
-            KeyType hashedKey = Hasher::hash(data->getKey());
-            m_factorizable.push_back(std::make_tuple(hashedKey, data));
+        void registerFactorizable() {
+            auto data = std::make_unique<U>();
+            registerFactorizableInstance(move(static_unique_pointer_cast<IFactorizable<KeyType>>(move(data))));
+        }
+
+        void registerFactorizableInstance(Box<IFactorizable<KeyType>> instance)
+        {
+            KeyType hashedKey = Hasher::hash(instance->getKey());
+            m_factorizables[hashedKey] = move(instance);
         }
 
         Box<IFactorizable<KeyType>> createWithHash(KeyType key) {
-            for (auto tuple : m_factorizable) {
-                if (std::get<0>(tuple) == key) {
-                    return std::get<1>(tuple)->copy();
-                }
+            if (m_factorizables.find(key) != m_factorizables.end()) {
+                return m_factorizables.at(key)->copy();
             }
-            return std::unique_ptr<IFactorizable<KeyType>>(nullptr);
+            throw "Factorizable not found";
         }
 
         Box<IFactorizable<KeyType>> create(KeyType key) {
@@ -45,6 +45,6 @@ class AbstractFactory {
         }
     
     private:
-        std::vector<std::tuple<KeyType, IFactorizable<KeyType> *>> m_factorizable;
+        Map<KeyType, Box<IFactorizable<KeyType>>> m_factorizables;
 
 };

@@ -100,9 +100,6 @@ void BasicEntityComponentStorage::store(const Vec<Entity>& entities)
                 if (!component.second.complyWith(getSchema(component.first))) {
                     throw ComponentDoesNotComplyWithSchema();
                 }
-                for (const auto& name: m_schemas) {
-                    std::cout << name.m_name << std::endl;
-                }
                 m_components.at(component.first)[entity.getName()] = component.second;
             }
         }

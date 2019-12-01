@@ -7,7 +7,6 @@
 #include "AbstractState.hpp"
 #include "Event.hpp"
 #include "StateMachine.hpp"
-#include "SFMLEventProducer.hpp"
 #include "Bundle.hpp"
 
 namespace ecs {
@@ -17,15 +16,19 @@ using namespace std;
 template <typename T, typename E = Event>
 class Application {
 public:
-    Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data);
+    Application(unique_ptr<T> data);
     ~Application() = default;
 
-    void registerState(unique_ptr<AbstractState<T, E>> newState);
-    void run();
+    template<typename S>
+    void registerState();
+
+    void run(const String &stateName);
     void withBundle(Bundle& bundle);
 
     template <typename B, typename... Args>
     void withBundle(Args&&... args);
+
+    World &getWorld() { return m_world; }
 
 private:
     void handleTransition(StateData<T> stateData);
@@ -40,27 +43,24 @@ private:
 };
 
 template <typename T, typename E>
-Application<T, E>::Application(unique_ptr<AbstractState<T, E>> initialState, unique_ptr<T> data)
+Application<T, E>::Application(unique_ptr<T> data)
     : m_threadPool{make_shared<ThreadPool<ecs::StateData<T>, ecs::Error>>(1)} // TODO: Check if the game doesn't run the same system twice. Then try with the thread pool.
     , m_transitions()
     , m_eventHandler()
     , m_data(move(data))
-    , m_stateMachine([&]() {
-        initialState->attachThreadPool(this->m_threadPool);
-        return move(initialState);
-    }())
+    , m_stateMachine()
     , m_world(unique_ptr<IEntityComponentStorage>(new BasicEntityComponentStorage()))
 {
     m_world.writeResource<deque<Transition<T, E>> *>("transitionQueue", &m_transitions);
 }
 
 template <typename T, typename E>
-void Application<T, E>::run()
+void Application<T, E>::run(const String &stateName)
 {
     double deltaTime = 0;
 
     m_eventHandler.start();
-    m_stateMachine.start(StateData<T> { m_world, deltaTime, *m_data });
+    m_stateMachine.start(stateName, StateData<T> { m_world, deltaTime, *m_data });
     while (m_stateMachine.m_running) {
         m_world.m_timer.start();
         auto stateData = StateData<T> { m_world, deltaTime, *m_data };
@@ -71,11 +71,15 @@ void Application<T, E>::run()
     }
 }
 
-template <typename T, typename E>
-void Application<T, E>::registerState(unique_ptr<AbstractState<T, E>> newState)
+template<typename T, typename E>
+template<typename S>
+void Application<T, E>::registerState()
 {
-    newState->attachThreadPool(&m_threadPool);
-    m_stateMachine.push(move(newState));
+    static_assert(is_base_of<AbstractState<T, E>, S>::value, "Should be a base of AbstractState.");
+    static_assert(is_default_constructible<S>::value);
+    m_stateMachine.template registerState<S>();
+    /*newState->attachThreadPool(&m_threadPool);
+    m_stateMachine.push(move(newState));*/
 }
 
 template <typename T, typename E>

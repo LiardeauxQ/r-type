@@ -7,6 +7,7 @@
 #include "AbstractState.hpp"
 #include "Definitions.hpp"
 #include "EntityRequest.hpp"
+#include "IFactorizable.hpp"
 #include <any>
 
 namespace ecs {
@@ -15,7 +16,7 @@ using namespace std;
 template<typename T> struct StateData;
 
 template <typename T>
-class ISystem {
+class ISystem : public IFactorizable<String> {
 
 public:
     virtual ~ISystem() = default;

@@ -6,6 +6,16 @@
 
 #include "Definitions.hpp"
 
+template<typename To, typename From>
+Box<To> static_unique_pointer_cast(Box<From>&& old){
+    To *ptr = dynamic_cast<To *>(old.get());
+    if (ptr == nullptr) {
+        return Box<To>(nullptr);
+    }
+    old.release();
+    return Box<To>(ptr);
+}
+
 template<typename T>
 class IFactorizable {
     public:

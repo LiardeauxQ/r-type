@@ -7,6 +7,7 @@
 #include "AbstractState.hpp"
 #include "StopWatch.hpp"
 #include "Transition.hpp"
+#include "StateFactory.hpp"
 #include "World.hpp"
 
 namespace ecs {
@@ -23,10 +24,14 @@ using namespace std;
 template <typename T, typename E>
 class StateMachine {
 public:
-    explicit StateMachine(unique_ptr<AbstractState<T, E>> initial);
+    explicit StateMachine();
 
     void update(StateData<T> data);
-    void start(StateData<T> data);
+    void start(const String &name, StateData<T> data);
+
+    template<typename S>
+    void registerState();
+
     Transition<T, E> handleEvent(StateData<T> data, const E& event);
     void transition(Transition<T, E> trans, StateData<T>& data);
     bool m_running;
@@ -35,6 +40,7 @@ private:
     void push(Box<AbstractState<T, E>> newState, StateData<T>& data);
     unique_ptr<AbstractState<T, E>> pop(StateData<T>& data);
     vector<unique_ptr<AbstractState<T, E>>> m_states;
+    StateFactory<T, E> m_factory;
 };
 
 template <typename T, typename E>
@@ -108,17 +114,29 @@ void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
 }
 
 template <typename T, typename E>
-StateMachine<T, E>::StateMachine(unique_ptr<AbstractState<T, E>> initial)
+StateMachine<T, E>::StateMachine()
     : m_running(true)
     , m_states()
+    , m_factory()
 {
-    m_states.push_back(move(initial));
 }
 
 template <typename T, typename E>
-void StateMachine<T, E>::start(StateData<T> stateData)
+void StateMachine<T, E>::start(const String &name, StateData<T> stateData)
 {
+    auto state = m_factory.queryState(name);
+    std::cout << state->getKey() << std::endl;
+    m_states.push_back(move(state));
     m_states.back()->onStart(stateData);
+}
+
+template<typename T, typename E>
+template<typename S>
+void StateMachine<T, E>::registerState()
+{
+    static_assert(is_base_of<AbstractState<T, E>, S>::value, "Should be a base of AbstractState.");
+    static_assert(is_default_constructible<S>::value);
+    m_factory.template registerState<S>();
 }
 
 }

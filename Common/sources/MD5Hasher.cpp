@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <string.h>
 #include "Definitions.hpp"
 #include "MD5Hasher.hpp"
 
@@ -15,6 +16,7 @@
 
 String MD5Hasher::hash(String const &toHash) {
     unsigned char *data = new unsigned char[toHash.length()];
+    memset(data, 0, toHash.length());
 #ifdef __APPLE__
     CC_MD5_CTX context;
     CC_MD5_Init(&context);
