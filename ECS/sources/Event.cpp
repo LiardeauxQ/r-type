@@ -16,8 +16,13 @@ bool ecs::Event::isOfType(const string& type) const {
     return m_type == hash<string>()(type);
 }
 
-ecs::Event& ecs::Event::operator=(const ecs::Event& other) {
+ecs::Event::Event(ecs::Event&& other) noexcept
+    : m_type(other.m_type)
+    , m_value(move(other.m_value))
+{}
+ecs::Event& ecs::Event::operator=(ecs::Event&& other) noexcept
+{
+    m_value.swap(other.m_value);
     m_type = other.m_type;
-    m_value = other.m_value;
-    return (*this);
+    return *this;
 }

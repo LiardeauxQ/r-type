@@ -15,11 +15,11 @@ set(TESTS_RTYPE_SERVER
 
 set(TESTS_COMMON
     ${TESTS_SOURCES}/Common/test_common.cpp
+    ${TESTS_SOURCES}/Common/test_stop_watch.cpp
 )
 
 set(TESTS_ECS
     ${TESTS_SOURCES}/ECS/test_ecs.cpp
-    ${TESTS_SOURCES}/ECS/TestEvent.cpp
     ${TESTS_SOURCES}/ECS/test_thread_pool.cpp
 )
 

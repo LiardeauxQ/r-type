@@ -9,12 +9,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Documents/.cmake")
 # Set compiler arguments
 if (NOT WIN32)
 	if(NOT CMAKE_BUILD_TYPE)
-		set(CMAKE_BUILD_TYPE Release)
+		set(CMAKE_BUILD_TYPE Debug)
 	endif()
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wno-unused")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wno-unused")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g")
-	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -pipe -march=native")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -pipe -march=native -Wno-old-style-cast")
+	set(CMAKE_EXE_LINKER_FLAGS "-export-dynamic")
     set(CMAKE_STATIC_LINKER_FLAGS, "-lcriterion")
 endif ()
 
@@ -58,6 +59,7 @@ add_subdirectory(ECS)
 add_subdirectory(Physics)
 add_subdirectory(Parser)
 add_subdirectory(Network)
+add_subdirectory(Loader)
 
 # Client link
 

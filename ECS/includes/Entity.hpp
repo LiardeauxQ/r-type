@@ -4,37 +4,46 @@
 
 #pragma once
 
-#include "Definitions.hpp"
 #include "Component.hpp"
+#include "Definitions.hpp"
+#include <iostream>
 
 namespace ecs {
 
-    class Entity {
-        
-        public:
-            Entity(Vec<Component> components);
+class Entity {
 
-            Component &getComponent(String componentName);
+public:
+    explicit Entity(Vec<Component> components);
+    Entity(Vec<Component> components, String name);
 
-            void markDirty();
-            bool isDirty() const;
+    Entity(Entity&& entity) noexcept;
+    Entity& operator=(Entity&& entity) noexcept;
 
-        private:
-            Map<String, Component> m_components;
-            bool m_isDirty;
+    Entity(const Entity& entity);
 
-    };
+    Component& getComponent(String componentName);
+    [[nodiscard]] Map<String, Component> getComponents() const { return m_components; }
+    [[nodiscard]] String getName() const { return m_name; }
 
-    class EntityBuilder {
+    void markDirty();
+    [[nodiscard]] bool isDirty() const;
 
-        public:
-            EntityBuilder();
-            EntityBuilder with(Component &component);
-            Entity build();
+private:
+    Map<String, Component> m_components;
+    bool m_isDirty;
+    String m_name;
+};
 
-        private:
-            Vec<Component> m_components;
+class EntityBuilder {
 
-    };
+public:
+    EntityBuilder();
+    EntityBuilder with(Component& component);
+    Entity build();
+    Entity build(const String& name);
+
+private:
+    Vec<Component> m_components;
+};
 
 }

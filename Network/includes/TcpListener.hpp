@@ -7,13 +7,16 @@
 
 #include "Socket.hpp"
 #include "TcpStream.hpp"
+#include <iostream>
+#include <optional>
 
 class TcpListener : public Socket {
 public:
     explicit TcpListener(uint16_t port);
 
     [[nodiscard]] TcpStream accept() const;
-    void listen(int32_t nbConnection) const;
+    void listen(int32_t nbConnection = 0) const;
+    [[nodiscard]] optional<TcpStream> acceptNonBlocking() const;
 };
 
 #endif //CPP_RTYPE_2019_TCPLISTENER_HPP
