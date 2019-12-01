@@ -1,15 +1,22 @@
 use amethyst::{
-    assets::{ProgressCounter},
+    ecs::prelude::Entity,
+    ui::{UiCreator, UiLoader, UiPrefab},
+    assets::{ProgressCounter, Completion, Handle},
     prelude::*,
 };
 
 use crate::common::{SpriteInfo, SpriteSheetList};
+use crate::states::MenuState;
 use crate::components::{Bullet, Enemy, Shield, Explosion};
-use crate::states::{MenuState};
 
 #[derive(Default)]
 pub struct LoadState {
-    progress_counter: Option<ProgressCounter>,
+    ui_counter: ProgressCounter,
+    sheet_counter: Option<ProgressCounter>,
+    load_ui: Option<Entity>,
+    menu_ui: Option<Handle<UiPrefab>>,
+    game_ui: Option<Handle<UiPrefab>>,
+    pause_ui: Option<Handle<UiPrefab>>,
 }
 
 impl SimpleState for LoadState {
@@ -26,7 +33,12 @@ impl SimpleState for LoadState {
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
-        self.progress_counter = Some(match sprite_sheet_list.load_from(world, sprite_infos) {
+        self.load_ui = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/load.ron", &mut self.ui_counter)));
+        self.menu_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/menu.ron", &mut self.ui_counter)));
+        self.game_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/game.ron", &mut self.ui_counter)));
+        self.pause_ui = Some(world.exec(|loader: UiLoader<'_>| loader.load("ui/pause.ron", &mut self.ui_counter)));
+
+        self.sheet_counter = Some(match sprite_sheet_list.load_from(world, sprite_infos) {
             Ok(counter) => counter,
             _ => ProgressCounter::new(),
         });
@@ -38,12 +50,28 @@ impl SimpleState for LoadState {
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
-        if let Some(ref progress_counter) = self.progress_counter {
-            if progress_counter.is_complete() {
-                self.progress_counter = None;
-                return Trans::Switch(Box::new(MenuState::default()));
+        if let Some(ref sheet_counter) = self.sheet_counter {
+            if !sheet_counter.is_complete() {
+                return Trans::None;
             }
         }
-        Trans::None
+        match self.ui_counter.complete() {
+            Completion::Failed => {
+                eprintln!("Failed loading ui assets");
+                Trans::Quit
+            }
+            Completion::Complete => {
+                println!("Assets loaded");
+                if let Some(entity) = self.load_ui {
+                    let _ = data.world.delete_entity(entity);
+                }
+                Trans::Switch(Box::new(MenuState::new(
+                    data.world.create_entity().with(self.menu_ui.as_ref().unwrap().clone()).build(),
+                    self.game_ui.as_ref().unwrap().clone(),
+                    self.pause_ui.as_ref().unwrap().clone(),
+                )))
+            }
+            Completion::Loading => Trans::None,
+        }
     }
 }

@@ -8,6 +8,7 @@ Label(
         width: 200.,
         height: 50.,
         transparent: true,
+        z: 0,
     ),
     text: (
         text: "Loading",

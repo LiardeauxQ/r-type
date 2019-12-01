@@ -2,32 +2,43 @@ use amethyst::{
     ecs::prelude::Entity,
     input::{is_close_requested, is_key_down},
     prelude::*,
-    ui::{UiCreator, UiEvent, UiEventType, UiFinder},
+    ui::{UiCreator, UiEvent, UiEventType, UiFinder, UiPrefab},
+    assets::Handle,
     winit::VirtualKeyCode,
 };
 
 use crate::states::{delete_hierarchy, GameState};
 
-const START_GAME_BUTTON: &str = "start_game";
-const OPTIONS_BUTTON: &str = "options";
-const EXIT_GAME_BUTTON: &str = "exit_game";
+const M_START_GAME_BUTTON: &str = "m_start_game";
+const M_OPTIONS_BUTTON: &str = "m_options";
+const M_EXIT_GAME_BUTTON: &str = "m_exit_game";
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct MenuState {
-    ui_load: Option<Entity>,
-    ui_root: Option<Entity>,
+    root_ui: Entity,
+    game_ui: Handle<UiPrefab>,
+    pause_ui: Handle<UiPrefab>,
     start_game_button: Option<Entity>,
     options_button: Option<Entity>,
     exit_game_button: Option<Entity>,
 }
 
+impl MenuState {
+    pub fn new(root_ui: Entity, game_ui: Handle<UiPrefab>, pause_ui: Handle<UiPrefab>) -> MenuState {
+        MenuState {
+            root_ui: root_ui,
+            game_ui: game_ui,
+            pause_ui: pause_ui,
+            start_game_button: None,
+            options_button: None,
+            exit_game_button: None,
+        }
+    }
+}
+
 impl SimpleState for MenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         println!("Entering MenuState");
-        let world = data.world;
-
-        self.ui_load = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/load.ron", ())));
-        self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
@@ -38,9 +49,9 @@ impl SimpleState for MenuState {
             || self.exit_game_button.is_none()
         {
             world.exec(|ui_finder: UiFinder<'_>| {
-                self.start_game_button = ui_finder.find(START_GAME_BUTTON);
-                self.options_button = ui_finder.find(OPTIONS_BUTTON);
-                self.exit_game_button = ui_finder.find(EXIT_GAME_BUTTON);
+                self.start_game_button = ui_finder.find(M_START_GAME_BUTTON);
+                self.options_button = ui_finder.find(M_OPTIONS_BUTTON);
+                self.exit_game_button = ui_finder.find(M_EXIT_GAME_BUTTON);
             });
         }
 
@@ -64,26 +75,26 @@ impl SimpleState for MenuState {
             }) => {
                 if Some(target) == self.start_game_button {
                     println!("START GAME PRESSED!");
-                    return Trans::Switch(Box::new(GameState::default()));
-                }
-                if Some(target) == self.options_button {
+                    Trans::Switch(Box::new(GameState::new(
+                        data.world.create_entity().with(self.game_ui.clone()).build(),
+                        self.pause_ui.clone()),
+                    ))
+                } else if Some(target) == self.options_button {
                     println!("OPTIONS PRESSED!");
-                }
-                if Some(target) == self.exit_game_button {
+                    Trans::None
+                } else if Some(target) == self.exit_game_button {
                     println!("EXIT GAME PRESSED!");
+                    Trans::Quit
+                } else {
+                    Trans::None
                 }
-                Trans::None
             }
             _ => Trans::None
         }
     }
 
     fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        if let Some(entity) = self.ui_root {
-            delete_hierarchy(entity, data.world).expect("Failed to remove Menu");
-        }
-        self.ui_load = None;
-        self.ui_root = None;
+        delete_hierarchy(self.root_ui, data.world).expect("Failed to remove menu state");
         self.start_game_button = None;
         self.options_button = None;
         self.exit_game_button = None;

@@ -1,41 +1,32 @@
 #![enable(implicit_some)]
 Container(
     transform: (
-        id: "container_m_background",
+        id: "container_p_background",
         anchor: Middle,
         stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
         width: 1.0,
         height: 1.0,
-        z: 1,
+        z: 12,
+        transparent: true,
     ),
+    background: SolidColor(0.0, 0.0, 0.0, 0.75),
     children: [
-
-        Image(
-            transform: (
-                id: "m_background",
-                width: 2000.,
-                height: 1475.,
-                anchor: Middle,
-                z: 1,
-            ),
-            image: Texture(File("stars.png", ("IMAGE", ()))),
-        ),
 
         Container(
             transform: (
-                id: "container_m_start",
-                y: 210,
+                id: "container_p_resume",
+                y: 240,
                 width: 755.,
                 height: 150.,
                 anchor: Middle,
-                z: 3,
+                z: 14,
             ),
             background: SolidColor(1.0, 1.0, 1.0, 1.0),
             children: [
 
                 Button(
                     transform: (
-                        id: "m_start_game",
+                        id: "p_resume_game",
                         width: 750.,
                         height: 145.,
                         tab_order: 1,
@@ -43,7 +34,7 @@ Container(
                         mouse_reactive: true,
                     ),
                     button: (
-                        text: "START GAME",
+                        text: "RESUME GAME",
                         font: File("font/square.ttf", ("TTF", ())),
                         font_size: 75.,
                         normal_text_color: (1.0, 1.0, 1.0, 1.0),
@@ -57,19 +48,19 @@ Container(
 
         Container(
             transform: (
-                id: "container_m_options",
-                y: 50,
+                id: "container_p_options",
+                y: 80,
                 width: 755.,
                 height: 150.,
                 anchor: Middle,
-                z: 3,
+                z: 14,
             ),
             background: SolidColor(1.0, 1.0, 1.0, 1.0),
             children: [
 
                 Button(
                     transform: (
-                        id: "m_options",
+                        id: "p_options",
                         width: 750.,
                         height: 145.,
                         tab_order: 2,
@@ -91,22 +82,56 @@ Container(
 
         Container(
             transform: (
-                id: "container_m_exit",
-                y: -110,
+                id: "container_p_back_menu",
+                y: -80,
                 width: 755.,
                 height: 150.,
                 anchor: Middle,
-                z: 3,
+                z: 14,
             ),
             background: SolidColor(1.0, 1.0, 1.0, 1.0),
             children: [
 
                 Button(
                     transform: (
-                        id: "m_exit_game",
+                        id: "p_back_menu",
                         width: 750.,
                         height: 145.,
                         tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "BACK TO MENU",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 75.,
+                        normal_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 1.0),
+                        hover_image: SolidColor(0.0, 0.0, 0.05, 1.0),
+                        press_image: SolidColor(0.0, 0.2, 0.5, 1.0),
+                    )
+                ),
+            ]
+        ),
+
+        Container(
+            transform: (
+                id: "container_p_exit",
+                y: -240,
+                width: 755.,
+                height: 150.,
+                anchor: Middle,
+                z: 14,
+            ),
+            background: SolidColor(1.0, 1.0, 1.0, 1.0),
+            children: [
+
+                Button(
+                    transform: (
+                        id: "p_exit_game",
+                        width: 750.,
+                        height: 145.,
+                        tab_order: 4,
                         anchor: Middle,
                         mouse_reactive: true,
                     ),
