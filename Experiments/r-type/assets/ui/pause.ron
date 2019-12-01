@@ -9,7 +9,7 @@ Container(
         z: 12,
         transparent: true,
     ),
-    background: SolidColor(0.0, 0.0, 0.0, 0.5),
+    background: SolidColor(0.0, 0.0, 0.0, 0.75),
     children: [
 
         Container(
