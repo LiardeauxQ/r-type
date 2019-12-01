@@ -18,8 +18,11 @@ impl SimpleState for LoadState {
         let sprite_infos = vec![
             SpriteInfo::new("r-typesheet1.gif", "../resources/player.ron", "player"),
             SpriteInfo::new("r-typesheet1.gif", "../resources/bullet.ron", "bullet"),
-            SpriteInfo::new("r-typesheet5.gif", "../resources/enemy.ron", "enemy"),
             SpriteInfo::new("r-typesheet1.gif", "../resources/explosion.ron", "explosion"),
+            SpriteInfo::new("r-typesheet5.gif", "../resources/enemy5.ron", "enemy5"),
+            SpriteInfo::new("r-typesheet11.gif", "../resources/enemy11.ron", "enemy11"),
+            SpriteInfo::new("r-typesheet14.gif", "../resources/enemy14.ron", "enemy14"),
+            SpriteInfo::new("r-typesheet16.gif", "../resources/enemy16.ron", "enemy16"),
         ];
         let mut sprite_sheet_list = SpriteSheetList::default();
 
