@@ -1,6 +1,6 @@
 use amethyst::{
     assets::Handle,
-    ecs::{Entities, LazyUpdate, ReadExpect},
+    ecs::{Entities, Entity, LazyUpdate, ReadExpect},
     core::transform::Transform,
     prelude::*,
     renderer::{SpriteRender, SpriteSheet},
@@ -29,27 +29,28 @@ use crate::states::{WIDTH, HEIGHT};
 
 const SPAWN_SPEED: u64= 1200;
 
-pub fn initialize_spawners(world: &mut World) -> Result<(), &'static str> {
+pub fn initialize_spawners(world: &mut World) -> Result<Vec<Entity>, &'static str> {
     let mut transform_s1 = Transform::default();
     let mut transform_s2 = Transform::default();
+    let mut entites = Vec::new();
 
     transform_s1.set_translation_xyz(WIDTH, HEIGHT * 0.25, 0.0);
-    world
+    entites.push(world
         .create_entity()
         .with(Spawner)
         .with(transform_s1)
         .with(AttackSpeed::new(SPAWN_SPEED))
         .with(Team::new(2))
-        .build();
+        .build());
     transform_s2.set_translation_xyz(WIDTH, HEIGHT * 0.75, 0.0);
-    world
+    entites.push(world
         .create_entity()
         .with(Spawner)
         .with(transform_s2)
         .with(AttackSpeed::new(SPAWN_SPEED))
         .with(Team::new(2))
-        .build();
-    Ok(())
+        .build());
+    Ok(entites)
 }
 
 pub fn spawn_enemy(entities: &Entities,
@@ -65,8 +66,8 @@ pub fn spawn_enemy(entities: &Entities,
         AttackPattern::new(AttackPattern::compute_on_x, 50.0, 50.0),
         AttackPattern::new(AttackPattern::compute_cos, 50.0, 50.0),
         AttackPattern::new(AttackPattern::compute_sin, 50.0, 50.0),
-        AttackPattern::new(AttackPattern::compute_ascending_slope, 50.0, 50.0),
-        AttackPattern::new(AttackPattern::compute_descending_slope, 50.0, 50.0),
+        AttackPattern::new(AttackPattern::compute_ascending_slope, WIDTH, 200.0),
+        AttackPattern::new(AttackPattern::compute_descending_slope, WIDTH, 200.0),
     ];
     let mut animations = TimeAnimationList::default();
 
