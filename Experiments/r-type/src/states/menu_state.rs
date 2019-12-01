@@ -17,15 +17,17 @@ const M_EXIT_GAME_BUTTON: &str = "m_exit_game";
 #[derive(Debug)]
 pub struct MenuState {
     root_ui: Entity,
+    pause_ui: Handle<UiPrefab>,
     start_game_button: Option<Entity>,
     options_button: Option<Entity>,
     exit_game_button: Option<Entity>,
 }
 
 impl MenuState {
-    pub fn new(root_ui: Entity) -> MenuState {
+    pub fn new(root_ui: Entity, pause_ui: Handle<UiPrefab>) -> MenuState {
         MenuState {
             root_ui: root_ui,
+            pause_ui: pause_ui,
             start_game_button: None,
             options_button: None,
             exit_game_button: None,
