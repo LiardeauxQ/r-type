@@ -6,7 +6,7 @@ use amethyst::{
     winit::VirtualKeyCode,
 };
 
-use crate::states::delete_hierarchy;
+use crate::states::{delete_hierarchy, GameState};
 
 const START_GAME_BUTTON: &str = "start_game";
 const OPTIONS_BUTTON: &str = "options";
@@ -64,6 +64,7 @@ impl SimpleState for MenuState {
             }) => {
                 if Some(target) == self.start_game_button {
                     println!("START GAME PRESSED!");
+                    return Trans::Switch(Box::new(GameState::default()));
                 }
                 if Some(target) == self.options_button {
                     println!("OPTIONS PRESSED!");

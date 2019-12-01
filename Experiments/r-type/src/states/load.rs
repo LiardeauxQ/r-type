@@ -5,7 +5,7 @@ use amethyst::{
 
 use crate::common::{SpriteInfo, SpriteSheetList};
 use crate::components::{Bullet, Enemy, Shield, Explosion};
-use crate::states::RType;
+use crate::states::{MenuState};
 
 #[derive(Default)]
 pub struct LoadState {
@@ -36,9 +36,9 @@ impl SimpleState for LoadState {
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
         if let Some(ref progress_counter) = self.progress_counter {
-            if progress_counter.num_loading() == 0 {
+            if progress_counter.is_complete() {
                 self.progress_counter = None;
-                return Trans::Switch(Box::new(RType));
+                return Trans::Switch(Box::new(MenuState::default()));
             }
         }
         Trans::None
