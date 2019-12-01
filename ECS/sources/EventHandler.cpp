@@ -2,9 +2,9 @@
 // Created by Quentin Liardeaux on 11/19/19.
 //
 
-#include "Event.hpp"
+#include "EventHandler.hpp"
 
-EventHandler::EventHandler(shared_ptr<deque<unique_ptr<ecs::Event>>> events)
+EventHandler::EventHandler(shared_ptr<deque<ecs::Event>> events)
     : m_producers()
     , m_eventThread()
     , m_mutex()
@@ -39,15 +39,15 @@ void EventHandler::unlock() {
     m_isLock = false;
 }
 
-void EventHandler::addEvents(vector<unique_ptr<ecs::Event>> events) {
+void EventHandler::addEvents(vector<ecs::Event> events) {
     if (m_isLock)
         lock_guard<mutex> lock(m_mutex);
-    for (auto & event : events)
-        m_events->push_back(move(event));
+    for (const auto& event : events)
+        m_events->push_back(event);
 }
 
-void EventHandler::addEvent(unique_ptr<ecs::Event> event) {
-    m_events->push_back(move(event));
+void EventHandler::addEvent(const ecs::Event& event) {
+    m_events->push_back(event);
 }
 
 void EventHandler::addProducer(unique_ptr<AbstractEventProducer> producer) {

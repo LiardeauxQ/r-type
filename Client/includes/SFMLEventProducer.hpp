@@ -9,23 +9,17 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+#include "EventHandler.hpp"
 #include "Event.hpp"
-#include "AbstractEvent.hpp"
 
 using namespace std;
-
-class SFMLEvent: public ecs::Event {
-public:
-    SFMLEvent(sf::Event const &event);
-    ~SFMLEvent() = default;
-};
 
 class SFMLEventProducer: public AbstractEventProducer {
 public:
     SFMLEventProducer(shared_ptr<sf::RenderWindow> window);
     ~SFMLEventProducer() = default;
 
-    vector<unique_ptr<ecs::Event>> fetchEvents() final;
+    vector<ecs::Event> fetchEvents() final;
 private:
     shared_ptr<sf::RenderWindow> m_window;
 };
