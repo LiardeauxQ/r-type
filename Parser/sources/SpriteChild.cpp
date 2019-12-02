@@ -37,3 +37,4 @@ Frame<int> SpriteChild::createFrameFromRapidJsonValue(rapidjson::Value const &va
 
 const Frame<int> &SpriteChild::getFrameForAnimationAtPos(size_t pos) const {
     return m_frames.at(pos);
+}

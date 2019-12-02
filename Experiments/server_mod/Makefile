@@ -11,7 +11,7 @@ SRC_DIR	=			sources
 
 CXX		=		g++
 
-NAME	=			../dummy_mod.so
+NAME	=			../server_mod.so
 
 BUILD	=			$(ROOT)/build
 
