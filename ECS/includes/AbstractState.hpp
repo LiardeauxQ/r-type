@@ -50,7 +50,7 @@ public:
     ~AbstractState() override = default;
 
     template <typename S, typename... Args>
-    void registerSystem(Args... args);
+    void registerSystem(Args&&... args);
     template <typename S>
     void registerSystem();
     void attachThreadPool(shared_ptr<ThreadPool<ecs::StateData<T>, ecs::Error>> pool);
@@ -90,9 +90,11 @@ AbstractState<T, E>& AbstractState<T, E>::operator=(AbstractState<T, E>&& rhs) n
 
 template <typename T, typename E>
 template <typename S, typename... Args>
-void AbstractState<T, E>::registerSystem(Args... args)
+void AbstractState<T, E>::registerSystem(Args&&... args)
 {
-    m_dispatcher->template registerSystem<S>(args...);
+
+    make_unique<S>(forward<Args>(args)...);
+    m_dispatcher->template registerSystem<S>(forward<Args>(args)...);
 }
 
 template <typename T, typename E>

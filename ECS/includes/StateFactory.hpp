@@ -34,7 +34,7 @@ class StateFactory {
         void registerState();
 
         template<typename S, typename... Args>
-        void registerSystem(const String &name, Args... args);
+        void registerSystem(const String &name, Args&&... args);
 
         template<typename S>
         void registerSystem(const String &name);
@@ -58,11 +58,11 @@ void StateFactory<T, E>::registerState()
 
 template<typename T, typename E>
 template<typename S, typename... Args>
-void StateFactory<T, E>::registerSystem(const String &name, Args... args)
+void StateFactory<T, E>::registerSystem(const String &name, Args&&... args)
 {
     static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
     AbstractState<T, E> *state = static_cast<AbstractState<T, E> *>(m_factory.getBaseInstance(name).get());
-    state->template registerSystem<S>(args...);
+    state->template registerSystem<S>(forward<Args>(args)...);
 }
 
 

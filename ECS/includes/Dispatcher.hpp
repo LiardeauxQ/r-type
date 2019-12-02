@@ -33,7 +33,7 @@ public:
     void registerSystem();
 
     template<typename S, typename... Args>
-    void registerSystem(Args... args);
+    void registerSystem(Args&&... args);
 
     Box<Dispatcher<T, E>> copy() const;
 
@@ -118,7 +118,7 @@ void Dispatcher<T, E>::attachThreadPool(shared_ptr<ThreadPool<T, E>> pool)
 }
 template <typename T, typename E>
 template <typename S, typename... Args>
-void Dispatcher<T, E>::registerSystem(Args... args)
+void Dispatcher<T, E>::registerSystem(Args&&... args)
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
     m_systems.push_back(make_unique<S>(forward<Args>(args)...));
