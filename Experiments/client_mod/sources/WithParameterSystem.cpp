@@ -19,3 +19,13 @@ WithParameterSystem::WithParameterSystem(int readerId)
     : m_readerId(readerId)
 {
 }
+
+Box<IFactorizable<String>> WithParameterSystem::copy() const
+{
+    return static_unique_pointer_cast<IFactorizable<String>>(std::make_unique<WithParameterSystem>());
+}
+
+String WithParameterSystem::getKey() const
+{
+    return String("base::WithParameterSystem");
+}

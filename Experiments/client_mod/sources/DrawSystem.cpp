@@ -29,3 +29,13 @@ void DrawSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> dat
         window->setActive(false);
     }
 }
+
+Box<IFactorizable<String>> DrawSystem::copy() const
+{
+    return static_unique_pointer_cast<IFactorizable<String>>(std::make_unique<DrawSystem>());
+}
+
+String DrawSystem::getKey() const
+{
+    return String("base::DrawSystem");
+}

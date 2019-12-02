@@ -16,3 +16,13 @@ void MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>>
     s->move(static_cast<float>(data->delta) * 10, 0);
     cout << "Movement: " << this_thread::get_id() << endl;
 }
+
+Box<IFactorizable<String>> MovementSystem::copy() const
+{
+    return static_unique_pointer_cast<IFactorizable<String>>(std::make_unique<MovementSystem>());
+}
+
+String MovementSystem::getKey() const
+{
+    return String("base::MovementSystem");
+}

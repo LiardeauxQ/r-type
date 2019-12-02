@@ -26,25 +26,25 @@ template <typename T, typename E>
 struct Transition {
 
 
-    explicit Transition(TransitionName trans = NONE, unique_ptr<AbstractState<T, E>> newState = nullptr);
+    explicit Transition(TransitionName trans = NONE, String newStateName = "");
     Transition(Transition&& trans) noexcept;
     Transition& operator=(Transition&& trans) noexcept;
 
     TransitionName m_transition;
-    unique_ptr<AbstractState<T, E>> m_newState;
+    String m_newStateName;
 };
 
 template <typename T, typename E>
-Transition<T, E>::Transition(TransitionName trans, unique_ptr<AbstractState<T, E>> newState)
+Transition<T, E>::Transition(TransitionName trans, String newStateName)
     : m_transition(trans)
-    , m_newState(move(newState))
+    , m_newStateName(move(newStateName))
 {
 }
 
 template <typename T, typename E>
 Transition<T, E>::Transition(Transition&& trans) noexcept
     : m_transition(trans.m_transition)
-    , m_newState(move(trans.m_newState))
+    , m_newStateName(move(trans.m_newStateName))
 {
 }
 
@@ -52,7 +52,7 @@ template <typename T, typename E>
 Transition<T, E>& Transition<T, E>::operator=(Transition&& trans) noexcept
 {
     m_transition = trans.m_transition;
-    m_newState.swap(trans.m_newState);
+    m_newStateName.swap(trans.m_newStateName);
     return *this;
 }
 

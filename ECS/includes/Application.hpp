@@ -22,6 +22,9 @@ public:
     template<typename S>
     void registerState();
 
+    template<typename S, typename... Args>
+    void registerSystem(const String &name, Args... args);
+
     template<typename S>
     void registerSystem(const String &name);
 
@@ -82,12 +85,21 @@ void Application<T, E>::registerState()
 }
 
 template<typename T, typename E>
+template<typename S, typename... Args>
+void Application<T, E>::registerSystem(const String &name, Args... args)
+{
+    static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
+    m_stateMachine.template registerSystem<S>(name, args...);
+}
+
+template<typename T, typename E>
 template<typename S>
 void Application<T, E>::registerSystem(const String &name)
 {
     static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
     m_stateMachine.template registerSystem<S>(name);
 }
+
 
 template<typename T, typename E>
 void Application<T, E>::registerComponent(ComponentSchema schema)

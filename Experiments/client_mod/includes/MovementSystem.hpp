@@ -14,6 +14,9 @@ public:
     ~MovementSystem() override = default;
     ecs::EntityRequest getDependencies() const override;
     void operator()(any entities, shared_ptr<ecs::StateData<string>> data) override;
+
+    Box<IFactorizable> copy() const;
+    String getKey() const;
 };
 
 #endif //R_TYPE_MOVEMENTSYSTEM_HPP

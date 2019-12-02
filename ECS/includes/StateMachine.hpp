@@ -38,6 +38,8 @@ public:
     template<typename S>
     void registerState();
 
+    template<typename S, typename... Args>
+    void registerSystem(const String &name, Args... args);
     template<typename S>
     void registerSystem(const String &name);
 
@@ -111,7 +113,7 @@ void StateMachine<T, E>::transition(Transition<T, E> trans, StateData<T>& data)
         this->pop(data);
         break;
     case TransitionName::PUSH:
-        this->push(move(trans.m_newState), data);
+        this->push(move(m_factory.queryState(trans.m_newStateName)), data);
         break;
     case TransitionName::QUIT:
         for (auto& s : m_states)
@@ -150,11 +152,20 @@ void StateMachine<T, E>::registerState()
 }
 
 template<typename T, typename E>
+template<typename S, typename... Args>
+void StateMachine<T, E>::registerSystem(const String &name, Args... args)
+{
+    static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
+    m_factory.template registerSystem<S>(name, args...);
+}
+
+template<typename T, typename E>
 template<typename S>
 void StateMachine<T, E>::registerSystem(const String &name)
 {
     static_assert(is_base_of<ISystem<StateData<T>>, S>::value, "Should be a base of ISystem.");
     m_factory.template registerSystem<S>(name);
 }
+
 
 }

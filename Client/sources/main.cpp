@@ -30,8 +30,6 @@ int main(int argc, char* argv[])
         dispatcher->registerSystem<SystemNetworkEvent>();
         auto initialState = make_unique<MainMenuState>(move(dispatcher));
 
-        ecs::Application<string, ecs::Event> app(move(initialState), make_unique<string>());
-        app.withBundle<GraphicBundle>("Rtype");
 
         app.run();
     } catch(const exception& e) {

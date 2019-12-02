@@ -76,3 +76,21 @@ MainMenuState::MainMenuState(unique_ptr<ecs::Dispatcher<ecs::StateData<string>, 
     : AbstractState(move(dispatcher))
 {
 }
+
+MainMenuState::MainMenuState()
+    : AbstractState()
+{
+}
+
+String MainMenuState::getKey() const
+{
+    return String("base::MainMenuState");
+}
+
+Box<IFactorizable<String>> MainMenuState::copy() const {
+    return static_unique_pointer_cast<IFactorizable<String>>(
+        std::make_unique<MainMenuState>(
+            m_dispatcher->copy()
+        )
+    );
+}

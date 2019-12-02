@@ -105,7 +105,6 @@ template <typename S>
 void Dispatcher<T, E>::registerSystem()
 {
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
-    static_assert(std::is_default_constructible<S>::value);
     m_systems.push_back(make_unique<S>());
 }
 
@@ -124,6 +123,7 @@ void Dispatcher<T, E>::registerSystem(Args... args)
     static_assert(std::is_base_of<ecs::ISystem<T>, S>::value, "Dispatcher registered class need to be a ISystem.");
     m_systems.push_back(make_unique<S>(forward<Args>(args)...));
 }
+
 
 template <typename T, typename E>
 Dispatcher<T, E>::~Dispatcher()

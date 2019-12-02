@@ -11,14 +11,18 @@ SRC_DIR	=			sources
 
 CXX		=		g++
 
-NAME	=			../dummy_mod.so
+NAME	=			../client_mod.so
 
 BUILD	=			$(ROOT)/build
 
 SRC		=			$(SRC_DIR)/entrypoint.cpp \
-					$(SRC_DIR)/DummySystem.cpp \
+					$(SRC_DIR)/DrawSystem.cpp \
+					$(SRC_DIR)/GraphicBundle.cpp \
 					$(SRC_DIR)/MainMenuState.cpp \
-					$(SRC_DIR)/DummyBundle.cpp \
+					$(SRC_DIR)/MovementSystem.cpp \
+					$(SRC_DIR)/SFMLEventProducer.cpp \
+					$(SRC_DIR)/SystemNetworkEvent.cpp \
+					$(SRC_DIR)/WithParameterSystem.cpp
 
 
 CXXFLAGS=			-g -I $(ROOT)/includes -I $(ROOT)/../../ECS/includes -I $(ROOT)/../../Loader/includes -I $(ROOT)/../../Common/includes -I $(ROOT)/../../Network/includes $(WARN) -std=gnu++17 -fPIC 

@@ -23,3 +23,13 @@ void SystemNetworkEvent::operator()(any entities, shared_ptr<ecs::StateData<stri
         // data->world.createEntity().with<Client>(stream);
     }
 }
+
+Box<IFactorizable<String>> SystemNetworkEvent::copy() const
+{
+    return static_unique_pointer_cast<IFactorizable<String>>(std::make_unique<SystemNetworkEvent>());
+}
+
+String SystemNetworkEvent::getKey() const
+{
+    return String("base::SystemNetworkEvent");
+}

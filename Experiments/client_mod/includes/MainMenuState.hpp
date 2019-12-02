@@ -7,11 +7,11 @@
 
 #include "AbstractState.hpp"
 #include <SFML/Graphics.hpp>
-#include "Transform.hpp"
 
 class MainMenuState : public ecs::AbstractState<string, ecs::Event> {
 public:
     explicit MainMenuState(unique_ptr<ecs::Dispatcher<ecs::StateData<string>, ecs::Error>>);
+    explicit MainMenuState();
 
     ~MainMenuState() override = default;
 
@@ -24,6 +24,8 @@ public:
     ecs::Transition<string, ecs::Event> fixedUpdate(ecs::StateData<string>& data) override;
     void shadowUpdate(ecs::StateData<string>& data) override;
     void shadowFixedUpdate(ecs::StateData<string>& data) override;
+    [[nodiscard]] string getKey() const final;
+    [[nodiscard]] unique_ptr<IFactorizable<string>> copy() const final;
 };
 
 #endif //R_TYPE_MAINMENUSTATE_HPP
