@@ -8,6 +8,7 @@
 
 namespace ecs {
 
+using namespace std;
 using ComponentVector = vector<string>;
 
 /// TODO: Implements Serialize/Deserialize

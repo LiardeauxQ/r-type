@@ -7,20 +7,25 @@
 
 #include <string>
 
-using namespace std;
+#if defined(WIN32)
+    #include <WinSock2.h>
+    #include <WS2tcpip.h>
 
-#if defined(WINDOWS)
-    using RawSocket = int;
+    typedef SOCKET RawSocket;
+    #define FAILED_SOCKET INVALID_SOCKET
 #else
+    #include <fcntl.h>
     #include <sys/types.h>
     #include <sys/socket.h>
     #include <unistd.h>
     #include <arpa/inet.h>
     #include <netinet/in.h>
 
-    using RawSocket = int;
+    typedef int RawSocket;
+    #define FAILED_SOCKET -1
 #endif /* SYSTEM */
 
+#include <iostream>
 #include <cstring>
 
 class Socket {
@@ -32,8 +37,8 @@ public:
     };
 
     Socket(Type type, RawSocket socket);
-    Socket(Type type, const string& addr);
-    Socket(Type type, const string& addr, uint16_t port);
+    Socket(Type type, const std::string& addr);
+    Socket(Type type, const std::string& addr, uint16_t port);
     Socket(int32_t domain, int32_t type, int32_t protocol);
     Socket(uint8_t base0, uint8_t base1, uint8_t base2, uint8_t base3, uint8_t port1, uint8_t port2);
 
@@ -46,7 +51,7 @@ public:
 
     int setNonBlocking(bool active = true);
 protected:
-    static sockaddr_in parseStringAddr(const string& addr, uint16_t port = 0);
+    static sockaddr_in parseStringAddr(const std::string& addr, uint16_t port = 0);
 
     RawSocket m_handle;
     Type m_type;

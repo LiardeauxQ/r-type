@@ -9,6 +9,8 @@
 
 namespace ecs {
 
+using namespace std;
+
 enum AttributeType {
     BOOL = 0,
     INT = 1,

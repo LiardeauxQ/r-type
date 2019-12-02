@@ -16,7 +16,7 @@ public:
 
     [[nodiscard]] TcpStream accept() const;
     void listen(int32_t nbConnection = 0) const;
-    [[nodiscard]] optional<TcpStream> acceptNonBlocking() const;
+    [[nodiscard]] std::optional<TcpStream> acceptNonBlocking() const;
 };
 
 #endif //CPP_RTYPE_2019_TCPLISTENER_HPP
