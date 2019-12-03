@@ -5,7 +5,7 @@
 #include "Loader.hpp"
 
 Loader::Loader(Loader&& loader) noexcept
-: m_libraries(move(loader.m_libraries))
+    : m_libraries(move(loader.m_libraries))
 {
 }
 

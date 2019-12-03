@@ -8,6 +8,10 @@ TcpStream::TcpStream(RawSocket sock)
     : Socket(TCP, sock)
 {}
 
+TcpStream::TcpStream(const std::string& addr, short port)
+    : Socket(TCP, addr, port)
+{}
+
 void TcpStream::connectRaw() {
     socklen_t size = sizeof(sockaddr);
 
@@ -15,7 +19,7 @@ void TcpStream::connectRaw() {
         throw "Error cannot connect !";
 }
 
-void TcpStream::connect(const string& addr, uint16_t port)
+void TcpStream::connect(const std::string& addr, uint16_t port)
 {
     sockaddr_in addrIn = Socket::parseStringAddr(addr);
     addrIn.sin_port = htons(port);
@@ -24,7 +28,7 @@ void TcpStream::connect(const string& addr, uint16_t port)
     connectRaw();
 }
 
-void TcpStream::connect(const string& addr)
+void TcpStream::connect(const std::string& addr)
 {
     sockaddr_in addrIn = Socket::parseStringAddr(addr);
     memcpy(&m_addr, &addrIn, sizeof(sockaddr));
@@ -34,7 +38,7 @@ void TcpStream::connect(const string& addr)
 
 void TcpStream::send(const void* data, size_t size) const
 {
-    if (::send(m_handle, data, size, 0) == -1)
+    if (::send(m_handle, static_cast<const char *>(data), size, 0) == -1)
         throw "Error while sending.";
 }
 
