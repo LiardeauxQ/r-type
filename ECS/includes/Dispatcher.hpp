@@ -44,7 +44,7 @@ private:
     shared_ptr<ThreadPool<T, E>> m_pool;
     vector<unique_ptr<ISystem<T>>> m_systems;
     vector<bool> m_workersData;
-    [[nodiscard]] uint32_t prepareDispatch(const vector<Entity>&) const;
+    [[nodiscard]] uint32_t prepareDispatch() const;
 };
 
 template <typename T, typename E>
@@ -63,7 +63,7 @@ Dispatcher<T, E>& Dispatcher<T, E>::operator=(Dispatcher&& dispatcher) noexcept
 }
 
 template <typename T, typename E>
-uint32_t Dispatcher<T, E>::prepareDispatch(const vector<Entity>& entites) const
+uint32_t Dispatcher<T, E>::prepareDispatch() const
 {
     uint32_t i = 0;
 
@@ -81,13 +81,14 @@ void Dispatcher<T, E>::dispatch(shared_ptr<T> inputData)
     if (!m_pool)
         throw "Cannot dispatch without a ThreadPool attached.";
     for (auto& s : m_systems) {
+        uint32_t index = this->prepareDispatch();
         auto dependencies = s->getDependencies();
         vector<Entity> fetchedData = inputData->world.fetchStorage(move(dependencies));
-        uint32_t index = this->prepareDispatch(fetchedData);
         m_workersData[index] = true;
-        m_pool->enqueueWork([&s, this, index, fetched{ move(fetchedData) }](shared_ptr<T> data) -> E {
-            (*s)(fetched, data);
+        m_pool->enqueueWork([&s, this, inputData, index, fetched{ move(fetchedData) }](shared_ptr<T> data) -> E {
+            auto entities = (*s)(fetched, data);
             this->m_workersData[index] = false;
+            inputData->world.storeEntities(any_cast<Vec<Entity>>(entities));
         }, inputData);
     }
 }

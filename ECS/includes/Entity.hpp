@@ -26,6 +26,7 @@ public:
     [[nodiscard]] String getName() const { return m_name; }
 
     void markDirty();
+    void markNonDirty();
     [[nodiscard]] bool isDirty() const;
 
 private:

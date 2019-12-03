@@ -41,6 +41,8 @@ public:
     void registerComponent(ComponentSchema schema);
     void storeEntity(Entity entity);
 
+    void storeEntities(Vec<Entity> entities);
+
     StopWatch m_timer;
     unique_ptr<IEntityComponentStorage> m_storage;
 private:

@@ -21,7 +21,7 @@ class ISystem : public IFactorizable<String> {
 public:
     virtual ~ISystem() = default;
     [[nodiscard]] virtual EntityRequest getDependencies() const = 0;
-    virtual void operator()(any entities, shared_ptr<T> data) = 0;
+    virtual any operator()(any entities, shared_ptr<T> data) = 0;
 };
 
 }

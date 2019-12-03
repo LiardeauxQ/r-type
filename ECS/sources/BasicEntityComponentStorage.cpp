@@ -85,7 +85,9 @@ Vec<Entity> BasicEntityComponentStorage::request(EntityRequest request)
             for (auto& componentName : componentList) {
                 builder.with(this->getComponents(componentName).find(entityName)->second);
             }
-            return builder.build(entityName);
+            auto entity = builder.build(entityName);
+            entity.markNonDirty();
+            return entity;
         });
     return entityList;
 }
@@ -94,6 +96,7 @@ void BasicEntityComponentStorage::store(const Vec<Entity>& entities)
 {
     for (const auto& entity : entities) {
         if (entity.isDirty()) {
+            std::cout << "Stored:" << entity.getComponents().at("Position") << std::endl;
             for (auto component : entity.getComponents()) {
                 if (!hasSchema(component.first))
                     throw SchemaNotFound();

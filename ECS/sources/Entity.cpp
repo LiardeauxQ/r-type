@@ -44,6 +44,11 @@ void Entity::markDirty()
     m_isDirty = true;
 }
 
+void Entity::markNonDirty()
+{
+    m_isDirty = false;
+}
+
 bool Entity::isDirty() const
 {
     return m_isDirty;
