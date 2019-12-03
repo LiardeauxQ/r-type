@@ -3,7 +3,35 @@
 //
 
 #include "includes/Protocol/JoinRoom.hpp"
-JoinRoom::JoinRoom(string roomName)
-    : Message(JOIN_ROOM)
-    , m_roomName(move(roomName))
-{}
+
+String Join::getKey() const
+{
+    return Message::getKey();
+}
+
+Box<IFactorizable<String>> Join::copy() const
+{
+    return Box<IFactorizable<String>>();
+}
+
+Join::~Join()
+{
+}
+
+Vec<u8> Join::serialize() const
+{
+    Vec<u8> data = {'R', '-', 'T', 'Y'};
+    union {
+        int integer;
+        u8 bytes[4];
+    } test{};
+    test.integer = static_cast<int>(m_roomName.length());
+    for (unsigned char byte : test.bytes)
+        data.push_back(byte);
+    return data;
+}
+
+void Join::deserialize(Vec<u8>& data)
+{
+
+}

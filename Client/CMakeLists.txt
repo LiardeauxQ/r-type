@@ -7,14 +7,6 @@ set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT
 	${RTYPE_CLIENT_SOURCES}/main.cpp
-	${RTYPE_CLIENT_SOURCES}/DrawSystem.cpp
-	${RTYPE_CLIENT_SOURCES}/MainMenuState.cpp
-	${RTYPE_CLIENT_SOURCES}/MovementSystem.cpp
-	${RTYPE_CLIENT_SOURCES}/WithParameterSystem.cpp
-	${RTYPE_CLIENT_SOURCES}/SystemNetworkEvent.cpp
-    ${RTYPE_CLIENT_SOURCES}/SFMLEventProducer.cpp
-	${RTYPE_CLIENT_SOURCES}/GraphicBundle.cpp
-
 )
 
 add_executable(r-type_client
