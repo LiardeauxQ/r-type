@@ -12,11 +12,11 @@
 #include <stdint.h>
 
 #ifdef WIN32
-    #define U128 uint64_t;
-    #define I128 uint64_t;
+    #define U128 uint64_t
+    #define I128 uint64_t
 #else
-    #define U128 __uint128_t;
-    #define I128 __uint128_t;
+    #define U128 __uint128_t
+    #define I128 __uint128_t
 #endif /* WIN32 */
 
 template<typename  T>

@@ -14,10 +14,6 @@ Box<IFactorizable<String>> Join::copy() const
     return Box<IFactorizable<String>>();
 }
 
-Join::~Join()
-{
-}
-
 Vec<u8> Join::serialize() const
 {
     Vec<u8> data = {'R', '-', 'T', 'Y'};
