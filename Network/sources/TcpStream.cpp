@@ -38,7 +38,7 @@ void TcpStream::connect(const std::string& addr)
 
 void TcpStream::send(const void* data, size_t size) const
 {
-    if (::send(m_handle, (const char *) data, size, 0) == -1)
+    if (::send(m_handle, static_cast<const char *>(data), size, 0) == -1)
         throw "Error while sending.";
 }
 
