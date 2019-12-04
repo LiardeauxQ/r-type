@@ -10,7 +10,7 @@ ecs::EntityRequest SystemNetworkEvent::getDependencies() const
     return ecs::EntityRequest({}, {});
 }
 
-void SystemNetworkEvent::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
+any SystemNetworkEvent::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
     auto& listener = data->world.fetchResource<TcpListener>("listener");
     auto optStream = listener.acceptNonBlocking();

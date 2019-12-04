@@ -12,7 +12,7 @@ public:
     explicit WithParameterSystem(int readerId);
     ~WithParameterSystem() override = default;
     [[nodiscard]] ecs::EntityRequest getDependencies() const override;
-    void operator()(any entities, shared_ptr<ecs::StateData<string>> data) override;
+    any operator()(any entities, shared_ptr<ecs::StateData<string>> data) override;
 
     Box<IFactorizable> copy() const;
     String getKey() const;

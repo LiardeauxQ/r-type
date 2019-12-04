@@ -6,7 +6,7 @@ project(r-type_client LANGUAGES CXX)
 set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT
-	${RTYPE_CLIENT_SOURCES}/main.cpp
+	${RTYPE_CLIENT_SOURCES}/old_main.cpp
 )
 
 add_executable(r-type_client
@@ -21,4 +21,4 @@ set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(r-type_client ecs common physics network parser sfml::sfml)
+target_link_libraries(r-type_client ecs common physics network parser loader sfml::sfml)

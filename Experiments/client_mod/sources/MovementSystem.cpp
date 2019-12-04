@@ -9,7 +9,7 @@ ecs::EntityRequest MovementSystem::getDependencies() const
     return ecs::EntityRequest({}, {});
 }
 
-void MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
+any MovementSystem::operator()(any entities, shared_ptr<ecs::StateData<string>> data)
 {
     auto s = data->world.fetchResource<sf::Sprite *>("shipSprite");
     auto pos = s->getPosition();
