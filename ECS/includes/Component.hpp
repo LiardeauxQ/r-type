@@ -4,10 +4,13 @@
 
 #pragma once
 
+#include <iostream>
 #include "Definitions.hpp"
 #include <any>
 
 namespace ecs {
+
+using namespace std;
 
 enum AttributeType {
     BOOL = 0,
@@ -47,6 +50,12 @@ struct ComponentAttribute {
     const T& getValue() const
     {
         return any_cast<const T&>(m_value);
+    }
+
+    template<typename T>
+    void setValue(T value)
+    {
+        m_value = value;
     }
 
     std::any m_value;

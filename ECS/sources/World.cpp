@@ -23,3 +23,8 @@ void ecs::World::registerComponent(ecs::ComponentSchema schema)
 {
     m_storage->addComponentSchema(move(schema));
 }
+
+void ecs::World::storeEntities(Vec<Entity> entities)
+{
+    m_storage->store(move(entities));
+}

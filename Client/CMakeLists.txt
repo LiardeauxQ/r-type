@@ -21,4 +21,4 @@ set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(r-type_client ecs common physics network parser sfml::sfml)
+target_link_libraries(r-type_client ecs common physics network parser loader sfml::sfml)

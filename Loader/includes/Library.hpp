@@ -4,13 +4,20 @@
 
 #pragma once
 
+#ifdef WIN32
+    #include <windows.h>
+#else
+    #include <dlfcn.h>
+#endif
+
 #include <filesystem>
+#include <iostream>
 #include "Definitions.hpp"
 
 struct Handle {
 
-    Handle(void *handle)
-    : ptr(handle)
+    explicit Handle(void *handle)
+        : ptr(handle)
     {}
 
     void *ptr;
@@ -20,11 +27,11 @@ using LibraryHandle = Box<Handle>;
 
 class LibraryException : public std::exception {
 public:
-    LibraryException(String errMessage)
+    explicit LibraryException(String errMessage)
      : m_error(std::move(errMessage))
     {}
 
-    const char* what() const noexcept {
+    [[nodiscard]] const char* what() const noexcept final {
         return m_error.c_str();
     }
 

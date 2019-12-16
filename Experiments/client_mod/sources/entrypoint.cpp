@@ -4,7 +4,6 @@
 
 #include "DrawSystem.hpp"
 #include "MovementSystem.hpp"
-#include "WithParameterSystem.hpp"
 #include "SystemNetworkEvent.hpp"
 #include "GraphicBundle.hpp"
 #include "MainMenuState.hpp"
@@ -20,7 +19,6 @@ extern "C" {
     int registerSystems(ecs::Application<string, ecs::Event> &app) {
         app.registerSystem<DrawSystem>("base::MainMenuState");
         app.registerSystem<MovementSystem>("base::MainMenuState");
-        app.registerSystem<WithParameterSystem>("base::MainMenuState", 100);
         app.registerSystem<SystemNetworkEvent>("base::MainMenuState");
         return 1;
     }
