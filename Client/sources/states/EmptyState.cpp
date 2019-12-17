@@ -6,14 +6,27 @@
 */
 
 #include "states/EmptyState.hpp"
+#include <iostream>
 
-EmptyState::EmptyState(): State() {}
+EmptyState::EmptyState(): State()
+{
+    this->onStart();
+}
 
-EmptyState::~EmptyState() {}
+EmptyState::~EmptyState()
+{
+    this->onStop();
+}
 
-void EmptyState::onStart() {}
+void EmptyState::onStart()
+{
+    std::cout << "Entering EmptyState..." << std::endl;
+}
 
-void EmptyState::onStop() {}
+void EmptyState::onStop()
+{
+    std::cout << "Leaving EmptyState..." << std::endl;
+}
 
 void EmptyState::onPause() {}
 

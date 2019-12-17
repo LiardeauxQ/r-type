@@ -6,14 +6,27 @@
 */
 
 #include "states/MenuState.hpp"
+#include <iostream>
 
-MenuState::MenuState(): State() {}
+MenuState::MenuState(): State()
+{
+    this->onStart();
+}
 
-MenuState::~MenuState() {}
+MenuState::~MenuState()
+{
+    this->onStop();
+}
 
-void MenuState::onStart() {}
+void MenuState::onStart()
+{
+    std::cout << "Entering MenuState..." << std::endl;
+}
 
-void MenuState::onStop() {}
+void MenuState::onStop()
+{
+    std::cout << "Leaving MenuState..." << std::endl;
+}
 
 void MenuState::onPause() {}
 

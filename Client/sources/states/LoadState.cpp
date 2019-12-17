@@ -6,14 +6,27 @@
 */
 
 #include "states/LoadState.hpp"
+#include <iostream>
 
-LoadState::LoadState(): State() {}
+LoadState::LoadState(): State()
+{
+    this->onStart();
+}
 
-LoadState::~LoadState() {}
+LoadState::~LoadState()
+{
+    this->onStop();
+}
 
-void LoadState::onStart() {}
+void LoadState::onStart()
+{
+    std::cout << "Entering LoadState..." << std::endl;
+}
 
-void LoadState::onStop() {}
+void LoadState::onStop()
+{
+    std::cout << "Leaving LoadState..." << std::endl;
+}
 
 void LoadState::onPause() {}
 

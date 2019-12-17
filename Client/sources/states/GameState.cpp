@@ -6,6 +6,7 @@
 */
 
 #include "states/GameState.hpp"
+#include <iostream>
 
 GameState::GameState(): State()
 {
@@ -17,9 +18,15 @@ GameState::~GameState()
     this->onStop();
 }
 
-void GameState::onStart() {}
+void GameState::onStart()
+{
+    std::cout << "Entering GameState..." << std::endl;
+}
 
-void GameState::onStop() {}
+void GameState::onStop()
+{
+    std::cout << "Leaving GameState..." << std::endl;
+}
 
 void GameState::onPause() {}
 
