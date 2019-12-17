@@ -8,12 +8,13 @@
 #ifndef STATEBUILDER_HPP
 	#define STATEBUILDER_HPP
 
+#include <memory>
 #include "State.hpp"
 
 class StateBuilder {
     public:
         StateBuilder();
-        State *createState(States stateName);
+        std::unique_ptr<State> createState(States stateName);
         ~StateBuilder() = default;
     private:
 };

@@ -14,20 +14,20 @@
 
 StateBuilder::StateBuilder() {}
 
-State *StateBuilder::createState(States stateName)
+std::unique_ptr<State> StateBuilder::createState(States stateName)
 {
     switch (stateName) {
         case States::EMPTY:
-            return new EmptyState();
+            return std::make_unique<EmptyState>();
         case States::LOAD:
-            return new LoadState();
+            return std::make_unique<LoadState>();
         case States::MENU:
-            return new MenuState();
+            return std::make_unique<MenuState>();
         case States::PAUSE:
-            return new PauseState();
+            return std::make_unique<PauseState>();
         case States::GAME:
-            return new GameState();
+            return std::make_unique<GameState>();
         default:
-            return new EmptyState();
+            return std::make_unique<EmptyState>();
     }
 }
