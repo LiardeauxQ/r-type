@@ -7,6 +7,13 @@ set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT
 	${RTYPE_CLIENT_SOURCES}/main.cpp
+	${RTYPE_CLIENT_SOURCES}/Game.cpp
+    ${RTYPE_CLIENT_SOURCES}/StateBuilder.cpp
+    ${RTYPE_CLIENT_SOURCES}/states/EmptyState.cpp
+    ${RTYPE_CLIENT_SOURCES}/states/LoadState.cpp
+    ${RTYPE_CLIENT_SOURCES}/states/MenuState.cpp
+    ${RTYPE_CLIENT_SOURCES}/states/PauseState.cpp
+    ${RTYPE_CLIENT_SOURCES}/states/GameState.cpp
 )
 
 add_executable(r-type_client
