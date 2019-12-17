@@ -6,6 +6,11 @@
 */
 
 #include "StateBuilder.hpp"
+#include "states/EmptyState.hpp"
+#include "states/LoadState.hpp"
+#include "states/MenuState.hpp"
+#include "states/PauseState.hpp"
+#include "states/GameState.hpp"
 
 StateBuilder::StateBuilder() {}
 
