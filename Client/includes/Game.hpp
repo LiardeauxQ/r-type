@@ -14,10 +14,13 @@
 class Game {
     public:
         Game();
-        ~Game() = default;
+        ~Game();
+        void run();
     private:
-        StateBuilder stateBuilder;
-        std::stack<State *> states;
+        void loop();
+        StateBuilder m_stateBuilder;
+        std::stack<std::unique_ptr<State>> m_states;
+        bool m_isRunning;
 };
 
 #endif /* !GAME_HPP */
