@@ -12,6 +12,9 @@
 #ifndef GAME_HPP
 	#define GAME_HPP
 
+    #define WINDOW_WIDTH 1536
+    #define WINDOW_HEIGHT 864
+
 class Game {
     public:
         Game();
@@ -22,6 +25,7 @@ class Game {
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;
+        std::shared_ptr<sf::RenderWindow> m_window;
 };
 
 #endif /* !GAME_HPP */

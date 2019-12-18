@@ -44,4 +44,19 @@ void GameState::update()
         return;
 }
 
-void GameState::handleEvent() {}
+void GameState::handleEvent()
+{
+    while (m_window->pollEvent(m_event)) {
+        switch (m_event.type) {
+            case sf::Event::Closed:
+                m_window->close();
+                break;
+            case sf::Event::KeyPressed:
+                if (m_event.key.code == sf::Keyboard::Escape)
+                    m_window->close();
+                break;
+            default:
+                break;
+        }
+    }
+}

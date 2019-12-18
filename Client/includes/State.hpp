@@ -8,6 +8,10 @@
 #ifndef STATE_HPP
 	#define STATE_HPP
 
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
+
 enum States {
     EMPTY,
     LOAD,
@@ -18,8 +22,9 @@ enum States {
 
 class State {
     public:
-        State(): m_isPaused(false) {};
+        State(): m_window(nullptr), m_event(), m_isPaused(false) {};
         virtual ~State() {};
+        void linkWindow(std::shared_ptr<sf::RenderWindow> window) { m_window = window; };
         virtual void onStart() = 0;
         virtual void onStop() = 0;
         virtual void onPause() = 0;
@@ -27,6 +32,8 @@ class State {
         virtual void update() = 0;
         virtual void handleEvent() = 0;
     protected:
+        std::shared_ptr<sf::RenderWindow> m_window;
+        sf::Event m_event;
         bool m_isPaused;
 };
 

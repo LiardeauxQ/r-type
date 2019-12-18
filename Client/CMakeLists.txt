@@ -6,8 +6,8 @@ project(r-type_client LANGUAGES CXX)
 set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT
-	${RTYPE_CLIENT_SOURCES}/main.cpp
-	${RTYPE_CLIENT_SOURCES}/Game.cpp
+    ${RTYPE_CLIENT_SOURCES}/main.cpp
+    ${RTYPE_CLIENT_SOURCES}/Game.cpp
     ${RTYPE_CLIENT_SOURCES}/StateStack.cpp
     ${RTYPE_CLIENT_SOURCES}/StateBuilder.cpp
     ${RTYPE_CLIENT_SOURCES}/states/EmptyState.cpp
