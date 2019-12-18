@@ -28,10 +28,20 @@ void MenuState::onStop()
     std::cout << "Leaving MenuState..." << std::endl;
 }
 
-void MenuState::onPause() {}
+void MenuState::onPause()
+{
+    m_isPaused = true;
+}
 
-void MenuState::onResume() {}
+void MenuState::onResume()
+{
+    m_isPaused = false;
+}
 
-void MenuState::update() {}
+void MenuState::update()
+{
+    if (m_isPaused)
+        return;
+}
 
 void MenuState::handleEvent() {}

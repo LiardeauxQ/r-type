@@ -28,10 +28,20 @@ void EmptyState::onStop()
     std::cout << "Leaving EmptyState..." << std::endl;
 }
 
-void EmptyState::onPause() {}
+void EmptyState::onPause()
+{
+    m_isPaused = true;
+}
 
-void EmptyState::onResume() {}
+void EmptyState::onResume()
+{
+    m_isPaused = false;
+}
 
-void EmptyState::update() {}
+void EmptyState::update()
+{
+    if (m_isPaused)
+        return;
+}
 
 void EmptyState::handleEvent() {}

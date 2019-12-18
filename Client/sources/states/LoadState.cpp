@@ -28,10 +28,20 @@ void LoadState::onStop()
     std::cout << "Leaving LoadState..." << std::endl;
 }
 
-void LoadState::onPause() {}
+void LoadState::onPause()
+{
+    m_isPaused = true;
+}
 
-void LoadState::onResume() {}
+void LoadState::onResume()
+{
+    m_isPaused = false;
+}
 
-void LoadState::update() {}
+void LoadState::update()
+{
+    if (m_isPaused)
+        return;
+}
 
 void LoadState::handleEvent() {}

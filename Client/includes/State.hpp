@@ -18,7 +18,7 @@ enum States {
 
 class State {
     public:
-        State() {};
+        State(): m_isPaused(false) {};
         virtual ~State() {};
         virtual void onStart() = 0;
         virtual void onStop() = 0;
@@ -26,6 +26,8 @@ class State {
         virtual void onResume() = 0;
         virtual void update() = 0;
         virtual void handleEvent() = 0;
+    protected:
+        bool m_isPaused;
 };
 
 #endif /* !STATE_HPP */

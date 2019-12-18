@@ -28,10 +28,20 @@ void PauseState::onStop()
     std::cout << "Leaving PauseState..." << std::endl;
 }
 
-void PauseState::onPause() {}
+void PauseState::onPause()
+{
+    m_isPaused = true;
+}
 
-void PauseState::onResume() {}
+void PauseState::onResume()
+{
+    m_isPaused = false;
+}
 
-void PauseState::update() {}
+void PauseState::update()
+{
+    if (m_isPaused)
+        return;
+}
 
 void PauseState::handleEvent() {}

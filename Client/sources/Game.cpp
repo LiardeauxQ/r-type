@@ -32,5 +32,7 @@ void Game::run()
 void Game::loop()
 {
     while (m_isRunning) {
+        m_states.top()->handleEvent();
+        m_states.top()->update();
     }
 }

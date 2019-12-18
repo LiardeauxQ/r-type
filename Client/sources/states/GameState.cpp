@@ -28,10 +28,21 @@ void GameState::onStop()
     std::cout << "Leaving GameState..." << std::endl;
 }
 
-void GameState::onPause() {}
+void GameState::onPause()
+{
+    m_isPaused = true;
+}
 
-void GameState::onResume() {}
+void GameState::onResume()
+{
+    m_isPaused = false;
+}
 
-void GameState::update() {}
+void GameState::update()
+{
+    if (m_isPaused)
+        return;
+    std::cout << "GameState update" << std::endl;
+}
 
 void GameState::handleEvent() {}
