@@ -3,7 +3,7 @@
 //
 
 #include "includes/Protocol/PlayerConnected.hpp"
-
+/*
 vector<u8> PlayerConnected::serialize() const
 {
     return Vec<u8>();
@@ -22,5 +22,5 @@ unique_ptr<IFactorizable<string>> PlayerConnected::copy() const
 void PlayerConnected::deserialize(vector<u8>& data)
 {
 
-}
+}*/
 

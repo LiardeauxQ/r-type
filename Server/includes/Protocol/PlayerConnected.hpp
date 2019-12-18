@@ -8,7 +8,7 @@
 #include "Message.hpp"
 
 using namespace std;
-
+/*
 class PlayerConnected : public Message {
 public:
     ~PlayerConnected() override = default;
@@ -16,6 +16,6 @@ public:
     [[nodiscard]] string getKey() const override;
     [[nodiscard]] vector<u8> serialize() const override;
     void deserialize(Vec<u8>& data) override;
-};
+};*/
 
 #endif //CPP_RTYPE_2019_GAMEROOM_HPP

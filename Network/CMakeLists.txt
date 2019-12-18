@@ -9,6 +9,10 @@ set(NETWORK
     ${NETWORK_SOURCES}/TcpListener.cpp
     ${NETWORK_SOURCES}/TcpStream.cpp
     ${NETWORK_SOURCES}/MessageFactory.cpp
+    ${NETWORK_SOURCES}/Message.cpp
+    ${NETWORK_SOURCES}/Protocol/JoinGame.cpp
+    ${NETWORK_SOURCES}/Protocol/CreateGame.cpp
+    ${NETWORK_SOURCES}/Protocol/PacketDispatcher.cpp
 )
 
 add_library(network STATIC

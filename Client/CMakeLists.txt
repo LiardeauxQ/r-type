@@ -7,7 +7,9 @@ set(RTYPE_CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_CLIENT
 	${RTYPE_CLIENT_SOURCES}/main.cpp
-)
+	${RTYPE_CLIENT_SOURCES}/Game.cpp
+	${RTYPE_CLIENT_SOURCES}/InputOptionsHandler.cpp
+	)
 
 add_executable(r-type_client
     ${RTYPE_CLIENT}
