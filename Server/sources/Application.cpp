@@ -2,13 +2,12 @@
 // Created by Quentin Liardeaux on 12/17/19.
 //
 
-#include "../includes/Application.hpp"
+#include "Application.hpp"
 
-Application::Application(uint16_t port)
-    : m_listener(port) {
+Application::Application(int ac, char **av)
+    : m_dispatcher(8678, "0.0.0.0") {
 }
 
 void Application::run() {
-    m_streamer = m_listener.accept();
-    m_listener.listen(30);
+    m_dispatcher.run();
 }

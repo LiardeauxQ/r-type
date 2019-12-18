@@ -21,6 +21,7 @@ public:
     std::string& getSessionName();
     short getPort();
     bool isCreateSession();
+    bool isAskingForHelp();
 
 private:
     enum OptionId {

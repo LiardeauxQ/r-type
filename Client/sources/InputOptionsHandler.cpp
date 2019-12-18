@@ -7,7 +7,7 @@
 std::vector<InputOptionsHandler::OptionInfo> InputOptionsHandler::options_ = {
     OptionInfo { CREATE_SESSION, "-c", "--createSession" },
     OptionInfo { SESSION_NAME, "-s", "--name" },
-    OptionInfo { PASSWORD, "-p", "--password" },
+    OptionInfo { PASSWORD, "-w", "--password" },
     OptionInfo { NICKNAME, "-n", "--nickname" },
     OptionInfo { PORT, "-p", "--port" },
     OptionInfo { HELP, "-h", "--help" },
@@ -43,7 +43,7 @@ std::string InputOptionsHandler::getOptionValue(OptionInfo& info)
     return value;
 }
 
-std::string InputOptionsHandler::getNickname()
+std::string& InputOptionsHandler::getNickname()
 {
     OptionInfo info = getOption(NICKNAME);
     std::string name = getOptionValue(info);
@@ -53,7 +53,7 @@ std::string InputOptionsHandler::getNickname()
     return name;
 }
 
-std::string InputOptionsHandler::getPassword()
+std::string& InputOptionsHandler::getPassword()
 {
     OptionInfo info = getOption(PASSWORD);
     std::string pass = getOptionValue(info);
@@ -63,7 +63,7 @@ std::string InputOptionsHandler::getPassword()
     return pass;
 }
 
-std::string InputOptionsHandler::getSessionName()
+std::string& InputOptionsHandler::getSessionName()
 {
     OptionInfo info = getOption(SESSION_NAME);
     std::string name = getOptionValue(info);
@@ -86,6 +86,16 @@ short InputOptionsHandler::getPort()
 bool InputOptionsHandler::isCreateSession()
 {
     OptionInfo info = getOption(CREATE_SESSION);
+    std::string value = getOptionValue(info);
+
+    if (value.size() > 0 && (value == info.longName || value == info.shortName))
+        return true;
+    return false;
+}
+
+bool InputOptionsHandler::isAskingForHelp()
+{
+    OptionInfo info = getOption(HELP);
     std::string value = getOptionValue(info);
 
     if (value.size() > 0 && (value == info.longName || value == info.shortName))

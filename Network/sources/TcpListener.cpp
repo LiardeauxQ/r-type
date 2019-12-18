@@ -9,8 +9,10 @@ TcpStream TcpListener::accept() const
     socklen_t s = sizeof(sockaddr);
     RawSocket newConnection = ::accept(m_handle, const_cast<sockaddr*>(&m_addr), &s);
 
-    if (newConnection == FAILED_SOCKET)
+    if (newConnection == FAILED_SOCKET) {
+        perror("accept");
         throw "Error while connecting";
+    }
     return TcpStream(newConnection);
 }
 
@@ -24,10 +26,14 @@ std::optional<TcpStream> TcpListener::acceptNonBlocking() const
 
 void TcpListener::listen(int32_t nbClientMax) const
 {
-    if (::listen(m_handle, nbClientMax) == -1)
+    if (::listen(m_handle, nbClientMax) == -1) {
+        perror("listen");
         throw "Error while listening.";
+    }
 }
 
 TcpListener::TcpListener(uint16_t port)
     : Socket(TCP, "0.0.0.0", port)
 {}
+
+TcpListener::TcpListener() : Socket() {}

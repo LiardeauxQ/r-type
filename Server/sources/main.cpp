@@ -9,7 +9,7 @@
 #include "Application.hpp"
 
 int main(int ac, char **av) {
-    Application app;
+    Application app(ac, av);
 
     app.run();
     return 0;

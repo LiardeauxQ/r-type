@@ -21,7 +21,7 @@ public:
     ~CreateGame() override = default;
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
-    size_t getSize() const { return PACKET_HDR_SIZE + CREATE_GAME_SIZE; }
+    size_t getSize() const final { return PACKET_HDR_SIZE + CREATE_GAME_SIZE; }
 
     const std::string &getName() const { return m_name; }
     const std::string &getPassword() const { return m_password; }

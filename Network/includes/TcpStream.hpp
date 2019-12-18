@@ -13,6 +13,7 @@
 
 class TcpStream : public Socket {
 public:
+    TcpStream();
     explicit TcpStream(RawSocket sock);
     explicit TcpStream(const std::string& addr, short port);
     ~TcpStream() final = default;
@@ -26,8 +27,10 @@ public:
     {
         received = ::recv(m_handle, data, size, 0);
 
-        if (received == -1)
+        if (received == -1) {
+            perror("recv");
             throw "Error while receiving";
+        }
     }
 
 private:

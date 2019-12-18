@@ -4,14 +4,29 @@
 
 #include "Protocol/PacketDispatcher.hpp"
 
+PacketDispatcher::PacketDispatcher()
+    : m_isRunning(false)
+    , m_listener()
+    , m_addr()
+{}
+
 PacketDispatcher::PacketDispatcher(uint16_t port, std::string addr)
-    : m_stream(port)
+    : m_isRunning(false)
+    , m_listener(port)
     , m_addr(std::move(addr))
 {
 }
 
 void PacketDispatcher::run() {
+    std::cout << "will run" << std::endl;
+    m_listener.listen(0);
+    std::cout << "listen" << std::endl;
+    m_stream = m_listener.accept();
+    std::cout << "is accepted" << std::endl;
     m_stream.connect(m_addr);
+    std::cout << "is connected" << std::endl;
+    m_isRunning = true;
+    dispatch();
 }
 
 void PacketDispatcher::sendCreateGame(std::string& name, std::string& password, std::string& nickname) {
@@ -48,13 +63,9 @@ std::unique_ptr<Message> PacketDispatcher::createMessage(packet_header_t &hdr) {
             msg = std::make_unique<Message>(JoinGame(data));
             break;
         default:
-            return nullptr;
+            msg = nullptr;
+            break;
     }
     delete[] data;
     return msg;
-}
-
-void PacketDispatcher::dispatch() {
-    packet_header_t hdr = headerReader();
-    auto msg = createMessage(hdr);
 }

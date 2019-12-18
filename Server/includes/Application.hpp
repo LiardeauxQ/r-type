@@ -7,17 +7,17 @@
 
 #include "TcpListener.hpp"
 #include "TcpStream.hpp"
+#include "ServerPacketDispatcher.hpp"
 #include <optional>
 
 class Application {
 public:
-    Application(uint16_t port=8676);
+    Application(int ac, char **av);
     ~Application() = default;
 
     void run();
 private:
-    TcpListener m_listener;
-    std::optional<TcpStream> m_streamer;
+    ServerPacketDispatcher m_dispatcher;
 };
 
 #endif //R_TYPE_APPLICATION_HPP

@@ -9,19 +9,21 @@
 #include "TcpListener.hpp"
 #include "InputOptionsHandler.hpp"
 #include "Protocol/PacketDispatcher.hpp"
+#include "ClientPacketDispatcher.hpp"
 #include <optional>
 
 class Game {
 public:
     Game(int ac, char **av);
-    ~Game() = default;
+    ~Game();
 
     void run();
 private:
     void gameConnection();
+    void displayHelp();
 
-    std::optional<PacketDispatcher> m_dispatcher;
     InputOptionsHandler m_input;
+    ClientPacketDispatcher *m_dispatcher;
 };
 
 #endif //R_TYPE_GAME_HPP
