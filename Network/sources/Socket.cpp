@@ -4,6 +4,12 @@
 
 #include "Socket.hpp"
 
+Socket::Socket()
+    : m_handle(FAILED_SOCKET)
+    , m_type(TCP)
+    , m_addr()
+    , m_blocking(false)
+{}
 
 Socket::Socket(Socket::Type type, RawSocket handle)
     : m_handle(handle)
@@ -25,23 +31,28 @@ Socket::Socket(Socket::Type type, sockaddr_in addr)
     m_handle = ::socket(AF_INET, getUnixFromType(m_type), 0);
     if (m_handle == FAILED_SOCKET)
         throw "Error while creating socket.";
-    if (::bind(m_handle, &m_addr, sizeof(sockaddr)) < 0)
-        throw "Error while binding.";
-}
-
-Socket::~Socket()
-{
-    #ifdef WIN32
-        closesocket(m_handle);
-        WSACleanup();
-    #else
-        close(m_handle);
-    #endif
 }
 
 bool Socket::operator==(const Socket& socket) const
 {
     return m_handle == socket.m_handle;
+}
+
+void Socket::bind() {
+    if (::bind(m_handle, &m_addr, sizeof(m_addr)) < 0) {
+        perror("bind");
+        throw "Error while binding.";
+    }
+}
+
+void Socket::close() {
+    #ifdef WIN32
+        closesocket(m_handle);
+            WSACleanup();
+    #else
+        std::cout << "Close socket " << m_handle << std::endl;
+        ::close(m_handle);
+    #endif
 }
 
 int32_t Socket::getUnixFromType(Socket::Type type)

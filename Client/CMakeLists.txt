@@ -15,6 +15,8 @@ set(RTYPE_CLIENT
     ${RTYPE_CLIENT_SOURCES}/states/MenuState.cpp
     ${RTYPE_CLIENT_SOURCES}/states/PauseState.cpp
     ${RTYPE_CLIENT_SOURCES}/states/GameState.cpp
+	${RTYPE_CLIENT_SOURCES}/InputOptionsHandler.cpp
+	${RTYPE_CLIENT_SOURCES}/ClientPacketDispatcher.cpp
 )
 
 add_executable(r-type_client

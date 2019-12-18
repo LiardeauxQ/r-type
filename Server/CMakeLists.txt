@@ -6,8 +6,8 @@ set(RTYPE_SERVER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_SERVER
     ${RTYPE_SERVER_SOURCES}/main.cpp
-    ${RTYPE_SERVER_SOURCES}/Protocol/JoinRoom.cpp
-    ${RTYPE_SERVER_SOURCES}/Protocol/PlayerConnected.cpp
+    ${RTYPE_SERVER_SOURCES}/Application.cpp
+    ${RTYPE_SERVER_SOURCES}/ServerPacketDispatcher.cpp
 )
 
 add_executable(r-type_server

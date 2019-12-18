@@ -5,23 +5,34 @@
 ** Game header
 */
 
+#ifndef GAME_HPP
+#define GAME_HPP
+
+#define WINDOW_WIDTH 1536
+#define WINDOW_HEIGHT 864
+
 #include <SFML/Graphics.hpp>
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
-
-#ifndef GAME_HPP
-	#define GAME_HPP
-
-    #define WINDOW_WIDTH 1536
-    #define WINDOW_HEIGHT 864
+#include "TcpStream.hpp"
+#include "TcpListener.hpp"
+#include "InputOptionsHandler.hpp"
+#include "Protocol/PacketDispatcher.hpp"
+#include "ClientPacketDispatcher.hpp"
 
 class Game {
     public:
-        Game();
+        Game(int ac, char **av);
         ~Game();
+
         void run();
     private:
         void loop();
+        void displayHelp();
+        void gameConnection();
+
+        InputOptionsHandler m_input;
+        ClientPacketDispatcher *m_dispatcher;
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;

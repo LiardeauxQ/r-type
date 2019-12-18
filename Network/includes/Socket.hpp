@@ -36,6 +36,7 @@ public:
         RAW
     };
 
+    Socket();
     Socket(Type type, RawSocket socket);
     Socket(Type type, const std::string& addr);
     Socket(Type type, const std::string& addr, uint16_t port);
@@ -45,11 +46,14 @@ public:
     Socket(const Socket& sock) = default;
     Socket& operator=(const Socket& sock) = default;
 
-    virtual ~Socket();
+    virtual ~Socket() = default;
 
     bool operator==(const Socket& socket) const;
 
     int setNonBlocking(bool active = true);
+    void bind();
+
+    void close();
 protected:
     static sockaddr_in parseStringAddr(const std::string& addr, uint16_t port = 0);
 
