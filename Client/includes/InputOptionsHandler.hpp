@@ -19,7 +19,8 @@ public:
     std::string& getNickname();
     std::string& getPassword();
     std::string& getSessionName();
-    short getPort();
+    short getClientPort();
+    short getServerPort();
     bool isCreateSession();
     bool isAskingForHelp();
 
@@ -29,7 +30,8 @@ private:
         SESSION_NAME,
         PASSWORD,
         NICKNAME,
-        PORT,
+        SERVER_PORT,
+        CLIENT_PORT,
         HELP,
     };
 

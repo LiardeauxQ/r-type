@@ -38,6 +38,12 @@ void ClientPacketDispatcher::sendJoinGame(std::string &name, std::string& passwo
     m_stream.send(message.serialize().data(), message.getSize());
 }
 
+void ClientPacketDispatcher::connectToServer(uint16_t port, std::string &addr) {
+    auto message = FirstConnection(port, addr);
+
+    m_stream.send(message.serialize().data(), message.getSize());
+}
+
 packet_header_t ClientPacketDispatcher::headerReader() {
     packet_header_t hdr = {};
     ssize_t receivedSize = 0;

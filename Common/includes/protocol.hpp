@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 #define MAX_BUFFER_SIZE 256
+#define PORT_SIZE 15
 
 const uint32_t MAGIC_NUMBER = 0x522d5444;
 
@@ -40,6 +41,7 @@ enum TCP_COMMUNICATION {
     CREATE_GAME = 0x01,
     JOIN_GAME = 0x02,
     ROOM_INFO = 0x03,
+    PLAYER_INFO = 0x12,
     ROOM_PLAYER_JOIN = 0x04,
     ROOM_PLAYER_QUIT = 0x05,
     ROOM_PLAYER_STATE = 0x06,
@@ -48,6 +50,7 @@ enum TCP_COMMUNICATION {
     LIST_OF_STAGES = 0x09,
     LIST_GAMES = 0x0A,
     LIST_OF_GAMES = 0x0B,
+    CLIENT_CONNECT = 0x11,
 };
 
 enum UDP_COMMUNICATION {
@@ -77,6 +80,13 @@ typedef struct {
     uint32_t x;
     uint32_t y;
 } pos_t;
+
+typedef struct {
+    uint16_t port;
+    uint8_t address[PORT_SIZE];
+} client_connect_t;
+
+const size_t CLIENT_CONNECT_SIZE = sizeof(client_connect_t);
 
 typedef struct {
     uint8_t name[MAX_BUFFER_SIZE];

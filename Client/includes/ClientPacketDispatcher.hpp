@@ -19,6 +19,7 @@ public:
 
     void sendCreateGame(std::string& name, std::string& password, std::string& nickname);
     void sendJoinGame(std::string &name, std::string& password, std::string& nickname);
+    void connectToServer(uint16_t port, std::string &addr);
     packet_header_t headerReader();
     std::unique_ptr<Message> createMessage(packet_header_t &hdr);
 

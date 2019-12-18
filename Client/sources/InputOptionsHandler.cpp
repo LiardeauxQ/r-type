@@ -9,7 +9,8 @@ std::vector<InputOptionsHandler::OptionInfo> InputOptionsHandler::options_ = {
     OptionInfo { SESSION_NAME, "-s", "--name" },
     OptionInfo { PASSWORD, "-w", "--password" },
     OptionInfo { NICKNAME, "-n", "--nickname" },
-    OptionInfo { PORT, "-p", "--port" },
+    OptionInfo { SERVER_PORT, "-p1", "--serverPort" },
+    OptionInfo { CLIENT_PORT, "-p2", "--clientPort" },
     OptionInfo { HELP, "-h", "--help" },
 };
 
@@ -73,9 +74,19 @@ std::string& InputOptionsHandler::getSessionName()
     return name;
 }
 
-short InputOptionsHandler::getPort()
+short InputOptionsHandler::getServerPort()
 {
-    OptionInfo info = getOption(PORT);
+    OptionInfo info = getOption(SERVER_PORT);
+    std::string port = getOptionValue(info);
+
+    if (port.size() == 0 || port == info.shortName || port == info.longName)
+        throw std::logic_error("Cannot find port option");
+    return std::stoi(port);
+}
+
+short InputOptionsHandler::getClientPort()
+{
+    OptionInfo info = getOption(CLIENT_PORT);
     std::string port = getOptionValue(info);
 
     if (port.size() == 0 || port == info.shortName || port == info.longName)

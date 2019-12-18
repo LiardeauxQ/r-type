@@ -69,6 +69,7 @@ void Game::displayHelp() {
     std::cout << "\t-s\t --name $NAME" << std::endl;
     std::cout << "\t-w\t --password $PASSWORD" << std::endl;
     std::cout << "\t-n\t --nickname $NICKNAME" << std::endl;
-    std::cout << "\t-p\t --port $PORT" << std::endl;
+    std::cout << "\t-p1\t --serverPort $PORT" << std::endl;
+    std::cout << "\t-p2\t --clientPort $PORT" << std::endl;
     std::cout << "\t-h\t --help" << std::endl;
 }
