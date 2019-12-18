@@ -5,8 +5,9 @@
 ** Game header
 */
 
-#include <stack>
+#include <SFML/Graphics.hpp>
 #include "StateBuilder.hpp"
+#include "StateStack.hpp"
 
 #ifndef GAME_HPP
 	#define GAME_HPP
@@ -19,7 +20,7 @@ class Game {
     private:
         void loop();
         StateBuilder m_stateBuilder;
-        std::stack<std::unique_ptr<State>> m_states;
+        StateStack m_states;
         bool m_isRunning;
 };
 

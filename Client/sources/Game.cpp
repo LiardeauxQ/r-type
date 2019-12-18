@@ -25,7 +25,7 @@ Game::~Game()
 void Game::run()
 {
     m_isRunning = true;
-    m_states.push(m_stateBuilder.createState(States::GAME));
+    m_states.swap(m_stateBuilder.createState(States::GAME));
     this->loop();
 }
 

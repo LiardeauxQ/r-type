@@ -42,7 +42,6 @@ void GameState::update()
 {
     if (m_isPaused)
         return;
-    std::cout << "GameState update" << std::endl;
 }
 
 void GameState::handleEvent() {}
