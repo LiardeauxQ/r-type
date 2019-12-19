@@ -8,7 +8,8 @@
 #include "states/MenuState.hpp"
 #include <iostream>
 
-MenuState::MenuState(): State()
+MenuState::MenuState(TextureBuilder &textureBuilder)
+    : State(textureBuilder)
 {
     this->onStart();
 }

@@ -6,12 +6,14 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include "TextureBuilder.hpp"
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
 
 #ifndef GAME_HPP
 	#define GAME_HPP
 
+    #define WINDOW_NAME "test"
     #define WINDOW_WIDTH 1536
     #define WINDOW_HEIGHT 864
 
@@ -22,10 +24,11 @@ class Game {
         void run();
     private:
         void loop();
+        TextureBuilder m_textureBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;
-        std::shared_ptr<sf::RenderWindow> m_window;
+        sf::RenderWindow *m_window;
 };
 
 #endif /* !GAME_HPP */

@@ -12,7 +12,7 @@
 
 class LoadState : public State {
     public:
-        LoadState();
+        LoadState(TextureBuilder &textureBuilder);
         ~LoadState();
         void onStart();
         void onStop();

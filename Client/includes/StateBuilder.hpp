@@ -8,13 +8,13 @@
 #ifndef STATEBUILDER_HPP
 	#define STATEBUILDER_HPP
 
-#include <memory>
 #include "State.hpp"
+#include "TextureBuilder.hpp"
 
 class StateBuilder {
     public:
         StateBuilder();
-        std::unique_ptr<State> createState(States stateName);
+        State *createState(States stateName, TextureBuilder &textureBuilder);
         ~StateBuilder() = default;
     private:
 };

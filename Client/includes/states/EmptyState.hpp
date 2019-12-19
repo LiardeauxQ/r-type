@@ -12,7 +12,7 @@
 
 class EmptyState : public State {
     public:
-        EmptyState();
+        EmptyState(TextureBuilder &textureBuilder);
         ~EmptyState();
         void onStart();
         void onStop();

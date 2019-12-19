@@ -12,7 +12,7 @@
 
 class MenuState : public State {
     public:
-        MenuState();
+        MenuState(TextureBuilder &textureBuilder);
         ~MenuState();
         void onStart();
         void onStop();

@@ -8,7 +8,8 @@
 #include "states/GameState.hpp"
 #include <iostream>
 
-GameState::GameState(): State()
+GameState::GameState(TextureBuilder &textureBuilder)
+    : State(textureBuilder)
 {
     this->onStart();
 }

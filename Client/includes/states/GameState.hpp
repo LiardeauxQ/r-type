@@ -9,10 +9,11 @@
 	#define GAMESTATE_HPP
 
 #include "State.hpp"
+#include "TextureBuilder.hpp"
 
 class GameState : public State {
     public:
-        GameState();
+        GameState(TextureBuilder &textureBuilder);
         ~GameState();
         void onStart();
         void onStop();

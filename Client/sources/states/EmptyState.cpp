@@ -8,7 +8,8 @@
 #include "states/EmptyState.hpp"
 #include <iostream>
 
-EmptyState::EmptyState(): State()
+EmptyState::EmptyState(TextureBuilder &textureBuilder)
+    : State(textureBuilder)
 {
     this->onStart();
 }

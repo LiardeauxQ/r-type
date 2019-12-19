@@ -7,8 +7,8 @@
 
 #include "StateStack.hpp"
 
-void StateStack::swap(std::unique_ptr<State> newState)
+void StateStack::swap(State *newState)
 {
     this->pop();
-    this->push(std::move(newState));
+    this->push(newState);
 }

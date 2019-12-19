@@ -14,20 +14,20 @@
 
 StateBuilder::StateBuilder() {}
 
-std::unique_ptr<State> StateBuilder::createState(States stateName)
+State *StateBuilder::createState(States stateName, TextureBuilder &textureBuilder)
 {
     switch (stateName) {
         case States::EMPTY:
-            return std::make_unique<EmptyState>();
+            return new EmptyState(textureBuilder);
         case States::LOAD:
-            return std::make_unique<LoadState>();
+            return new LoadState(textureBuilder);
         case States::MENU:
-            return std::make_unique<MenuState>();
+            return new MenuState(textureBuilder);
         case States::PAUSE:
-            return std::make_unique<PauseState>();
+            return new PauseState(textureBuilder);
         case States::GAME:
-            return std::make_unique<GameState>();
+            return new GameState(textureBuilder);
         default:
-            return std::make_unique<EmptyState>();
+            return new EmptyState(textureBuilder);
     }
 }

@@ -9,7 +9,8 @@
 #include <iostream>
 
 Game::Game()
-    : m_stateBuilder()
+    : m_textureBuilder()
+    , m_stateBuilder()
     , m_states()
     , m_isRunning(false)
     , m_window(nullptr)
@@ -18,14 +19,16 @@ Game::Game()
 
 Game::~Game()
 {
-    while (!m_states.empty())
+    while (!m_states.empty()) {
+        delete m_states.top();
         m_states.pop();
+    }
 }
 
 void Game::run()
 {
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "test");
-    m_states.push(m_stateBuilder.createState(States::GAME));
+    m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
+    m_states.push(m_stateBuilder.createState(States::GAME, m_textureBuilder));
     m_states.top()->linkWindow(m_window);
     m_isRunning = true;
     this->loop();

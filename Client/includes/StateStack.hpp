@@ -9,14 +9,13 @@
 	#define STATESTACK_HPP
 
 #include <stack>
-#include <memory>
 #include "State.hpp"
 
-class StateStack : public std::stack<std::unique_ptr<State>> {
+class StateStack : public std::stack<State*> {
     public:
-        StateStack(): std::stack<std::unique_ptr<State>>() {};
+        StateStack(): std::stack<State*>() {};
         ~StateStack() = default;
-        void swap(std::unique_ptr<State> newState);
+        void swap(State *newState);
 };
 
 #endif /* !STATESTACK_HPP */
