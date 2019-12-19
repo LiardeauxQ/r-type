@@ -19,7 +19,7 @@ class MenuState : public State {
         void onPause();
         void onResume();
         void update();
-        void handleEvent();
+        Transition handleEvent(sf::Event &event);
 };
 
 #endif /* !MENUSTATE_HPP */

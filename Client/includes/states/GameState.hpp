@@ -9,7 +9,6 @@
 	#define GAMESTATE_HPP
 
 #include "State.hpp"
-#include "TextureBuilder.hpp"
 
 class GameState : public State {
     public:
@@ -20,7 +19,7 @@ class GameState : public State {
         void onPause();
         void onResume();
         void update();
-        void handleEvent();
+        Transition handleEvent(sf::Event &envent);
 };
 
 #endif /* !GAMESTATE_HPP */

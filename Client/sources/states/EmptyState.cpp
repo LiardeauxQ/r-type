@@ -45,4 +45,12 @@ void EmptyState::update()
         return;
 }
 
-void EmptyState::handleEvent() {}
+Transition EmptyState::handleEvent(sf::Event &event)
+{
+    switch (event.type) {
+        case sf::Event::Closed:
+            return Transition::QUIT;
+        default:
+            return Transition::NONE;
+    }
+}

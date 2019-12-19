@@ -19,7 +19,7 @@ class PauseState : public State {
         void onPause();
         void onResume();
         void update();
-        void handleEvent();
+        Transition handleEvent(sf::Event &event);
 };
 
 #endif /* !PAUSESTATE_HPP */

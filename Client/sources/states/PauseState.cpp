@@ -45,4 +45,12 @@ void PauseState::update()
         return;
 }
 
-void PauseState::handleEvent() {}
+Transition PauseState::handleEvent(sf::Event &event)
+{
+    switch (event.type) {
+        case sf::Event::Closed:
+            return Transition::QUIT;
+        default:
+            return Transition::NONE;
+    }
+}

@@ -45,4 +45,12 @@ void MenuState::update()
         return;
 }
 
-void MenuState::handleEvent() {}
+Transition MenuState::handleEvent(sf::Event &event)
+{
+    switch (event.type) {
+        case sf::Event::Closed:
+            return Transition::QUIT;
+        default:
+            return Transition::NONE;
+    }
+}

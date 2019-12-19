@@ -23,12 +23,14 @@ class Game {
         ~Game();
         void run();
     private:
+        void handleTransition(Transition transition);
         void loop();
         TextureBuilder m_textureBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;
         sf::RenderWindow *m_window;
+        sf::Event m_event;
 };
 
 #endif /* !GAME_HPP */

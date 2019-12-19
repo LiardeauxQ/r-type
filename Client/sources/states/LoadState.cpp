@@ -45,4 +45,12 @@ void LoadState::update()
         return;
 }
 
-void LoadState::handleEvent() {}
+Transition LoadState::handleEvent(sf::Event &event)
+{
+    switch (event.type) {
+        case sf::Event::Closed:
+            return Transition::QUIT;
+        default:
+            return Transition::NONE;
+    }
+}

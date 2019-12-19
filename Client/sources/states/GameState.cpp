@@ -45,19 +45,16 @@ void GameState::update()
         return;
 }
 
-void GameState::handleEvent()
+Transition GameState::handleEvent(sf::Event &event)
 {
-    while (m_window->pollEvent(m_event)) {
-        switch (m_event.type) {
-            case sf::Event::Closed:
-                m_window->close();
-                break;
-            case sf::Event::KeyPressed:
-                if (m_event.key.code == sf::Keyboard::Escape)
-                    m_window->close();
-                break;
-            default:
-                break;
-        }
+    switch (event.type) {
+        case sf::Event::Closed:
+            return Transition::QUIT;
+        case sf::Event::KeyPressed:
+            if (event.key.code == sf::Keyboard::Escape)
+                return Transition::QUIT;
+            return Transition::NONE;
+        default:
+            return Transition::NONE;
     }
 }

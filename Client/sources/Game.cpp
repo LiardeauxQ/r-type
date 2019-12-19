@@ -14,6 +14,7 @@ Game::Game()
     , m_states()
     , m_isRunning(false)
     , m_window(nullptr)
+    , m_event()
 {
 }
 
@@ -34,11 +35,24 @@ void Game::run()
     this->loop();
 }
 
+void Game::handleTransition(Transition transition)
+{
+    switch (transition) {
+        case Transition::QUIT:
+            m_window->close();
+            break;
+        default:
+            break;
+    }
+}
+
 void Game::loop()
 {
     while (m_isRunning && m_window->isOpen()) {
         m_window->clear();
-        m_states.top()->handleEvent();
+        while (m_window->pollEvent(m_event)) {
+            handleTransition(m_states.top()->handleEvent(m_event));
+        }
         m_states.top()->update();
         m_window->display();
     }
