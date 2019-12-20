@@ -59,9 +59,12 @@ Transition GameState::handleEvent(sf::Event &event)
         switch (event.type) {
             case sf::Event::Closed:
                 return Transition::QUIT;
-        case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape)
-                return Transition::QUIT;
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Escape)
+                    return Transition::QUIT;
+                break;
+            case sf::Event::Resized:
+                m_window->setView(sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height))));
             default:
                 break;
         }
