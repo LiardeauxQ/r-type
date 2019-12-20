@@ -31,6 +31,7 @@ class Game {
         bool m_isRunning;
         sf::RenderWindow *m_window;
         sf::Event m_event;
+        float m_deltaTime;
 };
 
 #endif /* !GAME_HPP */

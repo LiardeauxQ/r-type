@@ -8,7 +8,9 @@
 #ifndef GAMESTATE_HPP
 	#define GAMESTATE_HPP
 
+#include <vector>
 #include "State.hpp"
+#include "entities/Ship.hpp"
 
 class GameState : public State {
     public:
@@ -20,6 +22,9 @@ class GameState : public State {
         void onResume();
         void update();
         Transition handleEvent(sf::Event &envent);
+    private:
+        Ship m_player;
+        std::vector<Bullet> m_bullets;
 };
 
 #endif /* !GAMESTATE_HPP */
