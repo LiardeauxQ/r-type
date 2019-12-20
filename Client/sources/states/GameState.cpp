@@ -62,12 +62,12 @@ Transition GameState::handleEvent(sf::Event &event)
         case sf::Event::KeyPressed:
             if (event.key.code == sf::Keyboard::Escape)
                 return Transition::QUIT;
-            if (event.key.code == sf::Keyboard::Space)
-                m_bullets.push_back(m_player.shot());
             default:
                 break;
         }
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        m_bullets.push_back(m_player.shot());
     sf::Vector2f offset(0.0, 0.0);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         offset += sf::Vector2f(0.0, -320 * (*m_deltaTime));
