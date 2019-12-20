@@ -6,3 +6,5 @@ cmake-build-*
 .vscode
 .DS_Store
 .session.vimsess
+.clangd/
+compile_commands.json
