@@ -70,7 +70,7 @@ Transition GameState::handleEvent(sf::Event &event)
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        m_bullets.push_back(m_player.shot());
+        m_player.shot(m_bullets);
     sf::Vector2f offset(0.0, 0.0);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         offset += sf::Vector2f(0.0, -320 * (*m_deltaTime));

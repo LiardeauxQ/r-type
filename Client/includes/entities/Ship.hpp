@@ -9,6 +9,8 @@
 	#define SHIP_HPP
 
 #include "entities/Bullet.hpp"
+#include <SFML/System/Clock.hpp>
+#include <vector>
 
 class Ship : public Entity {
     public:
@@ -16,7 +18,11 @@ class Ship : public Entity {
         Ship(const sf::Texture *texture);
         ~Ship() = default;
         void setTexture(const sf::Texture *texture);
-        Bullet shot();
+        void shot(std::vector<Bullet> &bullets);
+    private:
+        float m_fireRate;
+        float m_cooldown;
+        sf::Clock m_clock;
 };
 
 #endif /* !SHIP_HPP */
