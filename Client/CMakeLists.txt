@@ -24,6 +24,7 @@ add_executable(r-type_client
 )
 
 find_package(sfml)
+find_package(boost_asio)
 
 target_include_directories(r-type_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
@@ -31,4 +32,4 @@ set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(r-type_client ecs common physics network parser loader sfml::sfml)
+target_link_libraries(r-type_client ecs common physics network parser loader sfml::sfml boost_asio::boost_asio)

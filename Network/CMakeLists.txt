@@ -13,6 +13,7 @@ set(NETWORK
     ${NETWORK_SOURCES}/Protocol/JoinGame.cpp
     ${NETWORK_SOURCES}/Protocol/CreateGame.cpp
     ${NETWORK_SOURCES}/Protocol/ClientConnect.cpp
+    ${NETWORK_SOURCES}/Protocol/SuccessConnect.cpp
     ${NETWORK_SOURCES}/Protocol/GameStart.cpp
     ${NETWORK_SOURCES}/Protocol/ListGames.cpp
     ${NETWORK_SOURCES}/Protocol/ListOfGames.cpp

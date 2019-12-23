@@ -29,7 +29,7 @@ void Game::run() {
     }
     try {
         m_dispatcher = new ClientPacketDispatcher(8678, 0, "0.0.0.0");
-        m_dispatcher->run();
+        m_dispatcher->start();
         gameConnection();
         m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "test");
         m_states.push(m_stateBuilder.createState(States::GAME));
@@ -59,8 +59,58 @@ void Game::loop()
         m_states.top()->handleEvent();
         m_states.top()->update();
         m_window->display();
+        checkServerPackets();
     }
 }
+
+void Game::checkServerPackets() {
+    auto responses = m_dispatcher->getServerResponses();
+
+    while (!responses.empty()) {
+        auto response = responses.front().get();
+
+        handlePacket(*response);
+        responses.pop();
+    }
+}
+
+void Game::handlePacket(const Message& msg) {
+    switch (msg.getId()) {
+        case ROOM_INFO:
+            roomInfo(dynamic_cast<const RoomInfo&>(msg));
+            break;
+        case SUCCESS_CONNECT:
+            successConnection(dynamic_cast<const SuccessConnect&>(msg));
+            break;
+        case ERROR:
+            break;
+        case ROOM_PLAYER_JOIN:
+            playerHasJoin(dynamic_cast<const RoomPlayerJoin&>(msg));
+            break;
+        case ROOM_PLAYER_QUIT:
+            playerHasQuit(dynamic_cast<const RoomPlayerQuit&>(msg));
+            break;
+        case ROOM_PLAYER_STATE:
+            getPlayerState(dynamic_cast<const RoomPlayerState&>(msg));
+            break;
+        case GAME_START:
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::roomInfo(const RoomInfo& msg) {
+
+}
+
+void Game::successConnection(const SuccessConnect& msg) {
+
+}
+
+void Game::playerHasJoin(const RoomPlayerJoin &msg) {}
+void Game::playerHasQuit(const RoomPlayerQuit &msg) {}
+void Game::getPlayerState(const RoomPlayerState &msg) {}
 
 void Game::displayHelp() {
     std::cout << "R-TYPE help:" << std::endl;

@@ -14,8 +14,6 @@
 #include <SFML/Graphics.hpp>
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
-#include "TcpStream.hpp"
-#include "TcpListener.hpp"
 #include "InputOptionsHandler.hpp"
 #include "ClientPacketDispatcher.hpp"
 
@@ -29,6 +27,15 @@ class Game {
         void loop();
         void displayHelp();
         void gameConnection();
+        void checkServerPackets();
+        void handlePacket(const Message& msg);
+
+        void roomInfo(const RoomInfo& msg);
+        void successConnection(const SuccessConnect& msg);
+        //void receiveError(const Error& msg);
+        void playerHasJoin(const RoomPlayerJoin& msg);
+        void playerHasQuit(const RoomPlayerQuit& msg);
+        void getPlayerState(const RoomPlayerState& msg);
 
         InputOptionsHandler m_input;
         ClientPacketDispatcher *m_dispatcher;

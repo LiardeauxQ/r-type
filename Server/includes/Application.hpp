@@ -7,7 +7,6 @@
 
 #include "TcpListener.hpp"
 #include "TcpStream.hpp"
-#include "ServerPacketDispatcher.hpp"
 #include "Lobby.hpp"
 
 #include <boost/asio.hpp>
