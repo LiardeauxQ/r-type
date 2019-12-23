@@ -44,33 +44,34 @@ std::string InputOptionsHandler::getOptionValue(OptionInfo& info)
     return value;
 }
 
-std::string& InputOptionsHandler::getNickname()
+std::string InputOptionsHandler::getNickname()
 {
     OptionInfo info = getOption(NICKNAME);
     std::string name = getOptionValue(info);
 
-    if (name.size() == 0 || name == info.shortName || name == info.longName)
+    if (name.empty() || name == info.shortName || name == info.longName)
         throw std::logic_error("Cannot find nickname option");
     return name;
 }
 
-std::string& InputOptionsHandler::getPassword()
+std::string InputOptionsHandler::getPassword()
 {
     OptionInfo info = getOption(PASSWORD);
     std::string pass = getOptionValue(info);
 
-    if (pass.size() == 0 || pass == info.shortName || pass == info.longName)
+    if (pass.empty() || pass == info.shortName || pass == info.longName)
         throw std::logic_error("Cannot find password option");
     return pass;
 }
 
-std::string& InputOptionsHandler::getSessionName()
+std::string InputOptionsHandler::getSessionName()
 {
     OptionInfo info = getOption(SESSION_NAME);
     std::string name = getOptionValue(info);
 
-    if (name.size() == 0 || name == info.shortName || name == info.longName)
+    if (name.empty() || name == info.shortName || name == info.longName)
         throw std::logic_error("Cannot find session name option");
+    std::cout << name << std::endl;
     return name;
 }
 
@@ -79,7 +80,7 @@ short InputOptionsHandler::getServerPort()
     OptionInfo info = getOption(SERVER_PORT);
     std::string port = getOptionValue(info);
 
-    if (port.size() == 0 || port == info.shortName || port == info.longName)
+    if (port.empty() || port == info.shortName || port == info.longName)
         throw std::logic_error("Cannot find port option");
     return std::stoi(port);
 }
@@ -89,7 +90,7 @@ short InputOptionsHandler::getClientPort()
     OptionInfo info = getOption(CLIENT_PORT);
     std::string port = getOptionValue(info);
 
-    if (port.size() == 0 || port == info.shortName || port == info.longName)
+    if (port.empty() || port == info.shortName || port == info.longName)
         throw std::logic_error("Cannot find port option");
     return std::stoi(port);
 }

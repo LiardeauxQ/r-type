@@ -4,11 +4,12 @@
 
 #include "ClientPacketDispatcher.hpp"
 
-ClientPacketDispatcher::ClientPacketDispatcher(uint16_t port, std::string addr)
-        : m_port(port)
+ClientPacketDispatcher::ClientPacketDispatcher(uint16_t serverPort, uint16_t  userPort, std::string addr)
+        : m_serverPort(serverPort)
+        , m_userPort(userPort)
         , m_addr(std::move(addr))
         , m_isRunning(false)
-        , m_stream(m_addr, port) {
+        , m_stream(m_addr, serverPort) {
 }
 
 ClientPacketDispatcher::~ClientPacketDispatcher() {
@@ -16,9 +17,9 @@ ClientPacketDispatcher::~ClientPacketDispatcher() {
 }
 
 void ClientPacketDispatcher::run() {
-    m_stream.connect(m_addr, m_port);
+    m_stream.connect(m_addr, m_serverPort);
     m_isRunning = true;
-    //m_dispatcherThread = std::thread(&ClientPacketDispatcher::dispatch, this);
+    m_dispatcherThread = std::thread(&ClientPacketDispatcher::dispatch, this);
 }
 
 void ClientPacketDispatcher::stop() {
@@ -27,24 +28,26 @@ void ClientPacketDispatcher::stop() {
 }
 
 void ClientPacketDispatcher::sendCreateGame(std::string& name, std::string& password, std::string& nickname) {
-    auto message = CreateGame(name, password, nickname);
+    auto message = CreateGame(0, name, password, nickname);
 
     m_stream.send(message.serialize().data(), message.getSize());
 }
 
 void ClientPacketDispatcher::sendJoinGame(std::string &name, std::string& password, std::string& nickname) {
-    auto message = JoinGame(name, password, nickname);
+    auto message = JoinGame(0, name, password, nickname);
 
     m_stream.send(message.serialize().data(), message.getSize());
 }
 
 void ClientPacketDispatcher::connectToServer(uint16_t port, std::string &addr) {
-    auto message = FirstConnection(port, addr);
+    auto message = ClientConnect(port, addr);
 
     m_stream.send(message.serialize().data(), message.getSize());
+
+    auto result = dynamic_cast<RoomInfo*>(receiveMessage().get());
 }
 
-packet_header_t ClientPacketDispatcher::headerReader() {
+packet_header_t ClientPacketDispatcher::receiveHeader() {
     packet_header_t hdr = {};
     ssize_t receivedSize = 0;
 
@@ -73,9 +76,16 @@ std::unique_ptr<Message> ClientPacketDispatcher::createMessage(packet_header_t &
     return msg;
 }
 
+std::unique_ptr<Message> ClientPacketDispatcher::receiveMessage() {
+    packet_header_t hdr = receiveHeader();
+
+    return createMessage(hdr);
+}
+
 void ClientPacketDispatcher::dispatch() {
     while (m_isRunning) {
-        packet_header_t hdr = headerReader();
-        auto msg = createMessage(hdr);
+        packet_header_t hdr = receiveHeader();
+        std::cout << hdr.packet_id << std::endl;
+        //auto msg = createMessage(hdr);
     }
 }

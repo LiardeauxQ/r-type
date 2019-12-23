@@ -10,15 +10,16 @@
 #include <string>
 #include <cstring>
 #include <stdexcept>
+#include <iostream>
 
 class InputOptionsHandler {
 public:
     InputOptionsHandler(int argc, char **argv);
     ~InputOptionsHandler() = default;
 
-    std::string& getNickname();
-    std::string& getPassword();
-    std::string& getSessionName();
+    std::string getNickname();
+    std::string getPassword();
+    std::string getSessionName();
     short getClientPort();
     short getServerPort();
     bool isCreateSession();

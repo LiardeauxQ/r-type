@@ -46,6 +46,8 @@ elseif()
 	set(CRITERION_LIBRARIES criterion)
 endif()
 
+find_package(boost_asio)
+
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
 set(RTYPE_CLIENT_PATH "${CMAKE_SOURCE_DIR}/Client")

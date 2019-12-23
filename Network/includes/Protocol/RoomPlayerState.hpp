@@ -10,19 +10,19 @@
 #include "Message.hpp"
 #include "protocol.hpp"
 
-class RoomPlayerQuit : public Message {
+class RoomPlayerState : public Message {
 public:
-    RoomPlayerQuit(uint8_t idPlayer, std::string nickname, bool isReady)
-            : Message(TCP_COMMUNICATION::ROOM_PLAYER_QUIT)
+    RoomPlayerState(uint8_t idPlayer, std::string nickname, bool isReady)
+            : Message(TCP_COMMUNICATION::ROOM_PLAYER_STATE)
             , m_idPlayer(idPlayer)
             , m_nickname(std::move(nickname))
             , m_isReady(isReady)
     {}
-    explicit RoomPlayerQuit(void *data);
-    ~RoomPlayerQuit() override = default;
+    explicit RoomPlayerState(void *data);
+    ~RoomPlayerState() override = default;
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
-    size_t getSize() const final { return PACKET_HDR_SIZE + ROOM_PLAYER_QUIT_SIZE; }
+    size_t getSize() const final { return PACKET_HDR_SIZE + ROOM_PLAYER_STATE_SIZE; }
 
     uint8_t getIdPlayer() const { return m_idPlayer; }
     const std::string &getNickname() const { return m_nickname; }

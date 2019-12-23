@@ -89,6 +89,13 @@ typedef struct {
 const size_t CLIENT_CONNECT_SIZE = sizeof(client_connect_t);
 
 typedef struct {
+    uint8_t id_player;
+} success_connect_t;
+
+const size_t SUCCESS_CONNECT_SIZE = sizeof(success_connect_t);
+
+typedef struct {
+    uint8_t id_player;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t password[MAX_BUFFER_SIZE];
     uint8_t nickname[MAX_BUFFER_SIZE];
@@ -97,6 +104,7 @@ typedef struct {
 const size_t CREATE_GAME_SIZE = sizeof(create_game_t);
 
 typedef struct {
+    uint8_t id_player;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t password[MAX_BUFFER_SIZE];
     uint8_t nickname[MAX_BUFFER_SIZE];

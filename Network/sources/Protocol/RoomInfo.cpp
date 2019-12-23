@@ -2,26 +2,25 @@
 // Created by Quentin Liardeaux on 12/18/19.
 //
 
-#include "includes/Protocol/RoomInfo.hpp"
-CreateGame::CreateGame(void *data) : Message(CREATE_GAME) {
-    auto pkt = reinterpret_cast<create_game_t*>(data);
+#include "Protocol/RoomInfo.hpp"
 
+RoomInfo::RoomInfo(void *data) : Message(ROOM_INFO) {
+    auto pkt = reinterpret_cast<room_info_t*>(data);
+
+    m_idGame = pkt->id_game;
     m_name = std::string(reinterpret_cast<char*>(pkt->name));
-    m_password = std::string(reinterpret_cast<char *>(pkt->password));
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
+    m_nbPlayers = pkt->nb_players;
+    m_maxPlayers = pkt->max_players;
+    m_idPlayer = pkt->id_player;
 }
 
-std::vector<uint8_t> CreateGame::serialize() const {
-    std::vector<uint8_t> data = Message::createHeader(m_id, CREATE_GAME_SIZE);
-    create_game_t pkt = {{0}, {0}, {0}};
+std::vector<uint8_t> RoomInfo::serialize() const {
+    std::vector<uint8_t> data = Message::createHeader(m_id, ROOM_INFO_SIZE);
+    room_info_t pkt = {m_idGame, {0}, m_nbPlayers, m_maxPlayers, m_idPlayer};
 
     for (size_t i = 0; i < m_name.size() && i < MAX_BUFFER_SIZE; i++)
         pkt.name[i] = static_cast<uint8_t>(*(m_name.c_str() + i));
-    for (size_t i = 0; i < m_password.size() && i < MAX_BUFFER_SIZE; i++)
-        pkt.password[i] = static_cast<uint8_t>(*(m_password.c_str() + i));
-    for (size_t i = 0; i < m_nickname.size() && i < MAX_BUFFER_SIZE; i++)
-        pkt.nickname[i] = static_cast<uint8_t>(*(m_nickname.c_str() + i));
-    for (size_t i = 0; i < JOIN_GAME_SIZE; i++)
+    for (size_t i = 0; i < ROOM_INFO_SIZE; i++)
         data.push_back(*(reinterpret_cast<uint8_t *>(&pkt) + i));
     return data;
 }

@@ -28,29 +28,28 @@ void Game::run() {
         return;
     }
     try {
-        m_dispatcher = new ClientPacketDispatcher(8678, "0.0.0.0");
+        m_dispatcher = new ClientPacketDispatcher(8678, 0, "0.0.0.0");
         m_dispatcher->run();
         gameConnection();
         m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "test");
         m_states.push(m_stateBuilder.createState(States::GAME));
         m_states.top()->linkWindow(m_window);
         m_isRunning = true;
-        this->loop();
+        //this->loop();
     } catch (const char *s) {
         std::cout << s << std::endl;
     }
 }
 
 void Game::gameConnection() {
+    auto sessionName = m_input.getSessionName();
+    auto password = m_input.getPassword();
+    auto nickname = m_input.getNickname();
     std::cout << "connect" << std::endl;
-    if (m_input.isCreateSession()) {
-        std::cout << "Create session" << std::endl;
-        m_dispatcher->sendCreateGame(m_input.getSessionName(),
-                                     m_input.getPassword(), m_input.getNickname());
-    } else {
-        m_dispatcher->sendJoinGame(m_input.getSessionName(),
-                                   m_input.getPassword(), m_input.getNickname());
-    }
+    if (m_input.isCreateSession())
+        m_dispatcher->sendCreateGame(sessionName, password, nickname);
+    else
+        m_dispatcher->sendJoinGame(sessionName, password, nickname);
 }
 
 void Game::loop()

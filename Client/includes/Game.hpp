@@ -17,7 +17,6 @@
 #include "TcpStream.hpp"
 #include "TcpListener.hpp"
 #include "InputOptionsHandler.hpp"
-#include "Protocol/PacketDispatcher.hpp"
 #include "ClientPacketDispatcher.hpp"
 
 class Game {
