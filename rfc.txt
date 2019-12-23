@@ -129,9 +129,9 @@ Internet-Draft              Abbreviated Title              December 2015
 2.1.  Header
 
                  +--------------+-------------+-------------+
-                 | magic_number | packet_size | hashed_name |
+                 | magic_number |  packet_id  | packet_size |
                  +--------------+-------------+-------------+
-                 |   4 bytes    |   4 bytes   |  16 bytes   |
+                 |   4 bytes    |   4 bytes   |   4 bytes   |
                  +--------------+-------------+-------------+
 
                            Structure of a header
@@ -139,7 +139,7 @@ Internet-Draft              Abbreviated Title              December 2015
    The header is composed of a magic number which SHOULD be used to do a
    primary sanity check of the packet.
 
-   The value of magic_number MUST be 0x522d545950 (ASCII R-TYP)
+   The value of magic_number MUST be 0x522d5459 (ASCII R-TY)
 
    The packet_size is used to allocate memory for the message and handle
    it properly.
@@ -364,7 +364,7 @@ Internet-Draft              Abbreviated Title              December 2015
    Direction: client <=> server
 
    Error codes:
-   0x01: Nickname is already taken
+   0x03: Nickname is already taken
 
    This packet is sent from the server to every client when a client
    changes its state (ready or not).
@@ -563,7 +563,7 @@ Internet-Draft              Abbreviated Title              December 2015
                                | uint64_t |
                                +----------+
 
-                        Structure of a MOVE message
+                        Structure of a SYNC_DIST message
 
 5.  Security Considerations
 

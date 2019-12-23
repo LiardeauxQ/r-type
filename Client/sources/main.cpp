@@ -6,9 +6,11 @@
 */
 
 #include "Game.hpp"
+#include <iostream>
 
-int main() {
-    Game game = Game();
+int main(int ac, char **av) {
+    Game game(ac, av);
+
     game.run();
     return 0;
 }

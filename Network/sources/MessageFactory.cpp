@@ -26,7 +26,7 @@ Vec<Box<Message>> MessageFactory::deserialize_packets(Vec<u8> const &bytes) {
             Vec<u8> tempVec;
             tempVec.assign(m_store.begin() + 24, m_store.begin() + 24 + messageLength);
             m_store.erase(m_store.begin(), m_store.begin() + 24);
-            message->deserialize(tempVec);
+            //message->deserialize(tempVec);
             m_store.erase(m_store.begin(), m_store.begin() + messageLength);
             vector.push_back(std::move(message));
         }

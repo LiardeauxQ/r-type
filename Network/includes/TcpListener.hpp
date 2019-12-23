@@ -12,6 +12,7 @@
 
 class TcpListener : public Socket {
 public:
+    TcpListener();
     explicit TcpListener(uint16_t port);
 
     [[nodiscard]] TcpStream accept() const;

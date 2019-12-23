@@ -6,8 +6,10 @@ set(RTYPE_SERVER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 set(RTYPE_SERVER
     ${RTYPE_SERVER_SOURCES}/main.cpp
-    ${RTYPE_SERVER_SOURCES}/Protocol/JoinRoom.cpp
-    ${RTYPE_SERVER_SOURCES}/Protocol/PlayerConnected.cpp
+    ${RTYPE_SERVER_SOURCES}/Application.cpp
+    ${RTYPE_SERVER_SOURCES}/Lobby.cpp
+    ${RTYPE_SERVER_SOURCES}/GameRoom.cpp
+    ${RTYPE_SERVER_SOURCES}/Client.cpp
 )
 
 add_executable(r-type_server
@@ -20,7 +22,9 @@ set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_server PROPERTY CXX_EXTENSIONS NO)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED YES)
 
-target_link_libraries(r-type_server common network loader ecs)
+find_package(boost_asio)
+
+target_link_libraries(r-type_server common network loader ecs boost_asio::boost_asio)
 
 if (NOT APPLE)
     target_link_libraries(r-type_server crypto)

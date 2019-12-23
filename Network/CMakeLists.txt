@@ -9,6 +9,21 @@ set(NETWORK
     ${NETWORK_SOURCES}/TcpListener.cpp
     ${NETWORK_SOURCES}/TcpStream.cpp
     ${NETWORK_SOURCES}/MessageFactory.cpp
+    ${NETWORK_SOURCES}/Message.cpp
+    ${NETWORK_SOURCES}/Protocol/JoinGame.cpp
+    ${NETWORK_SOURCES}/Protocol/CreateGame.cpp
+    ${NETWORK_SOURCES}/Protocol/ClientConnect.cpp
+    ${NETWORK_SOURCES}/Protocol/SuccessConnect.cpp
+    ${NETWORK_SOURCES}/Protocol/GameStart.cpp
+    ${NETWORK_SOURCES}/Protocol/ListGames.cpp
+    ${NETWORK_SOURCES}/Protocol/ListOfGames.cpp
+    ${NETWORK_SOURCES}/Protocol/ListOfStages.cpp
+    ${NETWORK_SOURCES}/Protocol/ListStages.cpp
+    ${NETWORK_SOURCES}/Protocol/PlayerInfo.cpp
+    ${NETWORK_SOURCES}/Protocol/RoomInfo.cpp
+    ${NETWORK_SOURCES}/Protocol/RoomPlayerJoin.cpp
+    ${NETWORK_SOURCES}/Protocol/RoomPlayerQuit.cpp
+    ${NETWORK_SOURCES}/Protocol/RoomPlayerState.cpp
 )
 
 add_library(network STATIC
