@@ -73,9 +73,9 @@ const size_t PACKET_HDR_SIZE = sizeof(packet_header_t);
 typedef struct {
     uint8_t command_code;
     uint8_t error_code;
-} error_t;
+} server_error_t;
 
-const size_t ERROR_SIZE = sizeof(error_t);
+const size_t ERROR_SIZE = sizeof(server_error_t);
 
 typedef struct {
     uint32_t x;
