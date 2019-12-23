@@ -14,7 +14,7 @@
 class StateBuilder {
     public:
         StateBuilder();
-        State *createState(States stateName, TextureBuilder &textureBuilder);
+        State *createState(States stateName, std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder);
         ~StateBuilder() = default;
     private:
 };

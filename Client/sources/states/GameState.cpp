@@ -8,8 +8,8 @@
 #include "states/GameState.hpp"
 #include <iostream>
 
-GameState::GameState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
+GameState::GameState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
+    : State(display, textureBuilder)
     , m_player()
     , m_bullets()
 {

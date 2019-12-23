@@ -12,7 +12,7 @@
 
 class PauseState : public State {
     public:
-        PauseState(TextureBuilder &textureBuilder);
+        PauseState(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder);
         ~PauseState();
         void onStart();
         void onStop();

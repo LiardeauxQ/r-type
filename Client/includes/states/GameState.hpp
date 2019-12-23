@@ -14,7 +14,7 @@
 
 class GameState : public State {
     public:
-        GameState(TextureBuilder &textureBuilder);
+        GameState(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder);
         ~GameState();
         void onStart();
         void onStop();

@@ -8,8 +8,8 @@
 #include "states/EmptyState.hpp"
 #include <iostream>
 
-EmptyState::EmptyState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
+EmptyState::EmptyState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
+    : State(display, textureBuilder)
 {
     this->onStart();
 }

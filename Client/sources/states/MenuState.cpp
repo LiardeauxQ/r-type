@@ -8,8 +8,8 @@
 #include "states/MenuState.hpp"
 #include <iostream>
 
-MenuState::MenuState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
+MenuState::MenuState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
+    : State(display, textureBuilder)
 {
     this->onStart();
 }

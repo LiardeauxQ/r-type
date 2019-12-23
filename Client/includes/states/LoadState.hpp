@@ -12,7 +12,7 @@
 
 class LoadState : public State {
     public:
-        LoadState(TextureBuilder &textureBuilder);
+        LoadState(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder);
         ~LoadState();
         void onStart();
         void onStop();

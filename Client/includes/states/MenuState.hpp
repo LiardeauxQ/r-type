@@ -12,7 +12,7 @@
 
 class MenuState : public State {
     public:
-        MenuState(TextureBuilder &textureBuilder);
+        MenuState(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder);
         ~MenuState();
         void onStart();
         void onStop();
