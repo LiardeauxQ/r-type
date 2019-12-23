@@ -11,7 +11,7 @@
 
 Game::Game(int ac, char **av)
     : m_input(ac, av)
-    , m_dispatcher(nullptr)
+    , m_dispatcher()
     , m_textureBuilder()
     , m_stateBuilder()
     , m_states()
@@ -24,7 +24,6 @@ Game::Game(int ac, char **av)
 
 Game::~Game()
 {
-    delete m_dispatcher;
     while (!m_states.empty()) {
         delete m_states.top();
     }
@@ -37,7 +36,7 @@ void Game::run()
         return;
     }
     try {
-        m_dispatcher = new ClientPacketDispatcher(8678, 0, "0.0.0.0");
+        m_dispatcher = std::make_shared<ClientPacketDispatcher>(8678, 0, "0.0.0.0");
         m_dispatcher->start();
         gameConnection();
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
@@ -70,9 +69,9 @@ void Game::loop()
         m_deltaTime = clock.getElapsedTime().asSeconds();
         clock.restart();
         handleTransition(m_states.top()->handleEvent(m_event));
+        checkServerPackets();
         m_states.top()->update();
         m_window->display();
-        checkServerPackets();
     }
 }
 

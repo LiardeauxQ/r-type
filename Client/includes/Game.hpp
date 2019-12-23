@@ -13,6 +13,7 @@
     #define WINDOW_HEIGHT 864
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "TextureBuilder.hpp"
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
@@ -39,7 +40,7 @@ class Game {
         void displayHelp();
 
         InputOptionsHandler m_input;
-        ClientPacketDispatcher *m_dispatcher;
+        std::shared_ptr<ClientPacketDispatcher> m_dispatcher;
         TextureBuilder m_textureBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
