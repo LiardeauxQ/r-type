@@ -26,7 +26,7 @@ enum States {
 class State {
     public:
         State(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder)
-        : m_dispatcher(dispatcher), m_window(nullptr), m_textureBuilder(textureBuilder), m_deltaTime(0), m_isPaused(false) {};
+        : m_dispatcher(std::move(dispatcher)), m_window(nullptr), m_textureBuilder(textureBuilder), m_deltaTime(0), m_isPaused(false) {};
         virtual ~State() {};
         void linkWindow(sf::RenderWindow *window, float *deltaTime) { m_window = window; m_deltaTime = deltaTime; };
         virtual void onStart() = 0;

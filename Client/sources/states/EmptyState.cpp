@@ -9,7 +9,7 @@
 #include <iostream>
 
 EmptyState::EmptyState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
-    : State(display, textureBuilder)
+    : State(std::move(display), textureBuilder)
 {
     this->onStart();
 }

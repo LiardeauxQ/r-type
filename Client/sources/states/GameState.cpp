@@ -9,7 +9,7 @@
 #include <iostream>
 
 GameState::GameState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
-    : State(display, textureBuilder)
+    : State(std::move(display), textureBuilder)
     , m_player()
     , m_bullets()
 {
