@@ -17,8 +17,9 @@ public:
             , m_idPlayer(id_player)
             , m_nickname(std::move(nickname))
             , m_isReady(is_ready) {}
-    PlayerInfo(void *data);
     ~PlayerInfo() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + PLAYER_INFO_SIZE; }

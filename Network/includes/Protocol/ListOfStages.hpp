@@ -13,8 +13,9 @@
 class ListOfStages : public Message {
 public:
     ListOfStages() : Message(TCP_COMMUNICATION::LIST_OF_STAGES) {}
-    ListOfStages(void *data);
     ~ListOfStages() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final;

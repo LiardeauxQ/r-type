@@ -4,7 +4,11 @@
 
 #include "Protocol/ListStages.hpp"
 
-ListStages::ListStages(void *data) : Message(LIST_STAGES) {}
+std::unique_ptr<Message> ListStages::from(void *data) {
+    auto msg = std::make_unique<ListStages>();
+
+    return msg;
+}
 
 std::vector<uint8_t> ListStages::serialize() const {
     std::vector<uint8_t> data = Message::createHeader(m_id, LIST_STAGES_SIZE);

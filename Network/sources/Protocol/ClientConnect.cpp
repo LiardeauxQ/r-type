@@ -4,11 +4,12 @@
 
 #include "Protocol/ClientConnect.hpp"
 
-ClientConnect::ClientConnect(void *data) : Message(CLIENT_CONNECT) {
+std::unique_ptr<Message> ClientConnect::from(void *data) {
     auto pkt = reinterpret_cast<client_connect_t*>(data);
+    auto msg = std::make_unique<ClientConnect>(pkt->port,
+            std::string(reinterpret_cast<char *>(pkt->address)));
 
-    m_port = pkt->port;
-    m_addr = std::string(reinterpret_cast<char *>(pkt->address));
+    return msg;
 }
 
 std::vector<uint8_t> ClientConnect::serialize() const {

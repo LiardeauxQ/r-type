@@ -12,10 +12,10 @@
 
 class ListOfGames : public Message {
 public:
-    ListOfGames(uint16_t port, std::string addr)
-            : Message(TCP_COMMUNICATION::LIST_OF_GAMES) {}
-    ListOfGames(void *data);
+    ListOfGames() : Message(TCP_COMMUNICATION::LIST_OF_GAMES) {}
     ~ListOfGames() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final;

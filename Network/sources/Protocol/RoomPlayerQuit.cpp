@@ -4,12 +4,14 @@
 
 #include "Protocol/RoomPlayerQuit.hpp"
 
-RoomPlayerQuit::RoomPlayerQuit(void *data) : Message(ROOM_PLAYER_QUIT) {
+std::unique_ptr<Message> RoomPlayerQuit::from(void *data) {
     auto pkt = reinterpret_cast<room_player_quit_t*>(data);
+    auto msg = std::make_unique<RoomPlayerQuit>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char *>(pkt->nickname)),
+            pkt->is_ready);
 
-    m_idPlayer = pkt->id_player;
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
-    m_isReady = pkt->is_ready;
+    return msg;
 }
 
 std::vector<uint8_t> RoomPlayerQuit::serialize() const {

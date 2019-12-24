@@ -204,6 +204,7 @@ enum FireType {
 };
 
 typedef struct {
+    //team
     uint16_t id_new_entity;
     FireType type;
 } fire_entity_t;

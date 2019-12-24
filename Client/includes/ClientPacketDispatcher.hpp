@@ -10,16 +10,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
-#include "Protocol/CreateGame.hpp"
-#include "Protocol/JoinGame.hpp"
-#include "Protocol/ClientConnect.hpp"
-#include "Protocol/RoomInfo.hpp"
-#include "Protocol/SuccessConnect.hpp"
-#include "Protocol/RoomPlayerJoin.hpp"
-#include "Protocol/RoomPlayerQuit.hpp"
-#include "Protocol/RoomPlayerState.hpp"
-#include "TcpStream.hpp"
-#include "TcpListener.hpp"
+#include "Protocol/Packet.hpp"
 
 typedef boost::asio::ip::tcp BoostTcp;
 
@@ -32,9 +23,9 @@ public:
     void start();
     void stop();
 
-    void sendCreateGame(std::string& name, std::string& password, std::string& nickname);
-    void sendJoinGame(std::string &name, std::string& password, std::string& nickname);
-    void connectToServer(uint16_t port, std::string &addr);
+    void sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname);
+    void sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname);
+    void connectToServer(uint16_t port, const std::string &addr);
 
     std::queue<std::unique_ptr<Message>> getServerResponses();
 

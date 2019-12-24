@@ -2,9 +2,13 @@
 // Created by Quentin Liardeaux on 12/18/19.
 //
 
-#include "includes/Protocol/ListGames.hpp"
+#include "Protocol/ListGames.hpp"
 
-ListGames::ListGames(void *data) : Message(LIST_GAMES) {}
+std::unique_ptr<Message> ListGames::from(void *data) {
+    auto msg = std::make_unique<ListGames>();
+
+    return msg;
+}
 
 std::vector<uint8_t> ListGames::serialize() const {
     std::vector<uint8_t> data = Message::createHeader(m_id, LIST_GAMES_SIZE);

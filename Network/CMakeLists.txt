@@ -24,6 +24,7 @@ set(NETWORK
     ${NETWORK_SOURCES}/Protocol/RoomPlayerJoin.cpp
     ${NETWORK_SOURCES}/Protocol/RoomPlayerQuit.cpp
     ${NETWORK_SOURCES}/Protocol/RoomPlayerState.cpp
+    ${NETWORK_SOURCES}/Protocol/Packet.cpp
 )
 
 add_library(network STATIC

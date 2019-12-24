@@ -75,16 +75,8 @@ void Game::loop()
     }
 }
 
-void Game::gameConnection()
-{
-    auto sessionName = m_input.getSessionName();
-    auto password = m_input.getPassword();
-    auto nickname = m_input.getNickname();
-    std::cout << "connect" << std::endl;
-    if (m_input.isCreateSession())
-        m_dispatcher->sendCreateGame(sessionName, password, nickname);
-    else
-        m_dispatcher->sendJoinGame(sessionName, password, nickname);
+void Game::gameConnection() {
+    m_dispatcher->connectToServer(m_input.getClientPort(), "0.0.0.0");
 }
 
 void Game::checkServerPackets()
@@ -131,8 +123,17 @@ void Game::roomInfo(const RoomInfo& msg)
 
 }
 
-void Game::successConnection(const SuccessConnect& msg)
-{
+void Game::successConnection(const SuccessConnect& msg) {
+    auto sessionName = m_input.getSessionName();
+    auto password = m_input.getPassword();
+    auto nickname = m_input.getNickname();
+
+    m_playerData = std::make_shared<PlayerData>(msg.getId());
+    if (m_input.isCreateSession()) {
+        m_dispatcher->sendCreateGame(msg.getId(), sessionName, password, nickname);
+    } else {
+        m_dispatcher->sendJoinGame(msg.getId(), sessionName, password, nickname);
+    }
 }
 
 void Game::playerHasJoin(const RoomPlayerJoin &msg) {}

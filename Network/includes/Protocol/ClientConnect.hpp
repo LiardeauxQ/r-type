@@ -16,8 +16,9 @@ public:
             : Message(TCP_COMMUNICATION::CLIENT_CONNECT)
             , m_port(port)
             , m_addr(std::move(addr)) {}
-    ClientConnect(void *data);
     ~ClientConnect() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + CLIENT_CONNECT_SIZE; }

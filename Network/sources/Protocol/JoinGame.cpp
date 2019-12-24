@@ -4,13 +4,15 @@
 
 #include "Protocol/JoinGame.hpp"
 
-JoinGame::JoinGame(void *data) : Message(JOIN_GAME) {
+std::unique_ptr<Message> JoinGame::from(void *data) {
     auto pkt = reinterpret_cast<join_game_t*>(data);
+    auto msg = std::make_unique<JoinGame>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char*>(pkt->name)),
+            std::string(reinterpret_cast<char *>(pkt->password)),
+            std::string(reinterpret_cast<char *>(pkt->nickname)));
 
-    m_idPlayer = pkt->id_player;
-    m_name = std::string(reinterpret_cast<char *>(pkt->name));
-    m_password = std::string(reinterpret_cast<char *>(pkt->password));
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
+    return msg;
 }
 
 std::vector<uint8_t> JoinGame::serialize() const {

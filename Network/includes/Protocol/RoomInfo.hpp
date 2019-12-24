@@ -20,8 +20,9 @@ public:
             , m_maxPlayers(maxPlayers)
             , m_idPlayer(idPlayer)
             {}
-    RoomInfo(void *data);
     ~RoomInfo() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + ROOM_INFO_SIZE; }

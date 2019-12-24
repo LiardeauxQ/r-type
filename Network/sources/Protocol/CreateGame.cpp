@@ -4,13 +4,15 @@
 
 #include "Protocol/CreateGame.hpp"
 
-CreateGame::CreateGame(void *data) : Message(CREATE_GAME) {
+std::unique_ptr<Message> CreateGame::from(void *data) {
     auto pkt = reinterpret_cast<create_game_t*>(data);
+    auto msg = std::make_unique<CreateGame>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char*>(pkt->name)),
+            std::string(reinterpret_cast<char *>(pkt->password)),
+            std::string(reinterpret_cast<char *>(pkt->nickname)));
 
-    m_idPlayer = pkt->id_player;
-    m_name = std::string(reinterpret_cast<char*>(pkt->name));
-    m_password = std::string(reinterpret_cast<char *>(pkt->password));
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
+    return msg;
 }
 
 std::vector<uint8_t> CreateGame::serialize() const {

@@ -4,12 +4,14 @@
 
 #include "Protocol/PlayerInfo.hpp"
 
-PlayerInfo::PlayerInfo(void *data) : Message(PLAYER_INFO) {
+std::unique_ptr<Message> PlayerInfo::from(void *data) {
     auto pkt = reinterpret_cast<player_info_t*>(data);
+    auto msg = std::make_unique<PlayerInfo>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char *>(pkt->nickname)),
+            pkt->is_ready);
 
-    m_idPlayer = pkt->id_player;
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
-    m_isReady = pkt->is_ready;
+    return msg;
 }
 
 std::vector<uint8_t> PlayerInfo::serialize() const {

@@ -2,12 +2,13 @@
 // Created by Quentin Liardeaux on 12/18/19.
 //
 
-#include "includes/Protocol/GameStart.hpp"
+#include "Protocol/GameStart.hpp"
 
-GameStart::GameStart(void *data) : Message(GAME_START) {
+std::unique_ptr<Message> GameStart::from(void *data) {
     auto pkt = reinterpret_cast<game_start_t*>(data);
+    auto msg = std::make_unique<GameStart>(pkt->udp_port);
 
-    m_udp_port = pkt->udp_port;
+    return msg;
 }
 
 std::vector<uint8_t> GameStart::serialize() const {

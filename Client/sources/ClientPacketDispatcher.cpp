@@ -28,25 +28,25 @@ void ClientPacketDispatcher::stop() {
     m_socket.close();
 }
 
-void ClientPacketDispatcher::sendCreateGame(std::string& name, std::string& password, std::string& nickname) {
-    auto message = CreateGame(0, name, password, nickname);
+void ClientPacketDispatcher::sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname) {
+    auto message = CreateGame(id, name, password, nickname);
 
     boost::asio::write(m_socket,
             boost::asio::buffer(message.serialize().data(), message.getSize()));
 }
 
-void ClientPacketDispatcher::sendJoinGame(std::string &name, std::string& password, std::string& nickname) {
-    auto message = JoinGame(0, name, password, nickname);
+void ClientPacketDispatcher::sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname) {
+    auto message = JoinGame(id, name, password, nickname);
 
     boost::asio::write(m_socket,
             boost::asio::buffer(message.serialize().data(), message.getSize()));
 }
 
-void ClientPacketDispatcher::connectToServer(uint16_t port, std::string &addr) {
+void ClientPacketDispatcher::connectToServer(uint16_t port, const std::string &addr) {
     auto message = ClientConnect(port, addr);
 
     boost::asio::write(m_socket,
-            boost::asio::buffer(message.serialize().data(), message.getSize()));
+                       boost::asio::buffer(message.serialize().data(), message.getSize()));
 }
 
 packet_header_t ClientPacketDispatcher::receiveHeader() {
@@ -62,19 +62,11 @@ std::unique_ptr<Message> ClientPacketDispatcher::createMessage(packet_header_t &
     std::unique_ptr<Message> msg;
 
     boost::asio::read(m_socket, boost::asio::buffer(data, hdr.packet_size));
-    switch (hdr.packet_id) {
-        case CREATE_GAME:
-            msg = std::make_unique<Message>(CreateGame(data));
+    for (auto &initialize : packetInitializers) {
+        if (std::get<0>(initialize) == hdr.packet_id) {
+            msg = std::get<1>(initialize)(data);
             break;
-        case JOIN_GAME:
-            msg = std::make_unique<Message>(JoinGame(data));
-            break;
-        case ROOM_INFO:
-            msg = std::make_unique<Message>(RoomInfo(data));
-            break;
-        default:
-            msg = nullptr;
-            break;
+        }
     }
     delete[] data;
     return msg;

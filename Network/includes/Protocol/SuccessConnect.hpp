@@ -15,8 +15,9 @@ public:
     SuccessConnect(uint8_t id)
             : Message(TCP_COMMUNICATION::SUCCESS_CONNECT)
             , m_idPlayer(id) {}
-    SuccessConnect(void *data);
     ~SuccessConnect() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + SUCCESS_CONNECT_SIZE; }

@@ -4,10 +4,11 @@
 
 #include "Protocol/SuccessConnect.hpp"
 
-SuccessConnect::SuccessConnect(void *data) : Message(SUCCESS_CONNECT) {
+std::unique_ptr<Message> SuccessConnect::from(void *data) {
     auto pkt = reinterpret_cast<success_connect_t*>(data);
+    auto msg = std::make_unique<SuccessConnect>(pkt->id_player);
 
-    m_id = pkt->id_player;
+    return msg;
 }
 
 std::vector<uint8_t> SuccessConnect::serialize() const {

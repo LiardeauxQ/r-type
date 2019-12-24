@@ -15,8 +15,9 @@ public:
     GameStart(uint16_t udp_port)
             : Message(TCP_COMMUNICATION::GAME_START)
             , m_udp_port(udp_port) {}
-    GameStart(void *data);
     ~GameStart() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + GAME_START_SIZE; }

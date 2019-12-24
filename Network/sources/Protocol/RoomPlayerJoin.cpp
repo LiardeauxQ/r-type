@@ -4,12 +4,14 @@
 
 #include "Protocol/RoomPlayerJoin.hpp"
 
-RoomPlayerJoin::RoomPlayerJoin(void *data) : Message(ROOM_PLAYER_JOIN) {
+std::unique_ptr<Message> RoomPlayerJoin::from(void *data) {
     auto pkt = reinterpret_cast<room_player_join_t*>(data);
+    auto msg = std::make_unique<RoomPlayerJoin>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char *>(pkt->nickname)),
+            pkt->is_ready);
 
-    m_idPlayer = pkt->id_player;
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
-    m_isReady = pkt->is_ready;
+    return msg;
 }
 
 std::vector<uint8_t> RoomPlayerJoin::serialize() const {

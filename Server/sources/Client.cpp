@@ -50,51 +50,58 @@ void Client::receiveBody(const boost::system::error_code& ec) {
     m_packetData = nullptr;
 }
 
-void Client::handleRequest(uint8_t *data, uint16_t packetId) {
-    std::cout << packetId << std::endl;
-    switch (packetId) {
+std::unique_ptr<Message> Client::handleRequest(uint8_t *data, uint16_t packetId) {
+    for (auto &initializer : packetInitializers) {
+        if (std::get<0>(initializer) == packetId)
+            return std::get<1>(initializer)(data);
+    }
+    return nullptr;
+}
+
+void Client::dispatchPackets(const Message *msg) {
+    switch (msg->getId()) {
         case CLIENT_CONNECT:
-            connectClient(ClientConnect(data));
+            connectClient(dynamic_cast<const ClientConnect*>(msg));
             break;
         case CREATE_GAME:
-            createGame(CreateGame(data));
+            createGame(dynamic_cast<const CreateGame*>(msg));
             break;
         case JOIN_GAME:
-            joinGame(JoinGame(data));
+            joinGame(dynamic_cast<const JoinGame*>(msg));
             break;
         default:
             break;
     }
 }
 
-void Client::connectClient(const ClientConnect& msg) {
+void Client::connectClient(const ClientConnect *msg) {
     auto lobby = dynamic_cast<Lobby*>(m_handler.get());
 
     if (lobby == nullptr)
         return;
 }
 
-void Client::createGame(const CreateGame& msg) {
+void Client::createGame(const CreateGame *msg) {
     auto lobby = dynamic_cast<Lobby*>(m_handler.get());
 
     if (lobby == nullptr)
         return;
-    std::cout << msg.getName() << std::endl;
-    lobby->createGameRoom(msg.getName(), 10);
+    std::cout << msg->getName() << std::endl;
+    lobby->createGameRoom(msg->getName(), 10);
 }
 
-void Client::joinGame(const JoinGame& msg) {
+void Client::joinGame(const JoinGame *msg) {
     auto lobby = dynamic_cast<Lobby*>(m_handler.get());
 
     if (lobby == nullptr)
         return;
     try {
-        std::cout << msg.getName() << std::endl;
+        std::cout << msg->getName() << std::endl;
         auto roomId = lobby->getRoomId(msg.getName());
         std::cout << roomId << std::endl;
-        lobby->joinGameRoom(msg.getPlayerId(), roomId);
+        lobby->joinGameRoom(msg->getPlayerId(), roomId);
         std::cout << "has join" << std::endl;
-        sendMessage(lobby->getRoomInfo(msg.getName(), msg.getPlayerId()));
+        sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
         std::cout << "msg" << std::endl;
     } catch (const char *str) {
         std::cerr << str << std::endl; //TODO

@@ -4,15 +4,17 @@
 
 #include "Protocol/ListOfGames.hpp"
 
-ListOfGames::ListOfGames(void *data) : Message(LIST_OF_GAMES) {
-    auto pkt = reinterpret_cast<list_of_games_t*>(data);
+std::unique_ptr<Message> ListOfGames::from(void *data) {
+    auto pkt = reinterpret_cast<list_of_stages_t*>(data);
+    auto msg = std::make_unique<ListOfGames>();
 
     for (size_t i = 0 ; i < pkt->nb_games ; i++) {
-        auto tmp = pkt->games[i];
+        auto game = pkt->games[i];
 
-        addGame(tmp.id_game, std::string(reinterpret_cast<char *>(tmp.name)),
-                 tmp.is_private, tmp.nb_players, tmp.max_players);
+        msg->addGame(game.id_game, std::string(reinterpret_cast<char *>(game.name)),
+                game.is_private, game.nb_players, game.max_players);
     }
+    return msg;
 }
 
 std::vector<uint8_t> ListOfGames::serialize() const {
@@ -24,8 +26,8 @@ std::vector<uint8_t> ListOfGames::serialize() const {
         data.push_back(*(reinterpret_cast<uint8_t *>(&pkt) + i));
     for (size_t i = 0; i < m_games.size(); i++) {
         for (size_t j = 0; j < GAME_LIST_INFO_SIZE; j++) {
-            auto tmp = m_games[i];
-            data.push_back(*(reinterpret_cast<uint8_t *>(&tmp) + j));
+            auto game = m_games[i];
+            data.push_back(*(reinterpret_cast<uint8_t *>(&game) + j));
         }
     }
     return data;

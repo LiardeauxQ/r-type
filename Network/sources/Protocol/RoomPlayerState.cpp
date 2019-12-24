@@ -4,12 +4,14 @@
 
 #include "Protocol/RoomPlayerState.hpp"
 
-RoomPlayerState::RoomPlayerState(void *data) : Message(ROOM_PLAYER_STATE) {
+std::unique_ptr<Message> RoomPlayerState::from(void *data) {
     auto pkt = reinterpret_cast<room_player_state_t*>(data);
+    auto msg = std::make_unique<RoomPlayerState>(
+            pkt->id_player,
+            std::string(reinterpret_cast<char *>(pkt->nickname)),
+            pkt->is_ready);
 
-    m_idPlayer = pkt->id_player;
-    m_nickname = std::string(reinterpret_cast<char *>(pkt->nickname));
-    m_isReady = pkt->is_ready;
+    return msg;
 }
 
 std::vector<uint8_t> RoomPlayerState::serialize() const {

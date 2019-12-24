@@ -20,6 +20,12 @@
 #include "InputOptionsHandler.hpp"
 #include "ClientPacketDispatcher.hpp"
 
+struct PlayerData {
+    PlayerData(uint8_t id) : m_id(id) {}
+
+    uint8_t m_id;
+};
+
 class Game {
     public:
         Game(int ac, char **av);
@@ -48,6 +54,7 @@ class Game {
         sf::RenderWindow *m_window;
         sf::Event m_event;
         float m_deltaTime;
+        std::shared_ptr<PlayerData> m_playerData;
 };
 
 #endif /* !GAME_HPP */

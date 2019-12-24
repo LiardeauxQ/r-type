@@ -4,15 +4,17 @@
 
 #include "Protocol/ListOfStages.hpp"
 
-ListOfStages::ListOfStages(void *data) : Message(LIST_OF_STAGES) {
+std::unique_ptr<Message> ListOfStages::from(void *data) {
     auto pkt = reinterpret_cast<list_of_stages_t*>(data);
+    auto msg = std::make_unique<ListOfStages>();
 
     for (size_t i = 0 ; i < pkt->nb_games ; i++) {
-        auto tmp = pkt->games[i];
+        auto game = pkt->games[i];
 
-        addStage(tmp.id_game, std::string(reinterpret_cast<char *>(tmp.name)),
-                 tmp.is_private, tmp.nb_players, tmp.max_players);
+        msg->addStage(game.id_game, std::string(reinterpret_cast<char *>(game.name)),
+                     game.is_private, game.nb_players, game.max_players);
     }
+    return msg;
 }
 
 std::vector<uint8_t> ListOfStages::serialize() const {

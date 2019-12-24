@@ -18,8 +18,9 @@ public:
             , m_nickname(std::move(nickname))
             , m_isReady(isReady)
             {}
-    RoomPlayerJoin(void *data);
     ~RoomPlayerJoin() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + ROOM_PLAYER_JOIN_SIZE; }

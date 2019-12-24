@@ -9,9 +9,7 @@
 
 #include "protocol.hpp"
 #include "Message.hpp"
-#include "Protocol/ClientConnect.hpp"
-#include "Protocol/CreateGame.hpp"
-#include "Protocol/JoinGame.hpp"
+#include "Protocol/Packet.hpp"
 #include "ClientHandler.hpp"
 #include "GameRoom.hpp"
 #include "Lobby.hpp"
@@ -36,17 +34,18 @@ public:
 
     void receiveBody(const boost::system::error_code &ec);
 
-    void handleRequest(uint8_t *data, uint16_t packetId);
+    std::unique_ptr<Message> handleRequest(uint8_t *data, uint16_t packetId);
+    void dispatchPackets(const Message* msg);
 
-    void sendMessage(const Message &msg);
+    void sendMessage(const Message& msg);
 
     void run();
 
-    void connectClient(const ClientConnect &msg);
+    void connectClient(const ClientConnect* msg);
 
-    void createGame(const CreateGame &msg);
+    void createGame(const CreateGame* msg);
 
-    void joinGame(const JoinGame &msg);
+    void joinGame(const JoinGame* msg);
 
     BoostTcp::socket &getSocket() { return m_socket; }
 

@@ -18,8 +18,9 @@ public:
     , m_name(std::move(name))
     , m_password(std::move(password))
     , m_nickname(std::move(nickname)) {}
-    CreateGame(void *data);
     ~CreateGame() override = default;
+
+    static std::unique_ptr<Message> from(void *data);
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + CREATE_GAME_SIZE; }

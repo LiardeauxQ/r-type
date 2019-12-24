@@ -4,14 +4,16 @@
 
 #include "Protocol/RoomInfo.hpp"
 
-RoomInfo::RoomInfo(void *data) : Message(ROOM_INFO) {
+std::unique_ptr<Message> RoomInfo::from(void *data) {
     auto pkt = reinterpret_cast<room_info_t*>(data);
+    auto msg = std::make_unique<RoomInfo>(
+            pkt->id_game,
+            std::string(reinterpret_cast<char*>(pkt->name)),
+            pkt->nb_players,
+            pkt->max_players,
+            pkt->id_player);
 
-    m_idGame = pkt->id_game;
-    m_name = std::string(reinterpret_cast<char*>(pkt->name));
-    m_nbPlayers = pkt->nb_players;
-    m_maxPlayers = pkt->max_players;
-    m_idPlayer = pkt->id_player;
+    return msg;
 }
 
 std::vector<uint8_t> RoomInfo::serialize() const {
