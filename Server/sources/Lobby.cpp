@@ -31,6 +31,7 @@ void Lobby::joinGameRoom(uint16_t idPlayer, size_t idRoom) {
         for (auto it = m_clients.begin() ; it != m_clients.end() ; it++) {
             if ((*it)->getId() == idPlayer && room->getId() == idRoom) {
                 (*it)->setHandler(room);
+                room->addPlayer((*it));
                 m_clients.erase(it);
                 return;
             }

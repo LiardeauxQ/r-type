@@ -13,6 +13,8 @@
 
 #include "Client.hpp"
 
+#define MIN_PLAYERS 2
+
 class Client;
 
 class GameRoom : public ClientHandler {
@@ -21,7 +23,7 @@ public:
             : ClientHandler(), m_id(id), m_name(std::move(name)), m_maxPlayers(maxPLayers) {}
     ~GameRoom() final = default;
 
-    void addPlayer(const boost::shared_ptr<Client> &player);
+    void addPlayer(const boost::shared_ptr<Client> &newClient);
 
     void removePlayer(uint16_t idPlayer);
 

@@ -4,8 +4,16 @@
 
 #include "GameRoom.hpp"
 
-void GameRoom::addPlayer(const boost::shared_ptr<Client>& player) {
-    m_clients.push_back(player);
+void GameRoom::addPlayer(const boost::shared_ptr<Client>& newClient) {
+    for (auto& client : m_clients) {
+        client->sendPlayerJoinGame(newClient->getId(), newClient->getNickname());
+    }
+    m_clients.push_back(newClient);
+    if (m_clients.size() == MIN_PLAYERS) {
+        for (auto& client : m_clients)
+            client->startGame();
+    }
+        //m_clients->startGame();
 }
 
 void GameRoom::removePlayer(uint16_t idPlayer) {
@@ -15,6 +23,8 @@ void GameRoom::removePlayer(uint16_t idPlayer) {
             break;
         }
     }
+    for (auto& client : m_clients)
+        client->sendPlayerQuitGame(idPlayer);
 }
 
 void GameRoom::run() {

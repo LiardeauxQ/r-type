@@ -28,3 +28,8 @@ void GameData::removePlayer(uint8_t playerId) {
         }
     }
 }
+
+void GameData::updateRoomInfo(uint32_t idGame, uint8_t maxPlayers) {
+    m_idGame = idGame;
+    m_maxPlayers = maxPlayers;
+}

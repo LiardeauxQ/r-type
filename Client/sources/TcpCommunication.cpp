@@ -116,9 +116,10 @@ void TcpCommunication::handlePacket(const Message& msg)
     }
 }
 
-void TcpCommunication::roomInfo(const RoomInfo& msg)
-{
-
+void TcpCommunication::roomInfo(const RoomInfo& msg) {
+    if (msg.getIdPlayer() != m_gameData->getUserId())
+        return;
+    m_gameData->updateRoomInfo(msg.getIdGame(), msg.getMaxPlayers());
 }
 
 void TcpCommunication::successConnection(const SuccessConnect& msg) {
@@ -137,9 +138,11 @@ void TcpCommunication::successConnection(const SuccessConnect& msg) {
 void TcpCommunication::playerHasJoin(const RoomPlayerJoin &msg) {
     m_gameData->addPlayer(msg.getIdPlayer());
 }
+
 void TcpCommunication::playerHasQuit(const RoomPlayerQuit &msg) {
     m_gameData->removePlayer(msg.getIdPlayer());
 }
+
 void TcpCommunication::getPlayerState(const RoomPlayerState &msg) {}
 
 void TcpCommunication::startGame(const GameStart &msg) {
