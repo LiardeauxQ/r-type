@@ -20,9 +20,9 @@ InputOptionsHandler::InputOptionsHandler(int argc, char** argv)
 {
 }
 
-InputOptionsHandler::OptionInfo InputOptionsHandler::getOption(OptionId id)
+const InputOptionsHandler::OptionInfo& InputOptionsHandler::getOption(OptionId id) const
 {
-    for (auto option : options_) {
+    for (auto &option : options_) {
         if (option.id == id) {
             return option;
         }
@@ -30,7 +30,7 @@ InputOptionsHandler::OptionInfo InputOptionsHandler::getOption(OptionId id)
     return OptionInfo {};
 }
 
-std::string InputOptionsHandler::getOptionValue(OptionInfo& info)
+std::string InputOptionsHandler::getOptionValue(OptionInfo& info) const
 {
     std::string value;
 
@@ -44,7 +44,7 @@ std::string InputOptionsHandler::getOptionValue(OptionInfo& info)
     return value;
 }
 
-std::string InputOptionsHandler::getNickname()
+std::string InputOptionsHandler::getNickname() const
 {
     OptionInfo info = getOption(NICKNAME);
     std::string name = getOptionValue(info);
@@ -54,7 +54,7 @@ std::string InputOptionsHandler::getNickname()
     return name;
 }
 
-std::string InputOptionsHandler::getPassword()
+std::string InputOptionsHandler::getPassword() const
 {
     OptionInfo info = getOption(PASSWORD);
     std::string pass = getOptionValue(info);
@@ -64,7 +64,7 @@ std::string InputOptionsHandler::getPassword()
     return pass;
 }
 
-std::string InputOptionsHandler::getSessionName()
+std::string InputOptionsHandler::getSessionName() const
 {
     OptionInfo info = getOption(SESSION_NAME);
     std::string name = getOptionValue(info);
@@ -75,7 +75,7 @@ std::string InputOptionsHandler::getSessionName()
     return name;
 }
 
-short InputOptionsHandler::getServerPort()
+short InputOptionsHandler::getServerPort() const
 {
     OptionInfo info = getOption(SERVER_PORT);
     std::string port = getOptionValue(info);
@@ -85,7 +85,7 @@ short InputOptionsHandler::getServerPort()
     return std::stoi(port);
 }
 
-short InputOptionsHandler::getClientPort()
+short InputOptionsHandler::getClientPort() const
 {
     OptionInfo info = getOption(CLIENT_PORT);
     std::string port = getOptionValue(info);
@@ -95,7 +95,7 @@ short InputOptionsHandler::getClientPort()
     return std::stoi(port);
 }
 
-bool InputOptionsHandler::isCreateSession()
+bool InputOptionsHandler::isCreateSession() const
 {
     OptionInfo info = getOption(CREATE_SESSION);
     std::string value = getOptionValue(info);
@@ -105,7 +105,7 @@ bool InputOptionsHandler::isCreateSession()
     return false;
 }
 
-bool InputOptionsHandler::isAskingForHelp()
+bool InputOptionsHandler::isAskingForHelp() const
 {
     OptionInfo info = getOption(HELP);
     std::string value = getOptionValue(info);

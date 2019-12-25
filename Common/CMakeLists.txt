@@ -8,6 +8,7 @@ set(COMMON
     ${COMMON_SOURCES}/MD5Hasher.cpp
     ${COMMON_SOURCES}/Frame.cpp
     ${COMMON_SOURCES}/StopWatch.cpp
+    ${COMMON_SOURCES}/IdProvider.cpp
 )
 
 add_library(common STATIC

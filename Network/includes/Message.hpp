@@ -22,7 +22,7 @@ public:
 
     [[nodiscard]] virtual std::vector<uint8_t> serialize() const { return std::vector<uint8_t>(); };
     [[nodiscard]] virtual size_t getSize() const { return 0; }
-    [[nodiscard]] virtual uint8_t getId() const { return m_id; }
+    [[nodiscard]] uint8_t getId() const { return m_id; }
 
     static std::vector<uint8_t> createHeader(uint8_t id, uint16_t packet_size);
 protected:

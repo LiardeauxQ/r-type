@@ -8,8 +8,8 @@
 #include "states/PauseState.hpp"
 #include <iostream>
 
-PauseState::PauseState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
-    : State(std::move(display), textureBuilder)
+PauseState::PauseState(TextureBuilder &textureBuilder)
+    : State(textureBuilder)
 {
     this->onStart();
 }

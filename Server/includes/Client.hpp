@@ -13,6 +13,7 @@
 #include "ClientHandler.hpp"
 #include "GameRoom.hpp"
 #include "Lobby.hpp"
+#include "IdProvider.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>

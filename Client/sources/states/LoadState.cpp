@@ -8,8 +8,8 @@
 #include "states/LoadState.hpp"
 #include <iostream>
 
-LoadState::LoadState(std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
-    : State(std::move(display), textureBuilder)
+LoadState::LoadState(TextureBuilder &textureBuilder)
+    : State(textureBuilder)
 {
     this->onStart();
 }

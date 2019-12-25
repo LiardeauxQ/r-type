@@ -14,20 +14,20 @@
 
 StateBuilder::StateBuilder() {}
 
-State *StateBuilder::createState(States stateName, std::shared_ptr<ClientPacketDispatcher> display, TextureBuilder &textureBuilder)
+State *StateBuilder::createState(States stateName, TextureBuilder &textureBuilder)
 {
     switch (stateName) {
         case States::EMPTY:
-            return new EmptyState(std::move(display), textureBuilder);
+            return new EmptyState(textureBuilder);
         case States::LOAD:
-            return new LoadState(std::move(display), textureBuilder);
+            return new LoadState(textureBuilder);
         case States::MENU:
-            return new MenuState(std::move(display), textureBuilder);
+            return new MenuState(textureBuilder);
         case States::PAUSE:
-            return new PauseState(std::move(display), textureBuilder);
+            return new PauseState(textureBuilder);
         case States::GAME:
-            return new GameState(std::move(display), textureBuilder);
+            return new GameState(textureBuilder);
         default:
-            return new EmptyState(std::move(display), textureBuilder);
+            return new EmptyState(textureBuilder);
     }
 }

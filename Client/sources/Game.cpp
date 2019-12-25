@@ -11,7 +11,8 @@
 
 Game::Game(int ac, char **av)
     : m_input(ac, av)
-    , m_dispatcher()
+    , m_tcpHandler()
+    , m_gameData(std::make_shared<GameData>(GameData::from(m_input)))
     , m_textureBuilder()
     , m_stateBuilder()
     , m_states()
@@ -24,6 +25,7 @@ Game::Game(int ac, char **av)
 
 Game::~Game()
 {
+    m_tcpHandler->stop();
     while (!m_states.empty()) {
         delete m_states.top();
     }
@@ -36,15 +38,16 @@ void Game::run()
         return;
     }
     try {
-        m_dispatcher = std::make_shared<ClientPacketDispatcher>(8678, 0, "0.0.0.0");
-        m_dispatcher->start();
-        gameConnection();
+        m_tcpHandler = std::make_shared<TcpCommunication>(m_gameData);
+        m_udpHandler = std::make_shared<UdpCommunication>(m_gameData);
+        m_tcpHandler->start();
+        m_tcpHandler->askServerConnection(m_input.isCreateSession());
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
         m_window->setVerticalSyncEnabled( true );
-        m_states.push(m_stateBuilder.createState(States::GAME, m_dispatcher, m_textureBuilder));
+        //m_states.push(m_stateBuilder.createState(States::GAME, m_tcpHandler, m_textureBuilder));
         m_states.top()->linkWindow(m_window, &m_deltaTime);
         m_isRunning = true;
-        this->loop();
+        //this->loop();
     } catch (const char *s) {
         std::cout << s << std::endl;
     }
@@ -68,77 +71,18 @@ void Game::loop()
         m_window->clear();
         m_deltaTime = clock.getElapsedTime().asSeconds();
         clock.restart();
+        m_tcpHandler->update();
+        checkGameStatus();
         handleTransition(m_states.top()->handleEvent(m_event));
-        checkServerPackets();
         m_states.top()->update();
         m_window->display();
     }
 }
 
-void Game::gameConnection() {
-    m_dispatcher->connectToServer(m_input.getClientPort(), "0.0.0.0");
+void Game::checkGameStatus() {
+    if (m_gameData->m_gameRunning)
+        m_udpHandler->start();
 }
-
-void Game::checkServerPackets()
-{
-    auto responses = m_dispatcher->getServerResponses();
-
-    while (!responses.empty()) {
-        auto response = responses.front().get();
-
-        handlePacket(*response);
-        responses.pop();
-    }
-}
-
-void Game::handlePacket(const Message& msg)
-{
-    switch (msg.getId()) {
-        case ROOM_INFO:
-            roomInfo(dynamic_cast<const RoomInfo&>(msg));
-            break;
-        case SUCCESS_CONNECT:
-            successConnection(dynamic_cast<const SuccessConnect&>(msg));
-            break;
-        case ERROR:
-            break;
-        case ROOM_PLAYER_JOIN:
-            playerHasJoin(dynamic_cast<const RoomPlayerJoin&>(msg));
-            break;
-        case ROOM_PLAYER_QUIT:
-            playerHasQuit(dynamic_cast<const RoomPlayerQuit&>(msg));
-            break;
-        case ROOM_PLAYER_STATE:
-            getPlayerState(dynamic_cast<const RoomPlayerState&>(msg));
-            break;
-        case GAME_START:
-            break;
-        default:
-            break;
-    }
-}
-
-void Game::roomInfo(const RoomInfo& msg)
-{
-
-}
-
-void Game::successConnection(const SuccessConnect& msg) {
-    auto sessionName = m_input.getSessionName();
-    auto password = m_input.getPassword();
-    auto nickname = m_input.getNickname();
-
-    m_playerData = std::make_shared<PlayerData>(msg.getId());
-    if (m_input.isCreateSession()) {
-        m_dispatcher->sendCreateGame(msg.getId(), sessionName, password, nickname);
-    } else {
-        m_dispatcher->sendJoinGame(msg.getId(), sessionName, password, nickname);
-    }
-}
-
-void Game::playerHasJoin(const RoomPlayerJoin &msg) {}
-void Game::playerHasQuit(const RoomPlayerQuit &msg) {}
-void Game::getPlayerState(const RoomPlayerState &msg) {}
 
 void Game::displayHelp()
 {

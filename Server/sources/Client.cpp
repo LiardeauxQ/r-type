@@ -4,8 +4,6 @@
 
 #include "Client.hpp"
 
-static size_t MAX_ID = 0;
-
 boost::shared_ptr<Client> Client::create(boost::asio::io_context &context) {
     return boost::shared_ptr<Client>(new Client(context));
 }
@@ -14,7 +12,7 @@ Client::Client(boost::asio::io_context& context)
     : m_socket(context)
     , m_packetHeader()
     , m_packetData(nullptr)
-    , m_id(MAX_ID++) {}
+    , m_id(IdProvider::instance()->getNextId()) {}
 
 Client::~Client() {}
 
@@ -97,7 +95,7 @@ void Client::joinGame(const JoinGame *msg) {
         return;
     try {
         std::cout << msg->getName() << std::endl;
-        auto roomId = lobby->getRoomId(msg.getName());
+        auto roomId = lobby->getRoomId(msg->getName());
         std::cout << roomId << std::endl;
         lobby->joinGameRoom(msg->getPlayerId(), roomId);
         std::cout << "has join" << std::endl;

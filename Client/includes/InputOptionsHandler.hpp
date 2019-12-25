@@ -17,13 +17,13 @@ public:
     InputOptionsHandler(int argc, char **argv);
     ~InputOptionsHandler() = default;
 
-    std::string getNickname();
-    std::string getPassword();
-    std::string getSessionName();
-    short getClientPort();
-    short getServerPort();
-    bool isCreateSession();
-    bool isAskingForHelp();
+    std::string getNickname() const;
+    std::string getPassword() const;
+    std::string getSessionName() const;
+    short getClientPort() const;
+    short getServerPort() const;
+    bool isCreateSession() const;
+    bool isAskingForHelp() const;
 
 private:
     enum OptionId {
@@ -42,8 +42,8 @@ private:
         std::string longName;
     };
 
-    OptionInfo getOption(OptionId id);
-    std::string getOptionValue(OptionInfo &info);
+    const OptionInfo& getOption(OptionId id) const;
+    std::string getOptionValue(OptionInfo &info) const;
 
     int argc_;
     char **argv_;

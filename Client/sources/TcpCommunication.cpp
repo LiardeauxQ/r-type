@@ -49,34 +49,7 @@ void ClientPacketDispatcher::connectToServer(uint16_t port, const std::string &a
                        boost::asio::buffer(message.serialize().data(), message.getSize()));
 }
 
-packet_header_t ClientPacketDispatcher::receiveHeader() {
-    packet_header_t hdr = {};
-    ssize_t receivedSize = 0;
 
-    boost::asio::read(m_socket, boost::asio::buffer(&hdr, PACKET_HDR_SIZE));
-    return hdr;
-}
-
-std::unique_ptr<Message> ClientPacketDispatcher::createMessage(packet_header_t &hdr) {
-    auto data = new uint8_t[hdr.packet_size];
-    std::unique_ptr<Message> msg;
-
-    boost::asio::read(m_socket, boost::asio::buffer(data, hdr.packet_size));
-    for (auto &initialize : packetInitializers) {
-        if (std::get<0>(initialize) == hdr.packet_id) {
-            msg = std::get<1>(initialize)(data);
-            break;
-        }
-    }
-    delete[] data;
-    return msg;
-}
-
-std::unique_ptr<Message> ClientPacketDispatcher::receiveMessage() {
-    packet_header_t hdr = receiveHeader();
-
-    return createMessage(hdr);
-}
 
 void ClientPacketDispatcher::dispatch() {
     while (m_isRunning) {

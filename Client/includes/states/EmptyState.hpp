@@ -12,7 +12,7 @@
 
 class EmptyState : public State {
     public:
-        EmptyState(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder);
+        EmptyState(TextureBuilder &textureBuilder);
         ~EmptyState();
         void onStart();
         void onStop();

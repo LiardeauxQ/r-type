@@ -12,7 +12,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "TextureBuilder.hpp"
 #include "Transition.hpp"
-#include "ClientPacketDispatcher.hpp"
+#include "TcpCommunication.hpp"
 #include <memory>
 
 enum States {
@@ -25,8 +25,8 @@ enum States {
 
 class State {
     public:
-        State(std::shared_ptr<ClientPacketDispatcher> dispatcher, TextureBuilder &textureBuilder)
-        : m_dispatcher(std::move(dispatcher)), m_window(nullptr), m_textureBuilder(textureBuilder), m_deltaTime(0), m_isPaused(false) {};
+        State(TextureBuilder &textureBuilder)
+        : m_window(nullptr), m_textureBuilder(textureBuilder), m_deltaTime(0), m_isPaused(false) {};
         virtual ~State() {};
         void linkWindow(sf::RenderWindow *window, float *deltaTime) { m_window = window; m_deltaTime = deltaTime; };
         virtual void onStart() = 0;
@@ -36,7 +36,6 @@ class State {
         virtual void update() = 0;
         virtual Transition handleEvent(sf::Event &event) = 0;
     protected:
-        std::shared_ptr<ClientPacketDispatcher> m_dispatcher;
         sf::RenderWindow *m_window;
         TextureBuilder &m_textureBuilder;
         float *m_deltaTime;

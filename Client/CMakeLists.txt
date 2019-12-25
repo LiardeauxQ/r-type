@@ -20,7 +20,10 @@ set(RTYPE_CLIENT
     ${RTYPE_CLIENT_SOURCES}/entities/Ship.cpp
     ${RTYPE_CLIENT_SOURCES}/entities/Bullet.cpp
 	${RTYPE_CLIENT_SOURCES}/InputOptionsHandler.cpp
-	${RTYPE_CLIENT_SOURCES}/ClientPacketDispatcher.cpp
+	${RTYPE_CLIENT_SOURCES}/TcpCommunication.cpp
+	${RTYPE_CLIENT_SOURCES}/UdpCommunication.cpp
+	${RTYPE_CLIENT_SOURCES}/GameData.cpp
+
 )
 
 add_executable(r-type_client

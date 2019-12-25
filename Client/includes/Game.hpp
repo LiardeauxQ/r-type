@@ -18,13 +18,9 @@
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
 #include "InputOptionsHandler.hpp"
-#include "ClientPacketDispatcher.hpp"
-
-struct PlayerData {
-    PlayerData(uint8_t id) : m_id(id) {}
-
-    uint8_t m_id;
-};
+#include "TcpCommunication.hpp"
+#include "UdpCommunication.hpp"
+#include "GameData.hpp"
 
 class Game {
     public:
@@ -35,18 +31,14 @@ class Game {
     private:
         void handleTransition(Transition transition);
         void loop();
-        void gameConnection();
-        void checkServerPackets();
-        void handlePacket(const Message& msg);
-        void roomInfo(const RoomInfo& msg);
-        void successConnection(const SuccessConnect& msg);
-        void playerHasJoin(const RoomPlayerJoin& msg);
-        void playerHasQuit(const RoomPlayerQuit& msg);
-        void getPlayerState(const RoomPlayerState& msg);
+        void checkGameStatus();
+
         void displayHelp();
 
         InputOptionsHandler m_input;
-        std::shared_ptr<ClientPacketDispatcher> m_dispatcher;
+        std::shared_ptr<TcpCommunication> m_tcpHandler;
+        std::shared_ptr<UdpCommunication> m_udpHandler;
+        std::shared_ptr<GameData> m_gameData;
         TextureBuilder m_textureBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
@@ -54,7 +46,6 @@ class Game {
         sf::RenderWindow *m_window;
         sf::Event m_event;
         float m_deltaTime;
-        std::shared_ptr<PlayerData> m_playerData;
 };
 
 #endif /* !GAME_HPP */
