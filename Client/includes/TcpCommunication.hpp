@@ -2,8 +2,8 @@
 // Created by Quentin Liardeaux on 12/18/19.
 //
 
-#ifndef R_TYPE_CLIENTPACKETDISPATCHER_HPP
-#define R_TYPE_CLIENTPACKETDISPATCHER_HPP
+#ifndef R_TYPE_TCPCOMMUNICATION_HPP
+#define R_TYPE_TCPCOMMUNICATION_HPP
 
 #include <queue>
 
@@ -11,27 +11,42 @@
 #include <boost/thread.hpp>
 
 #include "Protocol/Packet.hpp"
+#include "ServerHandler.hpp"
+#include "GameData.hpp"
 
 typedef boost::asio::ip::tcp BoostTcp;
 
-class TcpCommunicationHandler {
+class TcpCommunication {
 public:
-    TcpCommunicationHandler() = default;
-    TcpCommunicationHandler(uint16_t serverPort, uint16_t userPort, std::string addr);
-    ~TcpCommunicationHandler() = default;
+    explicit TcpCommunication(std::shared_ptr<GameData> gameData);
+    ~TcpCommunication() = default;
 
     void start();
     void stop();
+    void update();
 
+    void askServerConnection(bool isCreateRoom);
+private:
     void sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname);
     void sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname);
     void connectToServer(uint16_t port, const std::string &addr);
 
+    void checkServerPackets();
+    void handlePacket(const Message& msg);
+    void roomInfo(const RoomInfo& msg);
+    void successConnection(const SuccessConnect& msg);
+    void playerHasJoin(const RoomPlayerJoin& msg);
+    void playerHasQuit(const RoomPlayerQuit& msg);
+    void getPlayerState(const RoomPlayerState& msg);
+    void startGame(const GameStart& msg);
+
     std::queue<std::unique_ptr<Message>> getServerResponses();
 
-private:
-
     void dispatch();
+
+    bool m_isRunning;
+    bool m_isCreateRoom;
+    std::shared_ptr<GameData> m_gameData;
 
     std::queue<std::unique_ptr<Message>> m_responses;
 
@@ -39,7 +54,8 @@ private:
     BoostTcp::socket m_socket;
     boost::thread m_responsesThread;
     boost::mutex m_mutex;
-    bool m_isRunning;
+
+    ServerHandler<BoostTcp::socket> m_handler;
 };
 
-#endif //R_TYPE_CLIENTPACKETDISPATCHER_HPP
+#endif //R_TYPE_TCPCOMMUNICATION_HPP
