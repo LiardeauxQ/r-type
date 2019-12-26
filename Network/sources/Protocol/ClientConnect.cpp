@@ -18,7 +18,7 @@ std::vector<uint8_t> ClientConnect::serialize() const {
 
     for (size_t i = 0; i < m_addr.size() && i < PORT_SIZE; i++)
         pkt.address[i] = static_cast<uint8_t>(*(m_addr.c_str() + i));
-    for (size_t i = 0; i < JOIN_GAME_SIZE; i++)
+    for (size_t i = 0; i < CLIENT_CONNECT_SIZE; i++)
         data.push_back(*(reinterpret_cast<uint8_t *>(&pkt) + i));
     return data;
 }
