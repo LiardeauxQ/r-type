@@ -12,7 +12,7 @@
 Game::Game(int ac, char **av)
     : m_input(ac, av)
     , m_tcpHandler()
-    , m_gameData(std::make_shared<GameData>(GameData::from(m_input)))
+    , m_gameData(GameData::from(m_input))
     , m_textureBuilder()
     , m_stateBuilder()
     , m_states()
@@ -25,7 +25,8 @@ Game::Game(int ac, char **av)
 
 Game::~Game()
 {
-    m_tcpHandler->stop();
+    if (m_tcpHandler != nullptr)
+        m_tcpHandler->stop();
     while (!m_states.empty()) {
         delete m_states.top();
     }
@@ -33,7 +34,7 @@ Game::~Game()
 
 void Game::run()
 {
-    if (m_input.isAskingForHelp()) {
+    if (m_input.isAskingForHelp() || m_gameData == nullptr) {
         displayHelp();
         return;
     }
@@ -44,12 +45,12 @@ void Game::run()
         m_tcpHandler->askServerConnection(m_input.isCreateSession());
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
         m_window->setVerticalSyncEnabled( true );
-        //m_states.push(m_stateBuilder.createState(States::GAME, m_tcpHandler, m_textureBuilder));
+        m_states.push(m_stateBuilder.createState(States::GAME, m_textureBuilder));
         m_states.top()->linkWindow(m_window, &m_deltaTime);
         m_isRunning = true;
-        //this->loop();
-    } catch (const char *s) {
-        std::cout << s << std::endl;
+        this->loop();
+    } catch (std::logic_error& error) {
+        std::cout << error.what() << std::endl;
     }
 }
 

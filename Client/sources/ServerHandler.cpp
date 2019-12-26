@@ -44,8 +44,14 @@ std::unique_ptr<Message> UdpServerHandler::receiveMessage() {
 }
 
 void UdpServerHandler::sendMessage(const Message& msg) {
+    unsigned char *data = msg.serialize().data();
+
+    for (size_t i = 0 ; i < msg.getSize() ; i++) {
+        printf("%c ", data[i]);
+    }
+    printf("\n");
     boost::asio::write(m_socket,
-                       boost::asio::buffer(msg.serialize().data(), msg.getSize()));
+                       boost::asio::buffer(data, msg.getSize()));
 }
 
 packet_header_t UdpServerHandler::receiveHeader() {

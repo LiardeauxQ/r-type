@@ -6,14 +6,20 @@
 
 GameData::GameData(UserData userData)
         : m_gameRunning(false)
-        , m_userData(userData) {}
+        , m_userData(userData)
+        , m_idGame(0)
+        , m_maxPlayers(0) {}
 
-GameData GameData::from(const InputOptionsHandler& inputs) {
-    UserData userData(inputs.getServerPort(), inputs.getClientPort(),
-            "0.0.0.0", inputs.getNickname(), inputs.getPassword(),
-            inputs.getSessionName());
+std::shared_ptr<GameData> GameData::from(const InputOptionsHandler& inputs) {
+    try {
+        UserData userData(inputs.getServerPort(), inputs.getClientPort(),
+                          "0.0.0.0", inputs.getNickname(), inputs.getPassword(),
+                          inputs.getSessionName());
 
-    return GameData(userData);
+        return std::make_shared<GameData>(userData);
+    } catch (std::logic_error &error) {
+        return nullptr;
+    }
 }
 
 void GameData::addPlayer(uint8_t playerId) {

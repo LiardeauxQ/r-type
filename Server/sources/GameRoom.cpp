@@ -13,7 +13,6 @@ void GameRoom::addPlayer(const boost::shared_ptr<Client>& newClient) {
         for (auto& client : m_clients)
             client->startGame();
     }
-        //m_clients->startGame();
 }
 
 void GameRoom::removePlayer(uint16_t idPlayer) {

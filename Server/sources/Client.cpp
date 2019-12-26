@@ -43,6 +43,12 @@ void Client::receivePacket(const boost::system::error_code& ec) {
     if (m_packetData != nullptr)
         delete[] m_packetData;
     m_packetData = new uint8_t[m_packetHeader.packet_size];
+    auto tmp = reinterpret_cast<unsigned char*>(&m_packetHeader);
+    for (int i = 0 ; i < PACKET_HDR_SIZE ; i++) {
+        printf("%d ", tmp[i]);
+    }
+    printf("\n");
+    std::cout << "Receive packet " << m_packetHeader.packet_size << " " << (int)(m_packetHeader.packet_id) << std::endl;
     boost::asio::async_read(
             m_tcpSocket,
             boost::asio::buffer(m_packetData, m_packetHeader.packet_size),
@@ -53,7 +59,6 @@ void Client::receiveBody(const boost::system::error_code& ec) {
     dispatchPackets(handleRequest(m_packetData, m_packetHeader.packet_id).get());
     delete[] m_packetData;
     m_packetData = nullptr;
-    waitHeader(boost::system::error_code());
 }
 
 std::unique_ptr<Message> Client::handleRequest(uint8_t *data, uint16_t packetId) {
@@ -92,8 +97,10 @@ void Client::connectClient(const ClientConnect *msg) {
 
     if (lobby == nullptr)
         return;
+    std::cout << "Connection " << msg->getAddr() << std::endl;
     m_ipAddress = msg->getAddr();
     m_remoteEndpoint = BoostUdp::endpoint(boost::asio::ip::address::from_string(msg->getAddr()), msg->getPort());
+    std::cout << "Send success connect " << (int)(m_id) << std::endl;
     sendMessage(SuccessConnect(static_cast<uint8_t>(m_id)));
 }
 
@@ -102,6 +109,7 @@ void Client::createGame(const CreateGame *msg) {
 
     if (lobby == nullptr)
         return;
+    std::cout << "Create " << msg->getNickname() << std::endl;
     m_nickname = msg->getNickname();
     lobby->createGameRoom(msg->getName(), 10);
     sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
@@ -113,6 +121,7 @@ void Client::joinGame(const JoinGame *msg) {
     if (lobby == nullptr)
         return;
     try {
+        std::cout << "Join " << msg->getNickname() << std::endl;
         auto roomId = lobby->getRoomId(msg->getName());
         m_nickname = msg->getNickname();
         lobby->joinGameRoom(msg->getPlayerId(), roomId);

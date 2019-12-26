@@ -40,10 +40,11 @@ private:
         OptionId id;
         std::string shortName;
         std::string longName;
+        bool hasValue;
     };
 
     const OptionInfo& getOption(OptionId id) const;
-    std::string getOptionValue(OptionInfo &info) const;
+    std::string getOptionValue(const OptionInfo &info) const;
 
     int argc_;
     char **argv_;

@@ -15,7 +15,7 @@ public:
     explicit GameData(UserData userData);
     ~GameData() = default;
 
-    static GameData from(const InputOptionsHandler& inputs);
+    static std::shared_ptr<GameData> from(const InputOptionsHandler& inputs);
 
     void addPlayer(uint8_t playerId);
     void removePlayer(uint8_t playerId);

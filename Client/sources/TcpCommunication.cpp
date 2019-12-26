@@ -35,6 +35,7 @@ void TcpCommunication::update() {
 }
 
 void TcpCommunication::askServerConnection(bool isCreateRoom) {
+    std::cout << "is create " << isCreateRoom << std::endl;
     m_isCreateRoom = isCreateRoom;
     connectToServer(m_gameData->getUserData().getUserPort(), "0.0.0.0");
 }
@@ -42,12 +43,14 @@ void TcpCommunication::askServerConnection(bool isCreateRoom) {
 void TcpCommunication::sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname) {
     auto message = CreateGame(id, name, password, nickname);
 
+    std::cout << "send create" << std::endl;
     m_handler.sendMessage(message);
 }
 
 void TcpCommunication::sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname) {
     auto message = JoinGame(id, name, password, nickname);
 
+    std::cout << "send join" << std::endl;
     m_handler.sendMessage(message);
 }
 
@@ -128,6 +131,7 @@ void TcpCommunication::successConnection(const SuccessConnect& msg) {
     auto nickname = m_gameData->getUserData().getNickname();
 
     m_gameData->setUserId(msg.getId());
+    std::cout << "Success connect " << (int)(msg.getId()) << "<-" << std::endl;
     if (m_isCreateRoom) {
         sendCreateGame(msg.getId(), sessionName, password, nickname);
     } else {
@@ -136,16 +140,19 @@ void TcpCommunication::successConnection(const SuccessConnect& msg) {
 }
 
 void TcpCommunication::playerHasJoin(const RoomPlayerJoin &msg) {
+    std::cout << "Join player " << msg.getNickname() << std::endl;
     m_gameData->addPlayer(msg.getIdPlayer());
 }
 
 void TcpCommunication::playerHasQuit(const RoomPlayerQuit &msg) {
+    std::cout << "Quit player " << msg.getNickname() << std::endl;
     m_gameData->removePlayer(msg.getIdPlayer());
 }
 
 void TcpCommunication::getPlayerState(const RoomPlayerState &msg) {}
 
 void TcpCommunication::startGame(const GameStart &msg) {
+    std::cout << "Start game" << std::endl;
     m_gameData->m_gameRunning = true;
 }
 

@@ -5,13 +5,13 @@
 #include "InputOptionsHandler.hpp"
 
 std::vector<InputOptionsHandler::OptionInfo> InputOptionsHandler::options_ = {
-    OptionInfo { CREATE_SESSION, "-c", "--createSession" },
-    OptionInfo { SESSION_NAME, "-s", "--name" },
-    OptionInfo { PASSWORD, "-w", "--password" },
-    OptionInfo { NICKNAME, "-n", "--nickname" },
-    OptionInfo { SERVER_PORT, "-p1", "--serverPort" },
-    OptionInfo { CLIENT_PORT, "-p2", "--clientPort" },
-    OptionInfo { HELP, "-h", "--help" },
+    OptionInfo { CREATE_SESSION, "-c", "--createSession", false },
+    OptionInfo { SESSION_NAME, "-s", "--name", true },
+    OptionInfo { PASSWORD, "-w", "--password", true },
+    OptionInfo { NICKNAME, "-n", "--nickname", true },
+    OptionInfo { SERVER_PORT, "-p1", "--serverPort", true },
+    OptionInfo { CLIENT_PORT, "-p2", "--clientPort", true },
+    OptionInfo { HELP, "-h", "--help", false },
 };
 
 InputOptionsHandler::InputOptionsHandler(int argc, char** argv)
@@ -30,14 +30,14 @@ const InputOptionsHandler::OptionInfo& InputOptionsHandler::getOption(OptionId i
     return OptionInfo {};
 }
 
-std::string InputOptionsHandler::getOptionValue(OptionInfo& info) const
+std::string InputOptionsHandler::getOptionValue(const OptionInfo& info) const
 {
     std::string value;
 
     for (int i = 0; i < argc_; i++) {
         if (!std::strcmp(info.shortName.c_str(), argv_[i])
             || !std::strcmp(info.longName.c_str(), argv_[i])) {
-            value = (i + 1 == argc_) ? argv_[i] : argv_[i + 1];
+            value = (!info.hasValue) ? argv_[i] : argv_[i + 1];
             break;
         }
     }
@@ -71,7 +71,6 @@ std::string InputOptionsHandler::getSessionName() const
 
     if (name.empty() || name == info.shortName || name == info.longName)
         throw std::logic_error("Cannot find session name option");
-    std::cout << name << std::endl;
     return name;
 }
 
@@ -82,7 +81,7 @@ short InputOptionsHandler::getServerPort() const
 
     if (port.empty() || port == info.shortName || port == info.longName)
         throw std::logic_error("Cannot find port option");
-    return std::stoi(port);
+    return static_cast<short>(std::stoi(port));
 }
 
 short InputOptionsHandler::getClientPort() const
@@ -92,7 +91,7 @@ short InputOptionsHandler::getClientPort() const
 
     if (port.empty() || port == info.shortName || port == info.longName)
         throw std::logic_error("Cannot find port option");
-    return std::stoi(port);
+    return static_cast<short>(std::stoi(port));
 }
 
 bool InputOptionsHandler::isCreateSession() const
