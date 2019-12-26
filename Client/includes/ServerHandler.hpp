@@ -25,8 +25,11 @@ public:
         return createMessage(hdr);
     }
     void sendMessage(const Message& msg) {
-        unsigned char *data = msg.serialize().data();
+        unsigned char *data = new unsigned char[msg.getSize()];
+        auto serializedMsg = msg.serialize();
 
+        for (size_t i = 0 ; i < msg.getSize() ; i++)
+            data[i] = serializedMsg[i];
         for (size_t i = 0 ; i < msg.getSize() ; i++) {
             printf("%d ", data[i]);
         }
@@ -34,6 +37,7 @@ public:
         std::cout << m_socket.is_open() << std::endl;
         boost::asio::write(m_socket,
                            boost::asio::buffer(data, msg.getSize()));
+        delete[] data;
         std::cout << "End read" << std::endl;
         /*boost::asio::write(m_socket,
                            boost::asio::buffer(msg.serialize().data(), msg.getSize()));*/
