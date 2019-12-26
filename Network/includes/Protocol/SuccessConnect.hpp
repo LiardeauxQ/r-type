@@ -6,6 +6,7 @@
 #define R_TYPE_SUCCESSCONNECT_HPP
 
 #include <string>
+#include <memory>
 
 #include "Message.hpp"
 #include "protocol.hpp"

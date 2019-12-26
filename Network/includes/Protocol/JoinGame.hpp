@@ -7,6 +7,7 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "Message.hpp"
 #include "protocol.hpp"

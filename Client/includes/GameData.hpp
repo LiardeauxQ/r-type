@@ -6,6 +6,7 @@
 #define R_TYPE_GAMEDATA_HPP
 
 #include <list>
+#include <memory>
 
 #include "UserData.hpp"
 #include "InputOptionsHandler.hpp"
