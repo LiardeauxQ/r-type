@@ -16,6 +16,12 @@ class Bullet : public Entity {
         Bullet(const sf::Texture *texture);
         ~Bullet() = default;
         void setTexture(const sf::Texture *texture);
+        void setMovement(const sf::Vector2f &movement);
+        void setMovement(const float &xMovement, const float &yMovement);
+        void update(const float &deltaTime);
+        bool isOutOfMap();
+    private:
+        sf::Vector2f m_movement;
 };
 
 #endif /* !BULLET_HPP */
