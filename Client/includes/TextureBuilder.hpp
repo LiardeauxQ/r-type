@@ -18,7 +18,6 @@ class TextureBuilder {
         ~TextureBuilder() = default;
         sf::Texture *getTexture(const std::string &name);
         void createTexture(const std::string &path, const std::string &name);
-        void test(const std::string &path);
     private:
         std::map<std::string, sf::Texture*> m_textures;
 };

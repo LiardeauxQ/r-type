@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include "TextureBuilder.hpp"
-#include "ParseJSONSprite.hpp"
 
 TextureBuilder::TextureBuilder()
     : m_textures()
@@ -22,9 +21,4 @@ void TextureBuilder::createTexture(const std::string &path, const std::string &n
 {
     m_textures[name] = new sf::Texture();
     m_textures[name]->loadFromFile(path);
-}
-
-void TextureBuilder::test(const std::string &path)
-{
-    auto sprite = ParseJSONSprite::parse(path)[0]->getChildWithPosition(SpritePosition::RIGHT);
 }
