@@ -40,14 +40,14 @@ void TcpCommunication::askServerConnection(bool isCreateRoom) {
     connectToServer(m_gameData->getUserData().getUserPort(), "0.0.0.0");
 }
 
-void TcpCommunication::sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname) {
+void TcpCommunication::sendCreateGame(size_t id, const std::string& name, const std::string& password, const std::string& nickname) {
     auto message = CreateGame(id, name, password, nickname);
 
     std::cout << "send create" << std::endl;
     m_handler.sendMessage(message);
 }
 
-void TcpCommunication::sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname) {
+void TcpCommunication::sendJoinGame(size_t id, const std::string &name, const std::string& password, const std::string& nickname) {
     auto message = JoinGame(id, name, password, nickname);
 
     std::cout << "send join" << std::endl;
@@ -120,6 +120,7 @@ void TcpCommunication::handlePacket(const Message& msg)
 }
 
 void TcpCommunication::roomInfo(const RoomInfo& msg) {
+    std::cout << "Room info " << msg.getIdPlayer() << " " << m_gameData->getUserId() << std::endl;
     if (msg.getIdPlayer() != m_gameData->getUserId())
         return;
     m_gameData->updateRoomInfo(msg.getIdGame(), msg.getMaxPlayers());
@@ -140,7 +141,7 @@ void TcpCommunication::successConnection(const SuccessConnect& msg) {
 }
 
 void TcpCommunication::playerHasJoin(const RoomPlayerJoin &msg) {
-    std::cout << "Join player " << msg.getNickname() << std::endl;
+    std::cout << "Join player " << msg.getNickname() << msg.getSize() << std::endl;
     m_gameData->addPlayer(msg.getIdPlayer());
 }
 

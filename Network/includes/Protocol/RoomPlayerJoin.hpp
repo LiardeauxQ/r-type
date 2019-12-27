@@ -13,7 +13,7 @@
 
 class RoomPlayerJoin : public Message {
 public:
-    RoomPlayerJoin(uint8_t idPlayer, std::string nickname, bool isReady)
+    RoomPlayerJoin(size_t idPlayer, std::string nickname, bool isReady)
             : Message(TCP_COMMUNICATION::ROOM_PLAYER_JOIN)
             , m_idPlayer(idPlayer)
             , m_nickname(std::move(nickname))
@@ -26,11 +26,11 @@ public:
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + ROOM_PLAYER_JOIN_SIZE; }
 
-    uint8_t getIdPlayer() const { return m_idPlayer; }
+    size_t getIdPlayer() const { return m_idPlayer; }
     const std::string &getNickname() const { return m_nickname; }
     bool getIsReady() const { return m_isReady; }
 private:
-    uint8_t m_idPlayer;
+    size_t m_idPlayer;
     std::string m_nickname;
     bool m_isReady;
 };

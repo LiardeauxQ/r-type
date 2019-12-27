@@ -25,7 +25,7 @@ public:
         return createMessage(hdr);
     }
     void sendMessage(const Message& msg) {
-        unsigned char *data = new unsigned char[msg.getSize()];
+        auto data = new unsigned char[msg.getSize()];
         auto serializedMsg = msg.serialize();
 
         for (size_t i = 0 ; i < msg.getSize() ; i++)
@@ -34,13 +34,9 @@ public:
             printf("%d ", data[i]);
         }
         printf("\n");
-        std::cout << m_socket.is_open() << std::endl;
         boost::asio::write(m_socket,
                            boost::asio::buffer(data, msg.getSize()));
         delete[] data;
-        std::cout << "End read" << std::endl;
-        /*boost::asio::write(m_socket,
-                           boost::asio::buffer(msg.serialize().data(), msg.getSize()));*/
     }
 
 private:
@@ -57,6 +53,10 @@ private:
         std::unique_ptr<Message> msg;
 
         boost::asio::read(m_socket, boost::asio::buffer(data, hdr.packet_size));
+        std::cout << "will read" << hdr.packet_size << std::endl;
+        for (int i = 0 ; i < hdr.packet_size ; i++)
+            printf("%d ", data[i]);
+        printf("\n");
         for (auto &initialize : packetInitializers) {
             if (std::get<0>(initialize) == hdr.packet_id) {
                 msg = std::get<1>(initialize)(data);

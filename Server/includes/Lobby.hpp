@@ -29,12 +29,12 @@ public:
 
     void runGameRoom(size_t id);
 
-    void joinGameRoom(uint16_t idPlayer, size_t idRoom);
+    void joinGameRoom(size_t idPlayer, size_t idRoom);
 
-    void quitGameRoom(uint16_t idPlayer, size_t idRoom);
+    void quitGameRoom(size_t idPlayer, size_t idRoom);
 
     size_t getRoomId(const std::string &name) const;
-    RoomInfo getRoomInfo(const std::string &name, uint16_t idPlayer);
+    RoomInfo getRoomInfo(const std::string &name, size_t idPlayer);
 
 private:
     std::list<boost::shared_ptr<GameRoom>> m_rooms;

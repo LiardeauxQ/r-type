@@ -22,11 +22,11 @@ std::shared_ptr<GameData> GameData::from(const InputOptionsHandler& inputs) {
     }
 }
 
-void GameData::addPlayer(uint8_t playerId) {
+void GameData::addPlayer(size_t playerId) {
     m_players.push_back(playerId);
 }
 
-void GameData::removePlayer(uint8_t playerId) {
+void GameData::removePlayer(size_t playerId) {
     for (auto it = m_players.begin() ; it != m_players.end() ; it++) {
         if (*it == playerId) {
             m_players.erase(it);
@@ -35,7 +35,7 @@ void GameData::removePlayer(uint8_t playerId) {
     }
 }
 
-void GameData::updateRoomInfo(uint32_t idGame, uint8_t maxPlayers) {
+void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {
     m_idGame = idGame;
     m_maxPlayers = maxPlayers;
 }

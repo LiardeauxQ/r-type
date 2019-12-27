@@ -18,21 +18,21 @@ public:
 
     static std::shared_ptr<GameData> from(const InputOptionsHandler& inputs);
 
-    void addPlayer(uint8_t playerId);
-    void removePlayer(uint8_t playerId);
-    void updateRoomInfo(uint32_t idGame, uint8_t maxPlayers);
+    void addPlayer(size_t playerId);
+    void removePlayer(size_t playerId);
+    void updateRoomInfo(size_t idGame, uint8_t maxPlayers);
 
-    void setUserId(uint8_t userId) { m_userData.m_id = userId; }
-    [[nodiscard]] uint8_t getUserId() const { return m_userData.m_id; }
+    void setUserId(size_t userId) { m_userData.m_id = userId; }
+    [[nodiscard]] size_t getUserId() const { return m_userData.m_id; }
     [[nodiscard]] const UserData& getUserData() const { return m_userData; }
     [[nodiscard]] size_t getNumberPlayers() const { return m_players.size(); }
 
     bool m_gameRunning;
 private:
     UserData m_userData;
-    std::list<uint8_t> m_players;
-    std::list<uint8_t> m_enemy;
-    uint32_t m_idGame;
+    std::list<size_t> m_players;
+    std::list<size_t> m_enemy;
+    size_t m_idGame;
     uint8_t m_maxPlayers;
 };
 

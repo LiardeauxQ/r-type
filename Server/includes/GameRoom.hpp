@@ -25,7 +25,7 @@ public:
 
     void addPlayer(const boost::shared_ptr<Client> &newClient);
 
-    void removePlayer(uint16_t idPlayer);
+    void removePlayer(size_t idPlayer);
 
     void run();
 

@@ -27,8 +27,8 @@ public:
 
     void askServerConnection(bool isCreateRoom);
 private:
-    void sendCreateGame(uint8_t id, const std::string& name, const std::string& password, const std::string& nickname);
-    void sendJoinGame(uint8_t id, const std::string &name, const std::string& password, const std::string& nickname);
+    void sendCreateGame(size_t id, const std::string& name, const std::string& password, const std::string& nickname);
+    void sendJoinGame(size_t id, const std::string &name, const std::string& password, const std::string& nickname);
     void connectToServer(uint16_t port, const std::string &addr);
 
     void checkServerPackets();

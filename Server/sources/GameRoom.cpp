@@ -7,6 +7,7 @@
 void GameRoom::addPlayer(const boost::shared_ptr<Client>& newClient) {
     for (auto& client : m_clients) {
         client->sendPlayerJoinGame(newClient->getId(), newClient->getNickname());
+        newClient->sendPlayerJoinGame(client->getId(), client->getNickname());
     }
     m_clients.push_back(newClient);
     if (m_clients.size() == MIN_PLAYERS) {
@@ -15,7 +16,7 @@ void GameRoom::addPlayer(const boost::shared_ptr<Client>& newClient) {
     }
 }
 
-void GameRoom::removePlayer(uint16_t idPlayer) {
+void GameRoom::removePlayer(size_t idPlayer) {
     for (auto it = m_clients.begin() ; it != m_clients.end() ; it++) {
         if ((*it)->getId() == idPlayer) {
             m_clients.erase(it);

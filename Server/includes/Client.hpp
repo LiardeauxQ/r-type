@@ -42,8 +42,8 @@ public:
     void setHandler(boost::shared_ptr<ClientHandler> handler) { m_handler = handler; }
     void setUdpSocket(uint16_t port) { m_udpPort = port; }
 
-    void sendPlayerJoinGame(uint8_t playerId, std::string nickname);
-    void sendPlayerQuitGame(uint8_t playerId);
+    void sendPlayerJoinGame(size_t playerId, std::string nickname);
+    void sendPlayerQuitGame(size_t playerId);
     void startGame();
 
     ~Client();
@@ -71,6 +71,7 @@ private:
     BoostTcp::socket m_tcpSocket;
     packet_header_t m_packetHeader;
     uint8_t *m_packetData;
+    uint8_t *m_writePacketData;
     boost::shared_ptr<ClientHandler> m_handler;
     size_t m_id;
     std::string m_nickname;

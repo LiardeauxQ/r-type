@@ -28,7 +28,7 @@ public:
     [[nodiscard]] const std::string& getPassword() const { return m_password; }
     [[nodiscard]] const std::string& getRoomName() const { return m_roomName; }
 
-    uint8_t m_id;
+    size_t m_id;
 private:
     uint16_t m_serverPort;
     uint16_t m_userPort;

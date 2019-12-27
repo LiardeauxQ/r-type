@@ -13,7 +13,7 @@
 
 class CreateGame : public Message {
 public:
-    CreateGame(uint8_t idPlayer, std::string name, std::string password, std::string nickname)
+    CreateGame(size_t idPlayer, std::string name, std::string password, std::string nickname)
     : Message(TCP_COMMUNICATION::CREATE_GAME)
     , m_idPlayer(idPlayer)
     , m_name(std::move(name))
@@ -26,12 +26,12 @@ public:
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     size_t getSize() const final { return PACKET_HDR_SIZE + CREATE_GAME_SIZE; }
 
-    uint8_t getPlayerId() const { return m_idPlayer; }
+    size_t getPlayerId() const { return m_idPlayer; }
     const std::string &getName() const { return m_name; }
     const std::string &getPassword() const { return m_password; }
     const std::string &getNickname() const { return m_nickname; }
 private:
-    uint8_t m_idPlayer;
+    size_t m_idPlayer;
     std::string m_name;
     std::string m_password;
     std::string m_nickname;

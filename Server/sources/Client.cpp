@@ -13,6 +13,7 @@ Client::Client(boost::asio::io_context& context)
     , m_tcpSocket(context)
     , m_packetHeader()
     , m_packetData(nullptr)
+    , m_writePacketData(nullptr)
     , m_id(IdProvider::instance()->getNextId())
     , m_udpPort(0)
     , m_ipAddress()
@@ -70,9 +71,19 @@ std::unique_ptr<Message> Client::handleRequest(uint8_t *data, uint16_t packetId)
 }
 
 void Client::sendMessage(const Message& msg) {
+    auto serializedData = msg.serialize();
+    if (m_writePacketData != nullptr)
+        delete[] m_writePacketData;
+    m_writePacketData = new uint8_t[msg.getSize()];
+    std::cout << "sending" << std::endl;
+    for (size_t i = 0 ; i < msg.getSize() ; i++) {
+        printf("%d ", serializedData[i]);
+        m_writePacketData[i] = serializedData[i];
+    }
+    printf("\n");
     boost::asio::async_write(
             m_tcpSocket,
-            boost::asio::buffer(msg.serialize().data(), msg.getSize()),
+            boost::asio::buffer(m_writePacketData, msg.getSize()),
             boost::bind(&Client::waitHeader, shared_from_this(), boost::asio::placeholders::error));
 }
 
@@ -101,7 +112,7 @@ void Client::connectClient(const ClientConnect *msg) {
     m_ipAddress = msg->getAddr();
     m_remoteEndpoint = BoostUdp::endpoint(boost::asio::ip::address::from_string(msg->getAddr()), msg->getPort());
     std::cout << "Send success connect " << (int)(m_id) << std::endl;
-    sendMessage(SuccessConnect(static_cast<uint8_t>(m_id)));
+    sendMessage(SuccessConnect(m_id));
 }
 
 void Client::createGame(const CreateGame *msg) {
@@ -111,8 +122,9 @@ void Client::createGame(const CreateGame *msg) {
         return;
     std::cout << "Create " << msg->getNickname() << std::endl;
     m_nickname = msg->getNickname();
-    lobby->createGameRoom(msg->getName(), 10);
+    auto roomId = lobby->createGameRoom(msg->getName(), 10);
     sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
+    lobby->joinGameRoom(msg->getPlayerId(), roomId);
 }
 
 void Client::joinGame(const JoinGame *msg) {
@@ -124,24 +136,27 @@ void Client::joinGame(const JoinGame *msg) {
         std::cout << "Join " << msg->getNickname() << std::endl;
         auto roomId = lobby->getRoomId(msg->getName());
         m_nickname = msg->getNickname();
-        lobby->joinGameRoom(msg->getPlayerId(), roomId);
         sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
+        lobby->joinGameRoom(msg->getPlayerId(), roomId);
     } catch (const char *str) {
         std::cerr << str << std::endl; //TODO
     }
 }
 
-void Client::sendPlayerJoinGame(uint8_t playerId, std::string nickname) {
+void Client::sendPlayerJoinGame(size_t playerId, std::string nickname) {
+    std::cout << "join player" << std::endl;
     sendMessage(RoomPlayerJoin(playerId, std::move(nickname), true));
 }
 
-void Client::sendPlayerQuitGame(uint8_t playerId) {
+void Client::sendPlayerQuitGame(size_t playerId) {
+    std::cout << "quit player" << std::endl;
     sendMessage(RoomPlayerQuit(playerId, "unknown", true));
 }
 
 void Client::startGame() {
     auto localEndpoint = BoostUdp::endpoint(boost::asio::ip::address_v4::any(), m_udpPort);
 
+    std::cout << "start game " << m_udpPort << std::endl;
     sendMessage(GameStart(m_udpPort));
     m_udpSocket = BoostUdp::socket(m_ioService, localEndpoint.protocol());
     m_udpSocket->bind(localEndpoint);
@@ -152,6 +167,7 @@ void Client::dispatchUdpPackets() {
     packet_header_t hdr = {0, 0, 0};
     uint8_t *data = nullptr;
 
+    std::cout << "receive udp packets " << m_remoteEndpoint->port() << std::endl;
     m_udpSocket->receive_from(boost::asio::buffer(&hdr, PACKET_HDR_SIZE), *m_remoteEndpoint);
     data = new uint8_t[hdr.packet_size];
     m_udpSocket->receive_from(boost::asio::buffer(data, hdr.packet_size), *m_remoteEndpoint);

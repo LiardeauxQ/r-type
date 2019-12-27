@@ -90,13 +90,13 @@ typedef struct {
 const size_t CLIENT_CONNECT_SIZE = sizeof(client_connect_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
 } success_connect_t;
 
 const size_t SUCCESS_CONNECT_SIZE = sizeof(success_connect_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t password[MAX_BUFFER_SIZE];
     uint8_t nickname[MAX_BUFFER_SIZE];
@@ -105,7 +105,7 @@ typedef struct {
 const size_t CREATE_GAME_SIZE = sizeof(create_game_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t password[MAX_BUFFER_SIZE];
     uint8_t nickname[MAX_BUFFER_SIZE];
@@ -114,17 +114,17 @@ typedef struct {
 const size_t JOIN_GAME_SIZE = sizeof(join_game_t);
 
 typedef struct {
-    uint32_t id_game;
+    size_t id_game;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t nb_players;
     uint8_t max_players;
-    uint8_t id_player;
+    size_t id_player;
 } room_info_t;
 
 const size_t ROOM_INFO_SIZE = sizeof(room_info_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t nickname[MAX_BUFFER_SIZE];
     uint8_t is_ready;
 } player_info_t;
@@ -132,7 +132,7 @@ typedef struct {
 const size_t PLAYER_INFO_SIZE = sizeof(player_info_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t nickname[MAX_BUFFER_SIZE];
     uint8_t is_ready;
 } room_player_join_t;
@@ -140,7 +140,7 @@ typedef struct {
 const size_t ROOM_PLAYER_JOIN_SIZE = sizeof(room_player_join_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t nickname[MAX_BUFFER_SIZE];
     uint8_t is_ready;
 } room_player_quit_t;
@@ -148,7 +148,7 @@ typedef struct {
 const size_t ROOM_PLAYER_QUIT_SIZE = sizeof(room_player_quit_t);
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
     uint8_t nickname[MAX_BUFFER_SIZE];
     uint8_t is_ready;
 } room_player_state_t;
@@ -162,7 +162,7 @@ typedef struct {
 const size_t GAME_START_SIZE = sizeof(game_start_t);
 
 typedef struct {
-    uint32_t id_game;
+    size_t id_game;
     uint8_t name[MAX_BUFFER_SIZE];
     uint8_t is_private;
     uint8_t nb_players;
@@ -194,7 +194,7 @@ typedef struct {
 } list_of_games_t;
 
 typedef struct {
-    uint8_t id_player;
+    size_t id_player;
 } game_ready_t;
 
 const size_t GAME_READY_SIZE = sizeof(game_ready_t);
@@ -205,14 +205,14 @@ enum FireType {
 
 typedef struct {
     //team
-    uint16_t id_new_entity;
+    size_t id_new_entity;
     FireType type;
 } fire_entity_t;
 
 const size_t FIRE_ENTITY_SIZE = sizeof(fire_entity_t);
 
 typedef struct {
-    uint16_t id_entity;
+    size_t id_entity;
     pos_t position;
     pos_t velocity;
     uint16_t angle;

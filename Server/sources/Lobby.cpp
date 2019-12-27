@@ -25,7 +25,7 @@ void Lobby::runGameRoom(size_t id) {
     }
 }
 
-void Lobby::joinGameRoom(uint16_t idPlayer, size_t idRoom) {
+void Lobby::joinGameRoom(size_t idPlayer, size_t idRoom) {
     for (auto& room : m_rooms) {
         std::cout << "name:" << room->getName() << std::endl;
         for (auto it = m_clients.begin() ; it != m_clients.end() ; it++) {
@@ -40,7 +40,7 @@ void Lobby::joinGameRoom(uint16_t idPlayer, size_t idRoom) {
     throw "Cannot find room";
 }
 
-void Lobby::quitGameRoom(uint16_t idPlayer, size_t idRoom) {
+void Lobby::quitGameRoom(size_t idPlayer, size_t idRoom) {
     for (auto& room : m_rooms) {
         if (room->getId() == idRoom) {
             room->removePlayer(idPlayer);
@@ -58,7 +58,7 @@ size_t Lobby::getRoomId(const std::string &name) const {
     throw "Unknown room";
 }
 
-RoomInfo Lobby::getRoomInfo(const std::string &name, uint16_t idPlayer) {
+RoomInfo Lobby::getRoomInfo(const std::string &name, size_t idPlayer) {
     for (auto& room : m_rooms) {
         if (room->getName() == name) {
             return RoomInfo(room->getId(), room->getName(),

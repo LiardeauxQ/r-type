@@ -13,7 +13,9 @@ std::unique_ptr<Message> SuccessConnect::from(void *data) {
 
 std::vector<uint8_t> SuccessConnect::serialize() const {
     std::vector<uint8_t> data = Message::createHeader(m_id, SUCCESS_CONNECT_SIZE);
-    client_connect_t pkt = {m_idPlayer};
+    success_connect_t pkt = {m_idPlayer};
 
+    for (size_t i = 0; i < SUCCESS_CONNECT_SIZE; i++)
+        data.push_back(*(reinterpret_cast<uint8_t *>(&pkt) + i));
     return data;
 }
