@@ -64,6 +64,12 @@ Transition GameState::handleEvent(sf::Event &event)
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Escape)
                     return Transition::QUIT;
+                if (event.key.code == sf::Keyboard::Num1)
+                    m_players.front()->setShotPatern(ShotPatern::SINGLE);
+                if (event.key.code == sf::Keyboard::Num2)
+                    m_players.front()->setShotPatern(ShotPatern::DOUBLE);
+                if (event.key.code == sf::Keyboard::Num3)
+                    m_players.front()->setShotPatern(ShotPatern::TRIPLE);
                 break;
             case sf::Event::Resized:
                 m_window->setView(sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height))));
