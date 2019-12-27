@@ -16,6 +16,7 @@ set(RTYPE_CLIENT
     ${RTYPE_CLIENT_SOURCES}/states/MenuState.cpp
     ${RTYPE_CLIENT_SOURCES}/states/PauseState.cpp
     ${RTYPE_CLIENT_SOURCES}/states/GameState.cpp
+    ${RTYPE_CLIENT_SOURCES}/EntityBuilder.cpp
     ${RTYPE_CLIENT_SOURCES}/Entity.cpp
     ${RTYPE_CLIENT_SOURCES}/entities/Ship.cpp
     ${RTYPE_CLIENT_SOURCES}/entities/Enemy.cpp

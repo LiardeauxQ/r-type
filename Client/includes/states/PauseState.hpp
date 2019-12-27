@@ -12,7 +12,7 @@
 
 class PauseState : public State {
     public:
-        PauseState(TextureBuilder &textureBuilder);
+        PauseState(EntityBuilder &entityBuilder);
         ~PauseState();
         void onStart();
         void onStop();

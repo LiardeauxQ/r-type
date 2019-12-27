@@ -8,9 +8,9 @@
 #include "states/GameState.hpp"
 #include <iostream>
 
-GameState::GameState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
-    , m_player()
+GameState::GameState(EntityBuilder &entityBuilder)
+    : State(entityBuilder)
+    , m_players()
     , m_bullets()
 {
     this->onStart();
@@ -24,9 +24,7 @@ GameState::~GameState()
 void GameState::onStart()
 {
     std::cout << "Entering GameState..." << std::endl;
-    m_textureBuilder.createTexture("../Client/assets/r-typesheet1.gif", "SHIP");
-    m_textureBuilder.createTexture("../Client/assets/r-typesheet5.gif", "ENEMY");
-    m_player.setTexture(m_textureBuilder.getTexture("SHIP"));
+    m_players.push_back(static_cast<Ship *>(m_entityBuilder.create(EntityType::SHIP)));
 }
 
 void GameState::onStop()
@@ -48,10 +46,12 @@ void GameState::update()
 {
     if (m_isPaused)
         return;
-    m_window->draw(m_player);
-    for (Bullet &bullet : m_bullets) {
-        bullet.move(sf::Vector2f(400 * (*m_deltaTime), 0.0));
+    for (auto &bullet : m_bullets) {
+        bullet.update(*m_deltaTime);
         m_window->draw(bullet);
+    }
+    for (auto &player : m_players) {
+        m_window->draw(*player);
     }
 }
 
@@ -72,7 +72,7 @@ Transition GameState::handleEvent(sf::Event &event)
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        m_player.shot(m_bullets);
+        m_players.front()->shot(m_bullets);
     sf::Vector2f offset(0.0, 0.0);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         offset += sf::Vector2f(0.0, -320 * (*m_deltaTime));
@@ -82,6 +82,6 @@ Transition GameState::handleEvent(sf::Event &event)
         offset += sf::Vector2f(0.0, 320 * (*m_deltaTime));
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         offset += sf::Vector2f(200 * (*m_deltaTime), 0.0);
-    m_player.move(offset);
+    m_players.front()->move(offset);
     return Transition::NONE;
 }

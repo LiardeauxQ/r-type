@@ -11,7 +11,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "GameData.hpp"
-#include "TextureBuilder.hpp"
+#include "EntityBuilder.hpp"
 #include "Transition.hpp"
 #include "TcpCommunication.hpp"
 #include <memory>
@@ -26,8 +26,8 @@ enum States {
 
 class State {
     public:
-        State(TextureBuilder &textureBuilder)
-        : m_window(nullptr), m_textureBuilder(textureBuilder), m_deltaTime(0), m_isPaused(false) {};
+        State(EntityBuilder &entityBuilder)
+        : m_window(nullptr), m_entityBuilder(entityBuilder), m_deltaTime(0), m_isPaused(false) {};
         virtual ~State() {};
         void linkToGame(std::shared_ptr<GameData> gameData, sf::RenderWindow *window, float *deltaTime) { m_gameData = std::move(gameData); m_window = window; m_deltaTime = deltaTime; };
         virtual void onStart() = 0;
@@ -39,7 +39,7 @@ class State {
     protected:
         std::shared_ptr<GameData> m_gameData;
         sf::RenderWindow *m_window;
-        TextureBuilder &m_textureBuilder;
+        EntityBuilder &m_entityBuilder;
         float *m_deltaTime;
         bool m_isPaused;
 };

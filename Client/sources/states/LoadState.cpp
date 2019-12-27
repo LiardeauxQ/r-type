@@ -8,8 +8,8 @@
 #include "states/LoadState.hpp"
 #include <iostream>
 
-LoadState::LoadState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
+LoadState::LoadState(EntityBuilder &entityBuilder)
+    : State(entityBuilder)
 {
     this->onStart();
 }

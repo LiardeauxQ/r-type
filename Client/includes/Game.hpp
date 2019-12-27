@@ -14,7 +14,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "TextureBuilder.hpp"
+#include "EntityBuilder.hpp"
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
 #include "InputOptionsHandler.hpp"
@@ -39,7 +39,7 @@ class Game {
         std::shared_ptr<TcpCommunication> m_tcpHandler;
         std::shared_ptr<UdpCommunication> m_udpHandler;
         std::shared_ptr<GameData> m_gameData;
-        TextureBuilder m_textureBuilder;
+        EntityBuilder m_entityBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;

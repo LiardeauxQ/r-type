@@ -8,8 +8,8 @@
 #include "states/PauseState.hpp"
 #include <iostream>
 
-PauseState::PauseState(TextureBuilder &textureBuilder)
-    : State(textureBuilder)
+PauseState::PauseState(EntityBuilder &entityBuilder)
+    : State(entityBuilder)
 {
     this->onStart();
 }

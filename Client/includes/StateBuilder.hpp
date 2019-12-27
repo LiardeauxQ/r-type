@@ -9,12 +9,12 @@
 	#define STATEBUILDER_HPP
 
 #include "State.hpp"
-#include "TextureBuilder.hpp"
+#include "EntityBuilder.hpp"
 
 class StateBuilder {
     public:
         StateBuilder();
-        State *createState(States stateName, TextureBuilder &textureBuilder);
+        State *createState(States stateName, EntityBuilder &entityBuilder);
         ~StateBuilder() = default;
     private:
 };

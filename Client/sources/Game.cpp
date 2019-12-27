@@ -13,7 +13,7 @@ Game::Game(int ac, char **av)
     : m_input(ac, av)
     , m_tcpHandler()
     , m_gameData(GameData::from(m_input))
-    , m_textureBuilder()
+    , m_entityBuilder()
     , m_stateBuilder()
     , m_states()
     , m_isRunning(false)
@@ -45,7 +45,7 @@ void Game::run()
         m_tcpHandler->askServerConnection(m_input.isCreateSession());
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
         m_window->setVerticalSyncEnabled( true );
-        m_states.push(m_stateBuilder.createState(States::GAME, m_textureBuilder));
+        m_states.push(m_stateBuilder.createState(States::GAME, m_entityBuilder));
         m_states.top()->linkToGame(m_gameData, m_window, &m_deltaTime);
         m_isRunning = true;
         this->loop();

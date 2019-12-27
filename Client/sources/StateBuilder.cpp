@@ -14,20 +14,20 @@
 
 StateBuilder::StateBuilder() {}
 
-State *StateBuilder::createState(States stateName, TextureBuilder &textureBuilder)
+State *StateBuilder::createState(States stateName, EntityBuilder &entityBuilder)
 {
     switch (stateName) {
         case States::EMPTY:
-            return new EmptyState(textureBuilder);
+            return new EmptyState(entityBuilder);
         case States::LOAD:
-            return new LoadState(textureBuilder);
+            return new LoadState(entityBuilder);
         case States::MENU:
-            return new MenuState(textureBuilder);
+            return new MenuState(entityBuilder);
         case States::PAUSE:
-            return new PauseState(textureBuilder);
+            return new PauseState(entityBuilder);
         case States::GAME:
-            return new GameState(textureBuilder);
+            return new GameState(entityBuilder);
         default:
-            return new EmptyState(textureBuilder);
+            return new EmptyState(entityBuilder);
     }
 }

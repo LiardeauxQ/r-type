@@ -14,7 +14,7 @@
 
 class GameState : public State {
     public:
-        GameState(TextureBuilder &textureBuilder);
+        GameState(EntityBuilder &entityBuilder);
         ~GameState();
         void onStart();
         void onStop();
@@ -23,7 +23,7 @@ class GameState : public State {
         void update();
         Transition handleEvent(sf::Event &envent);
     private:
-        Ship m_player;
+        std::vector<Ship *> m_players;
         std::vector<Bullet> m_bullets;
 };
 
