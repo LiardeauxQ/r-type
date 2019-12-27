@@ -19,6 +19,10 @@
 #include "RoomPlayerQuit.hpp"
 #include "RoomPlayerState.hpp"
 #include "SuccessConnect.hpp"
+#include "DirectionState.hpp"
+#include "EntityState.hpp"
+#include "FireEntity.hpp"
+#include "SyncDistance.hpp"
 
 #include <vector>
 #include <tuple>

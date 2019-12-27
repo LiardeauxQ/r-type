@@ -25,6 +25,10 @@ set(NETWORK
     ${NETWORK_SOURCES}/Protocol/RoomPlayerQuit.cpp
     ${NETWORK_SOURCES}/Protocol/RoomPlayerState.cpp
     ${NETWORK_SOURCES}/Protocol/Packet.cpp
+    ${NETWORK_SOURCES}/Protocol/DirectionState.cpp
+    ${NETWORK_SOURCES}/Protocol/EntityState.cpp
+    ${NETWORK_SOURCES}/Protocol/FireEntity.cpp
+    ${NETWORK_SOURCES}/Protocol/SyncDistance.cpp
 )
 
 add_library(network STATIC

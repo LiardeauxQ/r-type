@@ -19,4 +19,8 @@ const std::vector<std::tuple<uint8_t, std::unique_ptr<Message> (*)(void *)>> pac
         std::make_tuple(ROOM_PLAYER_QUIT, &RoomPlayerQuit::from),
         std::make_tuple(ROOM_PLAYER_STATE, &RoomPlayerState::from),
         std::make_tuple(SUCCESS_CONNECT, &SuccessConnect::from),
+        std::make_tuple(FIRE_ENTITY, &FireEntity::from),
+        std::make_tuple(MOVE, &DirectionState::from),
+        std::make_tuple(STATE_ENTITY, &EntityState::from),
+        std::make_tuple(SYNC_DIST, &SyncDistance::from),
 };
