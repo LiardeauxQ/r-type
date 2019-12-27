@@ -12,7 +12,7 @@
 
 class LoadState : public State {
     public:
-        LoadState(EntityBuilder &entityBuilder);
+        LoadState(std::shared_ptr<GameData> gameData);
         ~LoadState();
         void onStart();
         void onStop();

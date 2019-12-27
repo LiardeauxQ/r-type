@@ -14,7 +14,7 @@
 
 class GameState : public State {
     public:
-        GameState(EntityBuilder &entityBuilder);
+        GameState(std::shared_ptr<GameData> gameData);
         ~GameState();
         void onStart();
         void onStop();
@@ -23,8 +23,8 @@ class GameState : public State {
         void update();
         Transition handleEvent(sf::Event &envent);
     private:
-        std::vector<Ship *> m_players;
-        std::vector<Bullet> m_bullets;
+//        std::vector<Ship *> m_players;
+//        std::vector<Bullet> m_bullets;
 };
 
 #endif /* !GAMESTATE_HPP */

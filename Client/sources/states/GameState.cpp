@@ -8,10 +8,10 @@
 #include "states/GameState.hpp"
 #include <iostream>
 
-GameState::GameState(EntityBuilder &entityBuilder)
-    : State(entityBuilder)
-    , m_players()
-    , m_bullets()
+GameState::GameState(std::shared_ptr<GameData> gameData)
+    : State(std::move(gameData))
+//    , m_players()
+//    , m_bullets()
 {
     this->onStart();
 }
@@ -24,7 +24,7 @@ GameState::~GameState()
 void GameState::onStart()
 {
     std::cout << "Entering GameState..." << std::endl;
-    m_players.push_back(static_cast<Ship *>(m_entityBuilder.create(EntityType::SHIP)));
+//    m_players.push_back(static_cast<Ship *>(m_entityBuilder.create(EntityType::SHIP)));
 }
 
 void GameState::onStop()
@@ -46,13 +46,12 @@ void GameState::update()
 {
     if (m_isPaused)
         return;
-    for (auto &bullet : m_bullets) {
-        bullet.update(*m_deltaTime);
-        m_window->draw(bullet);
-    }
-    for (auto &player : m_players) {
-        m_window->draw(*player);
-    }
+//    for (auto &bullet : m_bullets) {
+//        bullet.update(*m_deltaTime);
+//        m_window->draw(bullet);
+//    }
+    for (auto &player : m_gameData->getPlayers())
+        m_window->draw(*player.second);
 }
 
 Transition GameState::handleEvent(sf::Event &event)
@@ -64,12 +63,12 @@ Transition GameState::handleEvent(sf::Event &event)
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Escape)
                     return Transition::QUIT;
-                if (event.key.code == sf::Keyboard::Num1)
-                    m_players.front()->setShotPatern(ShotPatern::SINGLE);
-                if (event.key.code == sf::Keyboard::Num2)
-                    m_players.front()->setShotPatern(ShotPatern::DOUBLE);
-                if (event.key.code == sf::Keyboard::Num3)
-                    m_players.front()->setShotPatern(ShotPatern::TRIPLE);
+//                if (event.key.code == sf::Keyboard::Num1)
+//                    m_players.front()->setShotPatern(ShotPatern::SINGLE);
+//                if (event.key.code == sf::Keyboard::Num2)
+//                    m_players.front()->setShotPatern(ShotPatern::DOUBLE);
+//                if (event.key.code == sf::Keyboard::Num3)
+//                    m_players.front()->setShotPatern(ShotPatern::TRIPLE);
                 break;
             case sf::Event::Resized:
                 m_window->setView(sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height))));
@@ -77,17 +76,17 @@ Transition GameState::handleEvent(sf::Event &event)
                 break;
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        m_players.front()->shot(m_bullets);
-    sf::Vector2f offset(0.0, 0.0);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        offset += sf::Vector2f(0.0, -320 * (*m_deltaTime));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        offset += sf::Vector2f(-200 * (*m_deltaTime), 0.0);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        offset += sf::Vector2f(0.0, 320 * (*m_deltaTime));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        offset += sf::Vector2f(200 * (*m_deltaTime), 0.0);
-    m_players.front()->move(offset);
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+//        m_players.front()->shot(m_bullets);
+//    sf::Vector2f offset(0.0, 0.0);
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+//        offset += sf::Vector2f(0.0, -320 * (*m_deltaTime));
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+//        offset += sf::Vector2f(-200 * (*m_deltaTime), 0.0);
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+//        offset += sf::Vector2f(0.0, 320 * (*m_deltaTime));
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+//        offset += sf::Vector2f(200 * (*m_deltaTime), 0.0);
+//    m_players.front()->move(offset);
     return Transition::NONE;
 }

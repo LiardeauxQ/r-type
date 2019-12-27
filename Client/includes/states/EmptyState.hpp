@@ -12,7 +12,7 @@
 
 class EmptyState : public State {
     public:
-        EmptyState(EntityBuilder &entityBuilder);
+        EmptyState(std::shared_ptr<GameData> gameData);
         ~EmptyState();
         void onStart();
         void onStop();

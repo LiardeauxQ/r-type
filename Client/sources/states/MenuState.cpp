@@ -8,8 +8,8 @@
 #include "states/MenuState.hpp"
 #include <iostream>
 
-MenuState::MenuState(EntityBuilder &entityBuilder)
-    : State(entityBuilder)
+MenuState::MenuState(std::shared_ptr<GameData> gameData)
+    : State(gameData)
 {
     this->onStart();
 }

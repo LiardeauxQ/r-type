@@ -6,6 +6,7 @@
 
 GameData::GameData(UserData userData)
         : m_gameRunning(false)
+        , m_entityBuilder()
         , m_userData(userData)
         , m_idGame(0)
         , m_maxPlayers(0) {}
@@ -23,16 +24,15 @@ std::shared_ptr<GameData> GameData::from(const InputOptionsHandler& inputs) {
 }
 
 void GameData::addPlayer(size_t playerId) {
-    m_players.push_back(playerId);
+    auto it = m_players.find(playerId);
+    if (it == m_players.end())
+        m_players[playerId] = static_cast<Ship *>(m_entityBuilder.create(EntityType::SHIP));
 }
 
 void GameData::removePlayer(size_t playerId) {
-    for (auto it = m_players.begin() ; it != m_players.end() ; it++) {
-        if (*it == playerId) {
-            m_players.erase(it);
-            break;
-        }
-    }
+    auto it = m_players.find(playerId);
+    if (it != m_players.end())
+        m_players.erase(it);
 }
 
 void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {

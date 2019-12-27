@@ -12,7 +12,7 @@
 
 class MenuState : public State {
     public:
-        MenuState(EntityBuilder &entityBuilder);
+        MenuState(std::shared_ptr<GameData> gameData);
         ~MenuState();
         void onStart();
         void onStop();

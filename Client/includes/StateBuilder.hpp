@@ -13,9 +13,9 @@
 
 class StateBuilder {
     public:
-        StateBuilder();
-        State *createState(States stateName, EntityBuilder &entityBuilder);
+        StateBuilder() = default;
         ~StateBuilder() = default;
+        State *createState(States stateName, std::shared_ptr<GameData> gameData);
     private:
 };
 

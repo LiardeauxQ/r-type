@@ -12,7 +12,7 @@
 
 class PauseState : public State {
     public:
-        PauseState(EntityBuilder &entityBuilder);
+        PauseState(std::shared_ptr<GameData> gameData);
         ~PauseState();
         void onStart();
         void onStop();

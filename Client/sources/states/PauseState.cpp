@@ -8,8 +8,8 @@
 #include "states/PauseState.hpp"
 #include <iostream>
 
-PauseState::PauseState(EntityBuilder &entityBuilder)
-    : State(entityBuilder)
+PauseState::PauseState(std::shared_ptr<GameData> gameData)
+    : State(gameData)
 {
     this->onStart();
 }

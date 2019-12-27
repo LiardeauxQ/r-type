@@ -8,8 +8,8 @@
 #include "states/EmptyState.hpp"
 #include <iostream>
 
-EmptyState::EmptyState(EntityBuilder &entityBuilder)
-    : State(entityBuilder)
+EmptyState::EmptyState(std::shared_ptr<GameData> gameData)
+    : State(gameData)
 {
     this->onStart();
 }

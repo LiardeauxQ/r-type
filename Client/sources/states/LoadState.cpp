@@ -8,8 +8,8 @@
 #include "states/LoadState.hpp"
 #include <iostream>
 
-LoadState::LoadState(EntityBuilder &entityBuilder)
-    : State(entityBuilder)
+LoadState::LoadState(std::shared_ptr<GameData> gameData)
+    : State(gameData)
 {
     this->onStart();
 }
