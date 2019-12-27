@@ -35,6 +35,18 @@ void GameData::removePlayer(size_t playerId) {
         m_players.erase(it);
 }
 
+void GameData::addEnemy(size_t enemyId) {
+    auto it = m_enemies.find(enemyId);
+    if (it == m_enemies.end())
+        m_enemies[enemyId] = static_cast<Enemy *>(m_entityBuilder.create(EntityType::ENEMY));
+}
+
+void GameData::removeEnemy(size_t enemyId) {
+    auto it = m_enemies.find(enemyId);
+    if (it != m_enemies.end())
+        m_enemies.erase(it);
+}
+
 void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {
     m_idGame = idGame;
     m_maxPlayers = maxPlayers;

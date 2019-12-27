@@ -20,8 +20,11 @@ public:
     static std::shared_ptr<GameData> from(const InputOptionsHandler& inputs);
 
     void addPlayer(size_t playerId);
-    std::map<size_t, Ship *> &getPlayers() { return m_players; };
     void removePlayer(size_t playerId);
+    std::map<size_t, Ship *> &getPlayers() { return m_players; };
+    void addEnemy(size_t enemyId);
+    void removeEnemy(size_t enemyId);
+    std::map<size_t, Enemy *> &getEnemies() { return m_enemies; };
     void updateRoomInfo(size_t idGame, uint8_t maxPlayers);
 
     void setUserId(size_t userId) { m_userData.m_id = userId; }

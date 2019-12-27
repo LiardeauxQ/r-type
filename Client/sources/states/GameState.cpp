@@ -50,6 +50,8 @@ void GameState::update()
 //        bullet.update(*m_deltaTime);
 //        m_window->draw(bullet);
 //    }
+    for (auto &enemy : m_gameData->getEnemies())
+        m_window->draw(*enemy.second);
     for (auto &player : m_gameData->getPlayers())
         m_window->draw(*player.second);
 }
