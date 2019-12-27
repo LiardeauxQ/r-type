@@ -24,7 +24,9 @@ GameState::~GameState()
 void GameState::onStart()
 {
     std::cout << "Entering GameState..." << std::endl;
-    m_player.setTexture(m_textureBuilder.getTexture("../Client/assets/r-typesheet1.gif"));
+    m_textureBuilder.createTexture("../Client/assets/r-typesheet1.gif", "SHIP");
+    m_textureBuilder.createTexture("../Client/assets/r-typesheet5.gif", "ENEMY");
+    m_player.setTexture(m_textureBuilder.getTexture("SHIP"));
 }
 
 void GameState::onStop()
