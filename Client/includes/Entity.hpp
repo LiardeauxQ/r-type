@@ -22,9 +22,8 @@ class Entity : public sf::Drawable, public sf::Transformable {
         Entity(const sf::Texture *texture);
         ~Entity() = default;
         void setTexture(const sf::Texture *texture);
-        void setPosition(const sf::Vector2f &position);
         void move(const sf::Vector2f &offset);
-        void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+        void draw(sf::RenderTarget &target, sf::RenderStates states) const final;
         sf::Vector2f m_position;
     protected:
         sf::Sprite m_sprite;
