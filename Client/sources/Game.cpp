@@ -75,7 +75,7 @@ void Game::loop()
         m_tcpHandler->update();
         checkGameStatus();
         handleTransition(m_states.top()->handleEvent(m_event));
-        m_states.top()->update();
+        handleTransition(m_states.top()->update());
         m_window->display();
     }
 }

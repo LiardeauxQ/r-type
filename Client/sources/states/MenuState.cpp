@@ -39,10 +39,11 @@ void MenuState::onResume()
     m_isPaused = false;
 }
 
-void MenuState::update()
+Transition MenuState::update()
 {
     if (m_isPaused)
-        return;
+        return Transition::NONE;
+    return Transition::NONE;
 }
 
 Transition MenuState::handleEvent(sf::Event &event)

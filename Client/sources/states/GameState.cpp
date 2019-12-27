@@ -42,10 +42,10 @@ void GameState::onResume()
     m_isPaused = false;
 }
 
-void GameState::update()
+Transition GameState::update()
 {
     if (m_isPaused)
-        return;
+        return Transition::NONE;
 //    for (auto &bullet : m_bullets) {
 //        bullet.update(*m_deltaTime);
 //        m_window->draw(bullet);
@@ -54,6 +54,7 @@ void GameState::update()
         m_window->draw(*enemy.second);
     for (auto &player : m_gameData->getPlayers())
         m_window->draw(*player.second);
+    return Transition::NONE;
 }
 
 Transition GameState::handleEvent(sf::Event &event)

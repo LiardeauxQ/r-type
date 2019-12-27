@@ -39,10 +39,11 @@ void LoadState::onResume()
     m_isPaused = false;
 }
 
-void LoadState::update()
+Transition LoadState::update()
 {
     if (m_isPaused)
-        return;
+        return Transition::NONE;
+    return Transition::NONE;
 }
 
 Transition LoadState::handleEvent(sf::Event &event)

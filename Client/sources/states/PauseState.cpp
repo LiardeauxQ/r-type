@@ -39,10 +39,11 @@ void PauseState::onResume()
     m_isPaused = false;
 }
 
-void PauseState::update()
+Transition PauseState::update()
 {
     if (m_isPaused)
-        return;
+        return Transition::NONE;
+    return Transition::NONE;
 }
 
 Transition PauseState::handleEvent(sf::Event &event)

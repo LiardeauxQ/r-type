@@ -34,7 +34,7 @@ class State {
         virtual void onStop() = 0;
         virtual void onPause() = 0;
         virtual void onResume() = 0;
-        virtual void update() = 0;
+        virtual Transition update() = 0;
         virtual Transition handleEvent(sf::Event &event) = 0;
     protected:
         std::shared_ptr<GameData> m_gameData;

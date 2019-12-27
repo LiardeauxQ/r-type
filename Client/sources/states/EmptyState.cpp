@@ -39,10 +39,11 @@ void EmptyState::onResume()
     m_isPaused = false;
 }
 
-void EmptyState::update()
+Transition EmptyState::update()
 {
     if (m_isPaused)
-        return;
+        return Transition::NONE;
+    return Transition::NONE;
 }
 
 Transition EmptyState::handleEvent(sf::Event &event)

@@ -20,7 +20,7 @@ class GameState : public State {
         void onStop();
         void onPause();
         void onResume();
-        void update();
+        Transition update();
         Transition handleEvent(sf::Event &envent);
     private:
 //        std::vector<Ship *> m_players;

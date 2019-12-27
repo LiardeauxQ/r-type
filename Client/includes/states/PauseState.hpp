@@ -18,7 +18,7 @@ class PauseState : public State {
         void onStop();
         void onPause();
         void onResume();
-        void update();
+        Transition update();
         Transition handleEvent(sf::Event &event);
 };
 
