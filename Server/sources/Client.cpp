@@ -17,7 +17,9 @@ Client::Client(boost::asio::io_context& context)
     , m_id(IdProvider::instance()->getNextId())
     , m_udpPort(0)
     , m_ipAddress()
-    , m_isUdpRunning(false) {}
+    , m_isUdpRunning(false)
+    , m_velocity(20, 20)
+    , m_position(100, 100) {}
 
 Client::~Client() {}
 
@@ -27,6 +29,7 @@ void Client::start() {
 
 void Client::stop() {
     m_isUdpRunning = false;
+    m_thread.join();
     m_tcpSocket.close();
     m_udpSocket->close();
 }
@@ -70,21 +73,31 @@ std::unique_ptr<Message> Client::handleRequest(uint8_t *data, uint16_t packetId)
     return nullptr;
 }
 
-void Client::sendMessage(const Message& msg) {
+void Client::sendTcpMessage(const Message& msg) {
     auto serializedData = msg.serialize();
     if (m_writePacketData != nullptr)
         delete[] m_writePacketData;
     m_writePacketData = new uint8_t[msg.getSize()];
-    std::cout << "sending" << std::endl;
-    for (size_t i = 0 ; i < msg.getSize() ; i++) {
-        printf("%d ", serializedData[i]);
+    for (size_t i = 0 ; i < msg.getSize() ; i++)
         m_writePacketData[i] = serializedData[i];
-    }
-    printf("\n");
     boost::asio::async_write(
             m_tcpSocket,
             boost::asio::buffer(m_writePacketData, msg.getSize()),
             boost::bind(&Client::waitHeader, shared_from_this(), boost::asio::placeholders::error));
+}
+
+void Client::sendUdpMessage(const Message& msg) {
+    auto serializedData = msg.serialize();
+    uint8_t *data = new uint8_t[msg.getSize()];
+
+    for (size_t i = 0 ; i < msg.getSize() ; i++) {
+        data[i] = serializedData[i];
+        printf("%d ", data[i]);
+    }
+    printf("\n");
+    m_udpSocket->send_to(boost::asio::buffer(data, msg.getSize()), *m_remoteEndpoint);
+    delete[] data;
+    usleep(100000);
 }
 
 void Client::dispatchPackets(const Message *msg) {
@@ -112,7 +125,7 @@ void Client::connectClient(const ClientConnect *msg) {
     m_ipAddress = msg->getAddr();
     m_remoteEndpoint = BoostUdp::endpoint(boost::asio::ip::address::from_string(msg->getAddr()), msg->getPort());
     std::cout << "Send success connect " << (int)(m_id) << std::endl;
-    sendMessage(SuccessConnect(m_id));
+    sendTcpMessage(SuccessConnect(m_id));
 }
 
 void Client::createGame(const CreateGame *msg) {
@@ -123,7 +136,7 @@ void Client::createGame(const CreateGame *msg) {
     std::cout << "Create " << msg->getNickname() << std::endl;
     m_nickname = msg->getNickname();
     auto roomId = lobby->createGameRoom(msg->getName(), 10);
-    sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
+    sendTcpMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
     lobby->joinGameRoom(msg->getPlayerId(), roomId);
 }
 
@@ -136,7 +149,7 @@ void Client::joinGame(const JoinGame *msg) {
         std::cout << "Join " << msg->getNickname() << std::endl;
         auto roomId = lobby->getRoomId(msg->getName());
         m_nickname = msg->getNickname();
-        sendMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
+        sendTcpMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
         lobby->joinGameRoom(msg->getPlayerId(), roomId);
     } catch (const char *str) {
         std::cerr << str << std::endl; //TODO
@@ -145,48 +158,127 @@ void Client::joinGame(const JoinGame *msg) {
 
 void Client::sendPlayerJoinGame(size_t playerId, std::string nickname) {
     std::cout << "join player" << std::endl;
-    sendMessage(RoomPlayerJoin(playerId, std::move(nickname), true));
+    sendTcpMessage(RoomPlayerJoin(playerId, std::move(nickname), true));
 }
 
 void Client::sendPlayerQuitGame(size_t playerId) {
     std::cout << "quit player" << std::endl;
-    sendMessage(RoomPlayerQuit(playerId, "unknown", true));
+    sendTcpMessage(RoomPlayerQuit(playerId, "unknown", true));
+}
+
+void Client::sendPlayerState() {
+    pos_t pos = {m_position.m_x, m_position.m_y};
+    pos_t vel = {m_velocity.m_x, m_velocity.m_y};
+
+    /*std::cout << "Send player state " << m_id << std::endl;
+    std::cout << pos.x << " " << pos.y << std::endl;
+    std::cout << vel.x << " " << vel.y << std::endl;*/
+    std::cout << "----------" << std::endl;
+    sendUdpMessage(EntityState(m_id, pos, vel, 0));
 }
 
 void Client::startGame() {
     auto localEndpoint = BoostUdp::endpoint(boost::asio::ip::address_v4::any(), m_udpPort);
 
     std::cout << "start game " << m_udpPort << std::endl;
-    sendMessage(GameStart(m_udpPort));
+    sendTcpMessage(GameStart(m_udpPort));
     m_udpSocket = BoostUdp::socket(m_ioService, localEndpoint.protocol());
     m_udpSocket->bind(localEndpoint);
+    m_isUdpRunning = true;
     m_thread = boost::thread(&Client::dispatchUdpPackets, shared_from_this());
 }
 
 void Client::dispatchUdpPackets() {
+    while (m_isUdpRunning) {
+        receiveUdpPackets();
+    }
+}
+
+void Client::receiveUdpPackets() {
     packet_header_t hdr = {0, 0, 0};
     uint8_t *data = nullptr;
 
     std::cout << "receive udp packets " << m_remoteEndpoint->port() << std::endl;
     m_udpSocket->receive_from(boost::asio::buffer(&hdr, PACKET_HDR_SIZE), *m_remoteEndpoint);
+    std::cout << "received" << std::endl;
     data = new uint8_t[hdr.packet_size];
     m_udpSocket->receive_from(boost::asio::buffer(data, hdr.packet_size), *m_remoteEndpoint);
+    printf("receiving\n");
+    for (size_t i = 0 ; i < hdr.packet_size ; i++) {
+        printf("%d ", data[i]);
+    }
+    printf("\n");
+    m_responsesMutex.lock();
     switch (hdr.packet_id) {
-        case GAME_READY:
         case FIRE_ENTITY:
-            fireEntity(*dynamic_cast<const FireEntity*>(FireEntity::from(data).get()));
+            m_udpResponses.push(FireEntity::from(data));
+            break;
         case MOVE:
-            movePlayer(*dynamic_cast<const DirectionState*>(DirectionState::from(data).get()));
+            m_udpResponses.push(DirectionState::from(data));
+            break;
         default:
             break;
     }
+    m_responsesMutex.unlock();
     delete[] data;
 }
 
+std::queue<std::unique_ptr<Message>> Client::getServerResponses() {
+    m_responsesMutex.lock();
+
+    auto queue = std::move(m_udpResponses);
+
+    m_udpResponses = std::queue<std::unique_ptr<Message>>();
+    m_responsesMutex.unlock();
+    return queue;
+}
+
+void Client::update() {
+    if (!m_isUdpRunning)
+        return;
+
+    auto responses = getServerResponses();
+    while (!responses.empty()) {
+        auto response = responses.front().get();
+
+        handlePacket(*response);
+        responses.pop();
+    }
+}
+
+void Client::handlePacket(const Message& msg) {
+    switch (msg.getId()) {
+        //case GAME_READY:
+        case FIRE_ENTITY:
+            fireEntity(dynamic_cast<const FireEntity&>(msg));
+            break;
+        case MOVE:
+            movePlayer(dynamic_cast<const DirectionState&>(msg));
+        default:
+            break;
+    }
+}
+
 void Client::movePlayer(const DirectionState& msg) {
-    std::cout << "receive move player" << std::endl;
+    switch (msg.getDirection()) {
+        case RIGHT:
+            m_position.m_x += m_velocity.m_x;
+            break;
+        case LEFT:
+            m_position.m_x -= m_velocity.m_x;
+            break;
+        case TOP:
+            m_position.m_y += m_velocity.m_y;
+            break;
+        case BOTTOM:
+            m_position.m_y -= m_velocity.m_y;
+            break;
+        default:
+            break;
+    }
+    //std::cout << "receive move player" << std::endl;
 }
 
 void Client::fireEntity(const FireEntity& msg) {
-    std::cout << "receive fire entity" << std::endl;
+    //std::cout << "receive fire entity" << std::endl;
 }

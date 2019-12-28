@@ -13,6 +13,8 @@ void GameRoom::addPlayer(const boost::shared_ptr<Client>& newClient) {
     if (m_clients.size() == MIN_PLAYERS) {
         for (auto& client : m_clients)
             client->startGame();
+        m_isRunning = true;
+        m_thread = std::thread(&GameRoom::run, this);
     }
 }
 
@@ -29,10 +31,16 @@ void GameRoom::removePlayer(size_t idPlayer) {
 
 void GameRoom::run() {
     while (m_isRunning) {
-        std::cout << "GameRoom " << m_id << " Running" << std::endl;
+        //std::cout << "running" << std::endl;
+        for (auto& client : m_clients)
+            client->update();
+        for (auto& client : m_clients) {
+            client->sendPlayerState();
+        }
     }
 }
 
 void GameRoom::stop() {
     m_isRunning = false;
+    m_thread.join();
 }

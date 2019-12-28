@@ -7,6 +7,7 @@
 
 #include <string>
 #include <optional>
+#include <queue>
 
 #include "protocol.hpp"
 #include "Message.hpp"
@@ -28,12 +29,22 @@ class ClientHandler;
 class GameRoom;
 class Lobby;
 
+struct Position {
+    Position(uint32_t x, uint32_t y)
+    : m_x(x)
+    , m_y(y) {}
+
+    uint32_t m_x;
+    uint32_t m_y;
+};
+
 class Client : public boost::enable_shared_from_this<Client> {
 public:
     static boost::shared_ptr<Client> create(boost::asio::io_context &context);
 
     void start();
     void stop();
+    void update();
 
     BoostTcp::socket &getSocket() { return m_tcpSocket; }
     size_t getId() const { return m_id; }
@@ -44,6 +55,7 @@ public:
 
     void sendPlayerJoinGame(size_t playerId, std::string nickname);
     void sendPlayerQuitGame(size_t playerId);
+    void sendPlayerState();
     void startGame();
 
     ~Client();
@@ -56,13 +68,17 @@ private:
     void receiveBody(const boost::system::error_code &ec);
     std::unique_ptr<Message> handleRequest(uint8_t *data, uint16_t packetId);
     void dispatchPackets(const Message* msg);
-    void sendMessage(const Message& msg);
+    void sendTcpMessage(const Message& msg);
+    void sendUdpMessage(const Message& msg);
 
     void connectClient(const ClientConnect *msg);
     void createGame(const CreateGame *msg);
     void joinGame(const JoinGame *msg);
 
     void dispatchUdpPackets();
+    void receiveUdpPackets();
+    std::queue<std::unique_ptr<Message>> getServerResponses();
+    void handlePacket(const Message& msg);
 
     void movePlayer(const DirectionState& msg);
     void fireEntity(const FireEntity& msg);
@@ -80,7 +96,11 @@ private:
     std::optional<BoostUdp::endpoint> m_remoteEndpoint;
     std::optional<BoostUdp::socket> m_udpSocket;
     bool m_isUdpRunning;
+    Position m_velocity;
+    Position m_position;
     boost::thread m_thread;
+    std::queue<std::unique_ptr<Message>> m_udpResponses;
+    boost::mutex m_responsesMutex;
 };
 
 #endif //R_TYPE_CLIENT_HPP

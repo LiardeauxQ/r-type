@@ -74,6 +74,7 @@ void Game::loop()
         clock.restart();
         m_tcpHandler->update();
         checkGameStatus();
+        m_udpHandler->update();
         handleTransition(m_states.top()->handleEvent(m_event));
         handleTransition(m_states.top()->update());
         m_window->display();

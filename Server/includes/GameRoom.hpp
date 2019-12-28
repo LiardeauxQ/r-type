@@ -8,6 +8,7 @@
 #include <memory>
 #include <list>
 #include <iostream>
+#include <thread>
 
 #include <boost/shared_ptr.hpp>
 
@@ -44,6 +45,7 @@ private:
     std::string m_name;
     uint8_t m_maxPlayers;
     bool m_isRunning;
+    std::thread m_thread;
 };
 
 #endif //R_TYPE_GAMEROOM_HPP

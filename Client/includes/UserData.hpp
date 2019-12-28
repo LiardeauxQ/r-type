@@ -23,7 +23,7 @@ public:
             , m_nickname(std::move(nickname))
             , m_password(std::move(password))
             , m_roomName(std::move(roomName))
-            , m_localEndpoint(boost::asio::ip::address::from_string("0.0.0.0"), m_userPort) {}
+            , m_localEndpoint(boost::asio::ip::address_v4::any(), m_userPort) {}
     ~UserData() = default;
 
     [[nodiscard]] uint16_t getServerPort() const { return m_serverPort; }

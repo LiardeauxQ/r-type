@@ -4,7 +4,7 @@
 
 #include "Application.hpp"
 
-static uint16_t udpPort = 9000;
+static uint16_t udpPort = 9500;
 
 Application::Application(int ac, char **av)
     : m_context()

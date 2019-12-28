@@ -33,8 +33,7 @@ public:
 private:
     explicit UdpCommunication(std::shared_ptr<GameData> gameData);
 
-    packet_header_t receiveHeader();
-    std::unique_ptr<Message> createMessage(const packet_header_t& hdr);
+    std::unique_ptr<Message> createMessage();
     std::unique_ptr<Message> receiveMessage();
     void checkServerPackets();
     void handlePacket(const Message& msg);
@@ -46,10 +45,16 @@ private:
 
     void sendMessage(const Message& msg);
 
+    void waitHeader(const boost::system::error_code& ec);
+    void receiveUdpPackets(const boost::system::error_code& ec);
+    void receiveBody(const boost::system::error_code& ec);
+
     void dispatch();
 
     bool m_isRunning;
     std::shared_ptr<GameData> m_gameData;
+    packet_header_t m_packetHeader;
+    uint8_t *m_packetData;
 
     std::queue<std::unique_ptr<Message>> m_responses;
 
