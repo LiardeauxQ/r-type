@@ -20,6 +20,8 @@ Entity *EntityBuilder::create(const EntityType &type)
             return this->createShip();
         case EntityType::ENEMY:
             return this->createEnemy();
+        case EntityType::BULLET:
+            return this->createBullet();
         default:
             return nullptr;
     }
@@ -33,6 +35,11 @@ Ship *EntityBuilder::createShip()
 Enemy *EntityBuilder::createEnemy()
 {
     return new Enemy(m_textureBuilder.getTexture("ENEMY"));
+}
+
+Bullet *EntityBuilder::createBullet()
+{
+    return new Bullet(m_textureBuilder.getTexture("SHIP"));
 }
 
 void EntityBuilder::initializeTexture()

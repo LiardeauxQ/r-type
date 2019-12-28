@@ -22,9 +22,15 @@ public:
     void addPlayer(size_t playerId);
     void removePlayer(size_t playerId);
     std::map<size_t, Ship *> &getPlayers() { return m_players; };
+
     void addEnemy(size_t enemyId);
     void removeEnemy(size_t enemyId);
     std::map<size_t, Enemy *> &getEnemies() { return m_enemies; };
+
+    void addBullet(size_t playerId, size_t bulletId);
+    void removeBullet(size_t bulletId);
+    std::map<size_t, Bullet *> &getBullets() { return m_bullets; };
+
     void updateRoomInfo(size_t idGame, uint8_t maxPlayers);
 
     void setUserId(size_t userId) { m_userData.m_id = userId; }
@@ -41,6 +47,7 @@ private:
     UserData m_userData;
     std::map<size_t, Ship *> m_players;
     std::map<size_t, Enemy *> m_enemies;
+    std::map<size_t, Bullet *> m_bullets;
     size_t m_idGame;
     uint8_t m_maxPlayers;
 };
