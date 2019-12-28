@@ -4,6 +4,10 @@
 
 #include "TcpCommunication.hpp"
 
+boost::shared_ptr<TcpCommunication> TcpCommunication::create(std::shared_ptr<GameData> gameData) {
+    return boost::shared_ptr<TcpCommunication>(new TcpCommunication(std::move(gameData)));
+}
+
 TcpCommunication::TcpCommunication(std::shared_ptr<GameData> gameData)
         : m_isRunning(false)
         , m_isCreateRoom(false)
@@ -154,6 +158,7 @@ void TcpCommunication::getPlayerState(const RoomPlayerState &msg) {}
 
 void TcpCommunication::startGame(const GameStart &msg) {
     std::cout << "Start game" << std::endl;
+    m_gameData->setRemoteEndpoint(msg.getUdpPort());
     m_gameData->m_gameRunning = true;
 }
 

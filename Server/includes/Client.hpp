@@ -64,8 +64,8 @@ private:
 
     void dispatchUdpPackets();
 
-    void movePlayer();
-    void fireEntity();
+    void movePlayer(const DirectionState& msg);
+    void fireEntity(const FireEntity& msg);
 
     boost::asio::io_service m_ioService;
     BoostTcp::socket m_tcpSocket;

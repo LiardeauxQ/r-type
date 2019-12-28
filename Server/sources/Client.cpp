@@ -174,19 +174,19 @@ void Client::dispatchUdpPackets() {
     switch (hdr.packet_id) {
         case GAME_READY:
         case FIRE_ENTITY:
-            fireEntity();
+            fireEntity(*dynamic_cast<const FireEntity*>(FireEntity::from(data).get()));
         case MOVE:
-            movePlayer();
+            movePlayer(*dynamic_cast<const DirectionState*>(DirectionState::from(data).get()));
         default:
             break;
     }
     delete[] data;
 }
 
-void Client::movePlayer() {
-
+void Client::movePlayer(const DirectionState& msg) {
+    std::cout << "receive move player" << std::endl;
 }
 
-void Client::fireEntity() {
-
+void Client::fireEntity(const FireEntity& msg) {
+    std::cout << "receive fire entity" << std::endl;
 }

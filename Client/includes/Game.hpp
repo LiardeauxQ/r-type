@@ -36,8 +36,8 @@ class Game {
         void displayHelp();
 
         InputOptionsHandler m_input;
-        std::shared_ptr<TcpCommunication> m_tcpHandler;
-        std::shared_ptr<UdpCommunication> m_udpHandler;
+        boost::shared_ptr<TcpCommunication> m_tcpHandler;
+        boost::shared_ptr<UdpCommunication> m_udpHandler;
         std::shared_ptr<GameData> m_gameData;
         EntityBuilder m_entityBuilder;
         StateBuilder m_stateBuilder;

@@ -39,8 +39,8 @@ void Game::run()
         return;
     }
     try {
-        m_tcpHandler = std::make_shared<TcpCommunication>(m_gameData);
-        m_udpHandler = std::make_shared<UdpCommunication>(m_gameData);
+        m_tcpHandler = TcpCommunication::create(m_gameData);
+        m_udpHandler = UdpCommunication::create(m_gameData);
         m_tcpHandler->start();
         m_tcpHandler->askServerConnection(m_input.isCreateSession());
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);

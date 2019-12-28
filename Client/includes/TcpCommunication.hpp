@@ -9,6 +9,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "Protocol/Packet.hpp"
 #include "ServerHandler.hpp"
@@ -16,9 +17,9 @@
 
 typedef boost::asio::ip::tcp BoostTcp;
 
-class TcpCommunication {
+class TcpCommunication: public boost::enable_shared_from_this<TcpCommunication> {
 public:
-    explicit TcpCommunication(std::shared_ptr<GameData> gameData);
+    static boost::shared_ptr<TcpCommunication> create(std::shared_ptr<GameData> gameData);
     ~TcpCommunication() = default;
 
     void start();
@@ -27,6 +28,8 @@ public:
 
     void askServerConnection(bool isCreateRoom);
 private:
+    explicit TcpCommunication(std::shared_ptr<GameData> gameData);
+
     void sendCreateGame(size_t id, const std::string& name, const std::string& password, const std::string& nickname);
     void sendJoinGame(size_t id, const std::string &name, const std::string& password, const std::string& nickname);
     void connectToServer(uint16_t port, const std::string &addr);

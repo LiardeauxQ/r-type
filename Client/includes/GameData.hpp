@@ -28,9 +28,12 @@ public:
     void updateRoomInfo(size_t idGame, uint8_t maxPlayers);
 
     void setUserId(size_t userId) { m_userData.m_id = userId; }
+    void setRemoteEndpoint(uint16_t port);
+
     [[nodiscard]] size_t getUserId() const { return m_userData.m_id; }
     [[nodiscard]] const UserData& getUserData() const { return m_userData; }
     [[nodiscard]] size_t getNumberPlayers() const { return m_players.size(); }
+    [[nodiscard]] const std::optional<BoostUdp::endpoint>& getRemoteEndpoint() { return m_userData.m_remoteEndpoint; }
 
     bool m_gameRunning;
 private:

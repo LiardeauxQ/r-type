@@ -6,6 +6,10 @@
 #define R_TYPE_USERDATA_HPP
 
 #include <string>
+#include <optional>
+#include <boost/asio.hpp>
+
+typedef boost::asio::ip::udp BoostUdp;
 
 class UserData {
 public:
@@ -18,7 +22,8 @@ public:
             , m_addr(std::move(address))
             , m_nickname(std::move(nickname))
             , m_password(std::move(password))
-            , m_roomName(std::move(roomName)) {}
+            , m_roomName(std::move(roomName))
+            , m_localEndpoint(boost::asio::ip::address::from_string("0.0.0.0"), m_userPort) {}
     ~UserData() = default;
 
     [[nodiscard]] uint16_t getServerPort() const { return m_serverPort; }
@@ -27,8 +32,10 @@ public:
     [[nodiscard]] const std::string& getNickname() const { return m_nickname; }
     [[nodiscard]] const std::string& getPassword() const { return m_password; }
     [[nodiscard]] const std::string& getRoomName() const { return m_roomName; }
+    [[nodiscard]] const BoostUdp::endpoint& getLocalEndpoint() const { return m_localEndpoint; }
 
     size_t m_id;
+    std::optional<BoostUdp::endpoint> m_remoteEndpoint;
 private:
     uint16_t m_serverPort;
     uint16_t m_userPort;
@@ -36,6 +43,7 @@ private:
     std::string m_nickname;
     std::string m_password;
     std::string m_roomName;
+    BoostUdp::endpoint m_localEndpoint;
 };
 
 

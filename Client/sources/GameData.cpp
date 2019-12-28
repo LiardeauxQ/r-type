@@ -51,3 +51,7 @@ void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {
     m_idGame = idGame;
     m_maxPlayers = maxPlayers;
 }
+
+void GameData::setRemoteEndpoint(uint16_t port) {
+    m_userData.m_remoteEndpoint = BoostUdp::endpoint(boost::asio::ip::address::from_string(m_userData.getIpAddress()), port);
+}
