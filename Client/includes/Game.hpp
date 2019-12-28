@@ -14,7 +14,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "EntityBuilder.hpp"
 #include "StateBuilder.hpp"
 #include "StateStack.hpp"
 #include "InputOptionsHandler.hpp"
@@ -39,7 +38,6 @@ class Game {
         boost::shared_ptr<TcpCommunication> m_tcpHandler;
         boost::shared_ptr<UdpCommunication> m_udpHandler;
         std::shared_ptr<GameData> m_gameData;
-        EntityBuilder m_entityBuilder;
         StateBuilder m_stateBuilder;
         StateStack m_states;
         bool m_isRunning;
