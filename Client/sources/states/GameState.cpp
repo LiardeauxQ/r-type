@@ -80,7 +80,7 @@ Transition GameState::handleEvent(sf::Event &event)
         }
     }
 //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-//        udp->playerShot();
+//        m_udpHandler->playerShot();
 //        m_players.front()->shot(m_bullets);
     sf::Vector2f offset(0.0, 0.0);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -91,7 +91,7 @@ Transition GameState::handleEvent(sf::Event &event)
         offset += sf::Vector2f(0.0, 320 * (*m_deltaTime));
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         offset += sf::Vector2f(200 * (*m_deltaTime), 0.0);
-//    udp->playerMove(offset);
+//    m_udpHandler->playerMove(offset);
 //    m_players.front()->move(offset);
     return Transition::NONE;
 }

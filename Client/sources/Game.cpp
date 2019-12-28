@@ -46,7 +46,7 @@ void Game::run()
         m_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
         m_window->setVerticalSyncEnabled( true );
         m_states.push(m_stateBuilder.createState(States::GAME, m_gameData));
-        m_states.top()->linkToGame(m_window, &m_deltaTime);
+        m_states.top()->linkToGame(m_udpHandler, m_window, &m_deltaTime);
         m_isRunning = true;
         this->loop();
     } catch (std::logic_error& error) {
