@@ -30,7 +30,7 @@ void TcpCommunication::start() {
 
 void TcpCommunication::stop() {
     m_isRunning = false;
-    m_socket.close();
+    m_socket.shutdown(m_socket.shutdown_both);
     m_responsesThread.join();
 }
 
