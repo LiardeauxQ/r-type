@@ -35,6 +35,16 @@ void Ship::setTexture(const sf::Texture *texture)
     m_sprite.setScale(2, 2);
 }
 
+bool Ship::isShotReady()
+{
+    m_cooldown -= m_clock.getElapsedTime().asSeconds();
+    m_clock.restart();
+    if (m_cooldown > 0)
+        return false;
+    m_cooldown = m_fireRate;
+    return true;
+}
+
 void Ship::shot(std::vector<Bullet> &bullets)
 {
     m_cooldown -= m_clock.getElapsedTime().asSeconds();
