@@ -6,12 +6,15 @@
 #define R_TYPE_SPAWNER_HPP
 
 #include <map>
+#include <tuple>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
 #include "Enemy.hpp"
 #include "IdProvider.hpp"
+
+#define BOX_SIZE 30
 
 class Spawner: public Entity {
 public:
@@ -20,6 +23,8 @@ public:
 
     void update(float elapsedTime);
     void stop();
+
+    std::tuple<bool, size_t> isCollideWith(const Position& pos);
 
     [[nodiscard]] const std::map<size_t, Enemy*>& getEnemies() const { return m_enemies; }
 private:

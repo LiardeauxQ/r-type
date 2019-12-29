@@ -48,6 +48,7 @@ private:
     void start();
     void run();
     void updateEntities();
+    void checkCollision();
     void sendEntitiesState(Client& client);
 
     size_t m_id;

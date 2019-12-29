@@ -83,6 +83,8 @@ void UdpCommunication::handlePacket(const Message& msg)
         case SYNC_DIST:
             receiveSyncDistance(dynamic_cast<const SyncDistance&>(msg));
             break;
+        case COLLISION_TRIGGER:
+            handleCollision(dynamic_cast<const CollisionTrigger&>(msg));
         default:
             break;
     }

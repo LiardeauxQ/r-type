@@ -38,3 +38,19 @@ void Spawner::createEnemy(const boost::system::error_code& ec) {
     m_timer.expires_at(m_timer.expires_at() + boost::posix_time::seconds(1));
     m_timer.async_wait(boost::bind(&Spawner::createEnemy, this, boost::system::error_code()));
 }
+
+std::tuple<bool, size_t> Spawner::isCollideWith(const Position& pos) {
+    std::tuple<bool, size_t> result(false, 0);
+
+    for (auto enemy = m_enemies.begin() ; enemy != m_enemies.end() ; enemy++) {
+        auto otherPos = enemy->second->getPosition();
+        if (pos.m_x > otherPos.m_x - BOX_SIZE && pos.m_x < otherPos.m_x + BOX_SIZE &&
+            pos.m_y > otherPos.m_y - BOX_SIZE && pos.m_y < otherPos.m_y + BOX_SIZE) {
+            result = std::make_tuple<bool, size_t>(true, enemy->second->getId());
+            delete enemy->second;
+            m_enemies.erase(enemy);
+            break;
+        }
+    }
+    return result;
+}

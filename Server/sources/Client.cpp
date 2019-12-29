@@ -174,6 +174,12 @@ void Client::sendEntityState(size_t id, const Position &position, const Position
     sendUdpMessage(EntityState(id, pos, vel, 0, type));
 }
 
+void Client::triggerCollision(size_t firstEntity, size_t secondEntity, const Position& pos) {
+    pos_t updatePosition = {pos.m_x, pos.m_y};
+
+    sendUdpMessage(CollisionTrigger(firstEntity, secondEntity, updatePosition));
+}
+
 void Client::startGame() {
     auto localEndpoint = BoostUdp::endpoint(boost::asio::ip::address_v4::any(), m_udpPort);
 
