@@ -5,12 +5,14 @@
 #include "InputOptionsHandler.hpp"
 
 std::vector<InputOptionsHandler::OptionInfo> InputOptionsHandler::options_ = {
-    OptionInfo { CREATE_SESSION, "-c", "--createSession", false },
+    OptionInfo { CREATE_SESSION, "-c", "--create-session", false },
     OptionInfo { SESSION_NAME, "-s", "--name", true },
     OptionInfo { PASSWORD, "-w", "--password", true },
     OptionInfo { NICKNAME, "-n", "--nickname", true },
-    OptionInfo { SERVER_PORT, "-p1", "--serverPort", true },
-    OptionInfo { CLIENT_PORT, "-p2", "--clientPort", true },
+    OptionInfo { SERVER_PORT, "-p1", "--server-port", true },
+    OptionInfo { CLIENT_PORT, "-p2", "--client-port", true },
+    OptionInfo { LOCAL_ADDRESS, "-l", "--local-address", true },
+    OptionInfo { REMOTE_ADDRESS, "-r", "--remote-address", true },
     OptionInfo { HELP, "-h", "--help", false },
 };
 
@@ -71,6 +73,26 @@ std::string InputOptionsHandler::getSessionName() const
 
     if (name.empty() || name == info.shortName || name == info.longName)
         throw std::logic_error("Cannot find session name option");
+    return name;
+}
+
+std::string InputOptionsHandler::getLocalAddress() const
+{
+    OptionInfo info = getOption(LOCAL_ADDRESS);
+    std::string name = getOptionValue(info);
+
+    if (name.empty() || name == info.shortName || name == info.longName)
+        throw std::logic_error("Cannot find local address option");
+    return name;
+}
+
+std::string InputOptionsHandler::getRemoteAddress() const
+{
+    OptionInfo info = getOption(REMOTE_ADDRESS);
+    std::string name = getOptionValue(info);
+
+    if (name.empty() || name == info.shortName || name == info.longName)
+        throw std::logic_error("Cannot find remote address option");
     return name;
 }
 

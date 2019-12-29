@@ -7,6 +7,7 @@
 
 #include <string>
 #include <optional>
+#include <queue>
 
 #include "protocol.hpp"
 #include "Message.hpp"
@@ -15,6 +16,7 @@
 #include "GameRoom.hpp"
 #include "Lobby.hpp"
 #include "IdProvider.hpp"
+#include "Position.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -34,6 +36,7 @@ public:
 
     void start();
     void stop();
+    void update();
 
     BoostTcp::socket &getSocket() { return m_tcpSocket; }
     size_t getId() const { return m_id; }
@@ -42,8 +45,14 @@ public:
     void setHandler(boost::shared_ptr<ClientHandler> handler) { m_handler = handler; }
     void setUdpSocket(uint16_t port) { m_udpPort = port; }
 
+    const Position& getPosition() const { return m_position; }
+    const Position& getVelocity() const { return m_velocity; }
+
     void sendPlayerJoinGame(size_t playerId, std::string nickname);
     void sendPlayerQuitGame(size_t playerId);
+    void sendPlayerState();
+    void sendFriendState(size_t id, const Position& position, const Position& velocity);
+    void sendEntityState(size_t id, const Position& position, const Position& velocity, EntityType type);
     void startGame();
 
     ~Client();
@@ -56,13 +65,17 @@ private:
     void receiveBody(const boost::system::error_code &ec);
     std::unique_ptr<Message> handleRequest(uint8_t *data, uint16_t packetId);
     void dispatchPackets(const Message* msg);
-    void sendMessage(const Message& msg);
+    void sendTcpMessage(const Message& msg);
+    void sendUdpMessage(const Message& msg);
 
     void connectClient(const ClientConnect *msg);
     void createGame(const CreateGame *msg);
     void joinGame(const JoinGame *msg);
 
     void dispatchUdpPackets();
+    void receiveUdpPackets();
+    std::queue<std::unique_ptr<Message>> getServerResponses();
+    void handlePacket(const Message& msg);
 
     void movePlayer(const DirectionState& msg);
     void fireEntity(const FireEntity& msg);
@@ -80,7 +93,11 @@ private:
     std::optional<BoostUdp::endpoint> m_remoteEndpoint;
     std::optional<BoostUdp::socket> m_udpSocket;
     bool m_isUdpRunning;
+    Position m_velocity;
+    Position m_position;
     boost::thread m_thread;
+    std::queue<std::unique_ptr<Message>> m_udpResponses;
+    boost::mutex m_responsesMutex;
 };
 
 #endif //R_TYPE_CLIENT_HPP

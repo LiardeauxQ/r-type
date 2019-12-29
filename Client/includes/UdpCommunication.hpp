@@ -33,8 +33,7 @@ public:
 private:
     explicit UdpCommunication(std::shared_ptr<GameData> gameData);
 
-    packet_header_t receiveHeader();
-    std::unique_ptr<Message> createMessage(const packet_header_t& hdr);
+    std::unique_ptr<Message> createMessage();
     std::unique_ptr<Message> receiveMessage();
     void checkServerPackets();
     void handlePacket(const Message& msg);
@@ -43,12 +42,15 @@ private:
 
     void receiveSyncDistance(const SyncDistance& msg);
     void receiveEntityState(const EntityState& msg);
+    void handlePlayerState(const EntityState& msg);
+    void handleEnemyState(const EntityState& msg);
+    void handleBulletState(const EntityState& msg);
 
     void sendMessage(const Message& msg);
 
     void dispatch();
 
-    bool m_isRunning;
+    volatile bool m_isRunning;
     std::shared_ptr<GameData> m_gameData;
 
     std::queue<std::unique_ptr<Message>> m_responses;

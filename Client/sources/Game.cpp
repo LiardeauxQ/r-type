@@ -24,17 +24,16 @@ Game::Game(int ac, char **av)
 
 Game::~Game()
 {
-    if (m_tcpHandler != nullptr)
-        m_tcpHandler->stop();
     while (!m_states.empty()) {
         delete m_states.top();
+        m_states.pop();
     }
 }
 
 void Game::run()
 {
     if (m_input.isAskingForHelp() || m_gameData == nullptr) {
-        displayHelp();
+        Game::displayHelp();
         return;
     }
     try {
@@ -57,6 +56,10 @@ void Game::handleTransition(Transition transition)
 {
     switch (transition) {
         case Transition::QUIT:
+            if (m_tcpHandler != nullptr)
+                m_tcpHandler->stop();
+            if (m_udpHandler != nullptr)
+                m_udpHandler->stop();
             m_window->close();
             break;
         default:
@@ -73,9 +76,12 @@ void Game::loop()
         clock.restart();
         m_tcpHandler->update();
         checkGameStatus();
+        m_udpHandler->update();
         handleTransition(m_states.top()->handleEvent(m_event));
-        handleTransition(m_states.top()->update());
-        m_window->display();
+        if (m_window->isOpen()) {
+            handleTransition(m_states.top()->update());
+            m_window->display();
+        }
     }
 }
 
@@ -87,11 +93,13 @@ void Game::checkGameStatus() {
 void Game::displayHelp()
 {
     std::cout << "R-TYPE help:" << std::endl;
-    std::cout << "\t-c\t --createSession" << std::endl;
+    std::cout << "\t-c\t --create-session" << std::endl;
     std::cout << "\t-s\t --name $NAME" << std::endl;
     std::cout << "\t-w\t --password $PASSWORD" << std::endl;
     std::cout << "\t-n\t --nickname $NICKNAME" << std::endl;
-    std::cout << "\t-p1\t --serverPort $PORT" << std::endl;
-    std::cout << "\t-p2\t --clientPort $PORT" << std::endl;
+    std::cout << "\t-p1\t --server-port $PORT" << std::endl;
+    std::cout << "\t-p2\t --client-port $PORT" << std::endl;
+    std::cout << "\t-l\t --local-address $ADDRESS" << std::endl;
+    std::cout << "\t-r\t --remote-address $ADDRESS" << std::endl;
     std::cout << "\t-h\t --help" << std::endl;
 }

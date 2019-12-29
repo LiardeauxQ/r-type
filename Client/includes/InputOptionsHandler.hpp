@@ -20,6 +20,8 @@ public:
     std::string getNickname() const;
     std::string getPassword() const;
     std::string getSessionName() const;
+    std::string getLocalAddress() const;
+    std::string getRemoteAddress() const;
     short getClientPort() const;
     short getServerPort() const;
     bool isCreateSession() const;
@@ -34,6 +36,8 @@ private:
         SERVER_PORT,
         CLIENT_PORT,
         HELP,
+        LOCAL_ADDRESS,
+        REMOTE_ADDRESS,
     };
 
     struct OptionInfo {

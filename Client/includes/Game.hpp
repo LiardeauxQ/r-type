@@ -32,7 +32,7 @@ class Game {
         void loop();
         void checkGameStatus();
 
-        void displayHelp();
+        static void displayHelp();
 
         InputOptionsHandler m_input;
         boost::shared_ptr<TcpCommunication> m_tcpHandler;
