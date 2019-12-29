@@ -3,7 +3,6 @@
 //
 
 #include "Spawner.hpp"
-#include <iostream>
 
 Spawner::Spawner(Position position, Position velocity, size_t id)
     : Entity(id, position, velocity)
@@ -15,9 +14,14 @@ Spawner::Spawner(Position position, Position velocity, size_t id)
 }
 
 void Spawner::update() {
-    for (auto& enemy : m_enemies) {
-        std::cout << "move" << enemy.second->getId() << std::endl;
-        enemy.second->move(LEFT);
+    for (auto it = m_enemies.begin() ; it != m_enemies.end() ;) {
+        if (it->second->getPosition().m_x < -30) {
+            delete it->second;
+            m_enemies.erase(it++);
+        } else {
+            it->second->move(LEFT);
+            it++;
+        }
     }
 }
 

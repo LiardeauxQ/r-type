@@ -187,9 +187,8 @@ void Client::startGame() {
 }
 
 void Client::dispatchUdpPackets() {
-    while (m_isUdpRunning) {
+    while (m_isUdpRunning)
         receiveUdpPackets();
-    }
 }
 
 void Client::receiveUdpPackets() {
@@ -272,5 +271,9 @@ void Client::movePlayer(const DirectionState& msg) {
 }
 
 void Client::fireEntity(const FireEntity& msg) {
-    //std::cout << "receive fire entity" << std::endl;
+    auto gameRoom = dynamic_cast<GameRoom*>(m_handler.get());
+
+    if (gameRoom == nullptr)
+        return;
+    gameRoom->addBullet(msg.getEntityId(), m_position);
 }

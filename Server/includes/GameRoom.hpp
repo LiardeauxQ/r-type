@@ -17,6 +17,7 @@
 #include "Spawner.hpp"
 
 #define MIN_PLAYERS 2
+#define MAX_X 1500
 
 class Client;
 
@@ -30,6 +31,7 @@ public:
     ~GameRoom() final = default;
 
     void addPlayer(const boost::shared_ptr<Client> &newClient);
+    void addBullet(size_t id, const Position& startPos);
     void removePlayer(size_t idPlayer);
 
     void stop();
@@ -50,7 +52,7 @@ private:
     uint8_t m_maxPlayers;
     bool m_isRunning;
     std::thread m_thread;
-    std::map<size_t, Bullet> m_bullets;
+    std::map<size_t, Bullet*> m_bullets;
     std::list<Spawner> m_spawners;
 };
 

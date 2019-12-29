@@ -12,6 +12,8 @@ public:
     Bullet(size_t id, Position position, Position velocity)
             : Entity(id, position, velocity) {}
     ~Bullet() override = default;
+
+    void update();
 };
 
 #endif //R_TYPE_BULLET_HPP

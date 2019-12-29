@@ -166,11 +166,9 @@ void UdpCommunication::playerMove(float x, float y) {
 
 void UdpCommunication::playerShot() {
     std::cout << "shot" << std::endl;
-    auto bulletId = m_gameData->getUserId() * 1000 + IdProvider::instance()->getNextId();
-    sendMessage(FireEntity(
-            bulletId,
-            FireType::NORMAL));
+    auto bulletId = IdProvider::instance()->getNextId();
     m_gameData->addBullet(bulletId);
+    sendMessage(FireEntity(bulletId,FireType::NORMAL));
 }
 
 void UdpCommunication::sendMessage(const Message& msg) {

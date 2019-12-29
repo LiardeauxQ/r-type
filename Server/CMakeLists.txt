@@ -12,6 +12,7 @@ set(RTYPE_SERVER
     ${RTYPE_SERVER_SOURCES}/Client.cpp
     ${RTYPE_SERVER_SOURCES}/Entity.cpp
     ${RTYPE_SERVER_SOURCES}/Spawner.cpp
+    ${RTYPE_SERVER_SOURCES}/Bullet.cpp
 )
 
 add_executable(r-type_server
