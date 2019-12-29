@@ -27,6 +27,7 @@ Game::~Game()
 {
     while (!m_states.empty()) {
         delete m_states.top();
+        m_states.pop();
     }
 }
 
