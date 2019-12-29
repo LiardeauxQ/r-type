@@ -52,6 +52,8 @@ private:
         auto data = new uint8_t[hdr.packet_size];
         std::unique_ptr<Message> msg;
 
+        if (hdr.magic_number != MAGIC_NUMBER || hdr.packet_size == 0)
+            return nullptr;
         boost::asio::read(m_socket, boost::asio::buffer(data, hdr.packet_size));
         for (auto &initialize : packetInitializers) {
             if (std::get<0>(initialize) == hdr.packet_id) {
@@ -66,8 +68,5 @@ private:
     const UserData& m_userData;
     T& m_socket;
 };
-
-//template ServerHandler<boost::asio::ip::tcp>;
-//template ServerHandler<boost::asio::ip::udp>;
 
 #endif //R_TYPE_SERVERHANDLER_HPP

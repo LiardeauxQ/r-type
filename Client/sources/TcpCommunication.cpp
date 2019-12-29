@@ -71,9 +71,10 @@ void TcpCommunication::connectToServer(uint16_t port, const std::string &addr) {
 
 void TcpCommunication::dispatch() {
     while (m_isRunning) {
-        std::cout << m_isRunning << std::endl;
         try {
             auto msg = m_handler.receiveMessage();
+            if (msg == nullptr)
+                continue;
             m_mutex.lock();
             m_responses.push(std::move(msg));
             m_mutex.unlock();

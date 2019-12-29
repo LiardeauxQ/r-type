@@ -39,9 +39,10 @@ void UdpCommunication::update() {
 
 void UdpCommunication::dispatch() {
     while (m_isRunning) {
-        std::cout << m_isRunning << std::endl;
         try {
             auto msg = receiveMessage();
+            if (msg == nullptr)
+                continue;
             m_mutex.lock();
             m_responses.push(std::move(msg));
             m_mutex.unlock();
@@ -194,6 +195,8 @@ std::unique_ptr<Message> UdpCommunication::createMessage() {
     std::unique_ptr<Message> msg = nullptr;
 
     m_socket.receive_from(boost::asio::buffer(&hdr, PACKET_HDR_SIZE), endpoint);
+    if (hdr.magic_number != MAGIC_NUMBER || hdr.packet_size == 0)
+        return nullptr;
     data = new uint8_t[hdr.packet_size];
     m_socket.receive_from(boost::asio::buffer(data, hdr.packet_size), endpoint);
     switch (hdr.packet_id) {
