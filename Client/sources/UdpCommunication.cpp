@@ -166,6 +166,8 @@ void UdpCommunication::playerMove(float x, float y) {
 
 void UdpCommunication::playerShot() {
     std::cout << "shot" << std::endl;
+    if (!m_gameData->getPlayers()[m_gameData->getUserId()]->isShotReady())
+        return;
     auto bulletId = m_gameData->getUserId() * 1000 + IdProvider::instance()->getNextId();
     sendMessage(FireEntity(
             bulletId,
