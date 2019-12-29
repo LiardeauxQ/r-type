@@ -10,8 +10,6 @@
 
 GameState::GameState(std::shared_ptr<GameData> gameData)
     : State(std::move(gameData))
-//    , m_players()
-//    , m_bullets()
 {
     this->onStart();
 }
@@ -24,7 +22,6 @@ GameState::~GameState()
 void GameState::onStart()
 {
     std::cout << "Entering GameState..." << std::endl;
-//    m_players.push_back(static_cast<Ship *>(m_entityBuilder.create(EntityType::SHIP)));
 }
 
 void GameState::onStop()
@@ -46,10 +43,10 @@ Transition GameState::update()
 {
     if (m_isPaused)
         return Transition::NONE;
-//    for (auto &bullet : m_bullets) {
-//        bullet.update(*m_deltaTime);
-//        m_window->draw(bullet);
-//    }
+    for (auto &bullet : m_gameData->getBullets()) {
+        m_window->draw(*bullet.second);
+        bullet.second->update(*m_deltaTime);
+    }
     for (auto &enemy : m_gameData->getEnemies())
         m_window->draw(*enemy.second);
     for (auto &player : m_gameData->getPlayers()) {

@@ -22,9 +22,6 @@ class GameState : public State {
         void onResume();
         Transition update();
         Transition handleEvent(sf::Event &envent);
-    private:
-//        std::vector<Ship *> m_players;
-//        std::vector<Bullet> m_bullets;
 };
 
 #endif /* !GAMESTATE_HPP */

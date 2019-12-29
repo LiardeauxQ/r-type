@@ -14,7 +14,8 @@
 
 enum EntityType {
     SHIP,
-    ENEMY
+    ENEMY,
+    BULLET
 };
 
 class EntityBuilder {
@@ -25,6 +26,7 @@ class EntityBuilder {
     private:
         Ship *createShip();
         Enemy *createEnemy();
+        Bullet *createBullet();
         void initializeTexture();
         TextureBuilder m_textureBuilder;
 };

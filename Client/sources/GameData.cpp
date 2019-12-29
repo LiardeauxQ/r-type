@@ -47,6 +47,21 @@ void GameData::removeEnemy(size_t enemyId) {
         m_enemies.erase(it);
 }
 
+void GameData::addBullet(size_t playerId, size_t bulletId) {
+    auto it = m_bullets.find(bulletId);
+    if (it == m_bullets.end()) {
+        m_bullets[bulletId] = static_cast<Bullet *>(m_entityBuilder.create(EntityType::BULLET));
+        m_bullets[bulletId]->setPosition(m_players[playerId]->getPosition());
+        m_bullets[bulletId]->setMovement(400, 0);
+    }
+}
+
+void GameData::removeBullet(size_t bulletId) {
+    auto it = m_bullets.find(bulletId);
+    if (it != m_bullets.end())
+        m_bullets.erase(it);
+}
+
 void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {
     m_idGame = idGame;
     m_maxPlayers = maxPlayers;
