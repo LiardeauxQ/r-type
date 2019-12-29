@@ -32,7 +32,7 @@ public:
     void removeBullet(size_t bulletId);
     std::map<size_t, Bullet *> &getBullets() { return m_bullets; };
 
-    void addExplosion(size_t entityId);
+    void addExplosion(const pos_t &position);
     void removeExplosions();
     std::list<Explosion *> &getExplosions() { return m_explosions; };
 

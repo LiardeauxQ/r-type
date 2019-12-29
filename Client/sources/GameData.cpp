@@ -65,24 +65,11 @@ void GameData::removeBullet(size_t bulletId) {
         m_bullets.erase(it);
 }
 
-void GameData::addExplosion(size_t entityId) {
-    auto it1 = m_enemies.find(entityId);
-    auto it2 = m_players.find(entityId);
-
-    if (!(it1 == m_enemies.end())) {
-        m_explosions.push_back(
-            dynamic_cast<Explosion *>(m_entityBuilder.create(EntityType::EXPLOSION))
-        );
-        m_explosions.back()->setPosition(m_enemies[entityId]->getPosition());
-        return;
-    }
-    if (!(it2 == m_players.end())) {
-        m_explosions.push_back(
-            dynamic_cast<Explosion *>(m_entityBuilder.create(EntityType::EXPLOSION))
-        );
-        m_explosions.back()->setPosition(m_players[entityId]->getPosition());
-        return;
-    }
+void GameData::addExplosion(const pos_t &position) {
+    m_explosions.push_back(
+        dynamic_cast<Explosion *>(m_entityBuilder.create(EntityType::EXPLOSION))
+    );
+    m_explosions.back()->setPosition(position.x, position.y);
 }
 
 void GameData::removeExplosions() {

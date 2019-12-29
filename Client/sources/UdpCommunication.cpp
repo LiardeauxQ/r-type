@@ -152,7 +152,18 @@ void UdpCommunication::handleBulletState(const EntityState& msg) {
     }
 }
 
-void UdpCommunication::handleCollision(const CollisionTrigger &msg) {}
+void UdpCommunication::handleCollision(const CollisionTrigger &msg) {
+    auto firstId = msg.getFirstEntityId();
+    auto secondId = msg.getFirstEntityId();
+
+    m_gameData->removeEnemy(secondId);
+    m_gameData->removeEnemy(firstId);
+    m_gameData->removeBullet(firstId);
+    m_gameData->removeBullet(secondId);
+    m_gameData->removePlayer(firstId);
+    m_gameData->removePlayer(secondId);
+    m_gameData->addExplosion(msg.getPosition());
+}
 
 void UdpCommunication::playerMove(float x, float y) {
     Direction dir = RIGHT;
