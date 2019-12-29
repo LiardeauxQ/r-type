@@ -9,6 +9,7 @@
 #include <list>
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 #include <boost/shared_ptr.hpp>
 
@@ -17,7 +18,7 @@
 #include "Spawner.hpp"
 
 #define MIN_PLAYERS 2
-#define MAX_X 1500
+#define MAX_X 3000
 
 class Client;
 
@@ -27,7 +28,8 @@ public:
             : ClientHandler()
             , m_id(id)
             , m_name(std::move(name))
-            , m_maxPlayers(maxPLayers) {}
+            , m_maxPlayers(maxPLayers)
+            , m_elapsedTime(0) {}
     ~GameRoom() final = default;
 
     void addPlayer(const boost::shared_ptr<Client> &newClient);
@@ -40,6 +42,7 @@ public:
     [[nodiscard]] const std::string &getName() const { return m_name; }
     [[nodiscard]] size_t getPlayerCount() const { return m_clients.size(); }
     [[nodiscard]] size_t getMaxPlayers() const { return m_maxPlayers; }
+    [[nodiscard]] float getElapsedTime() const { return m_elapsedTime; }
 
 private:
     void start();
@@ -54,6 +57,7 @@ private:
     std::thread m_thread;
     std::map<size_t, Bullet*> m_bullets;
     std::list<Spawner> m_spawners;
+    float m_elapsedTime;
 };
 
 #endif //R_TYPE_GAMEROOM_HPP

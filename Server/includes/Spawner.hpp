@@ -15,10 +15,10 @@
 
 class Spawner: public Entity {
 public:
-    explicit Spawner(Position position, Position velocity = Position(1, 0), size_t id = 0);
+    explicit Spawner(Position position, Position velocity = Position(300, 0), size_t id = 0);
     ~Spawner() override = default;
 
-    void update();
+    void update(float elapsedTime);
     void stop();
 
     [[nodiscard]] const std::map<size_t, Enemy*>& getEnemies() const { return m_enemies; }

@@ -6,12 +6,12 @@
 #define R_TYPE_POSITION_HPP
 
 struct Position {
-    Position(int x, int y)
+    Position(float x, float y)
             : m_x(x)
             , m_y(y) {}
 
-    int m_x;
-    int m_y;
+    float m_x;
+    float m_y;
 };
 
 #endif //R_TYPE_POSITION_HPP

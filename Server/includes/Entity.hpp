@@ -22,7 +22,7 @@ public:
     Entity(const Entity& other) = default;
     Entity &operator=(const Entity& other) = default;
 
-    void move(Direction dir);
+    void move(Direction dir, float elapsedTime);
 
     [[nodiscard]] size_t getId() const { return m_id; }
     [[nodiscard]] const Position& getPosition() const { return m_position; }

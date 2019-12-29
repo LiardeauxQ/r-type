@@ -4,6 +4,6 @@
 
 #include "Bullet.hpp"
 
-void Bullet::update() {
-    move(Direction::RIGHT);
+void Bullet::update(float elapsedTime) {
+    move(Direction::RIGHT, elapsedTime);
 }

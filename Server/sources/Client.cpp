@@ -171,7 +171,6 @@ void Client::sendEntityState(size_t id, const Position &position, const Position
     pos_t pos = {position.m_x, position.m_y};
     pos_t vel = {velocity.m_x, velocity.m_y};
 
-    std::cout << "update entity " << id << std::endl;
     sendUdpMessage(EntityState(id, pos, vel, 0, type));
 }
 
@@ -196,6 +195,8 @@ void Client::receiveUdpPackets() {
     uint8_t *data = nullptr;
 
     m_udpSocket->receive_from(boost::asio::buffer(&hdr, PACKET_HDR_SIZE), *m_remoteEndpoint);
+    if (hdr.magic_number != MAGIC_NUMBER || hdr.packet_size == 0)
+        return;
     data = new uint8_t[hdr.packet_size];
     m_udpSocket->receive_from(boost::asio::buffer(data, hdr.packet_size), *m_remoteEndpoint);
     m_responsesMutex.lock();
@@ -238,7 +239,6 @@ void Client::update() {
 
 void Client::handlePacket(const Message& msg) {
     switch (msg.getId()) {
-        //case GAME_READY:
         case FIRE_ENTITY:
             fireEntity(dynamic_cast<const FireEntity&>(msg));
             break;
@@ -266,8 +266,6 @@ void Client::movePlayer(const DirectionState& msg) {
         default:
             break;
     }
-    std::cout << m_position.m_x << " " << m_position.m_y << std::endl;
-    std::cout << "receive move player" << std::endl;
 }
 
 void Client::fireEntity(const FireEntity& msg) {

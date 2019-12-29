@@ -13,7 +13,7 @@ public:
             : Entity(id, position, velocity) {}
     ~Bullet() override = default;
 
-    void update();
+    void update(float elapsedTime);
 };
 
 #endif //R_TYPE_BULLET_HPP

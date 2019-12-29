@@ -18,7 +18,7 @@ void GameRoom::addBullet(size_t id, const Position& startPos) {
     auto it = m_bullets.find(id);
     if (it != m_bullets.end())
         return;
-    m_bullets[id] = new Bullet(id, startPos, Position(1, 0));
+    m_bullets[id] = new Bullet(id, startPos, Position(400, 0));
 }
 
 void GameRoom::removePlayer(size_t idPlayer) {
@@ -42,10 +42,16 @@ void GameRoom::start() {
 }
 
 void GameRoom::run() {
+    std::chrono::time_point<std::chrono::system_clock> start;
+    std::chrono::time_point<std::chrono::system_clock> end;
+
     while (m_isRunning) {
+        start = std::chrono::system_clock::now();
         updateEntities();
         for (auto& client : m_clients)
             sendEntitiesState(*client);
+        end = std::chrono::system_clock::now();
+        m_elapsedTime = std::chrono::duration<float>(end - start).count();
     }
 }
 
@@ -53,13 +59,13 @@ void GameRoom::updateEntities() {
     for (auto& client : m_clients)
         client->update();
     for (auto& spawner : m_spawners)
-        spawner.update();
+        spawner.update(m_elapsedTime);
     for (auto it = m_bullets.begin() ; it != m_bullets.end() ;) {
         if (it->second->getPosition().m_x > MAX_X) {
             delete it->second;
             m_bullets.erase(it++);
         } else {
-            it->second->update();
+            it->second->update(m_elapsedTime);
             it++;
         }
     }

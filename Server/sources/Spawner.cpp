@@ -13,13 +13,13 @@ Spawner::Spawner(Position position, Position velocity, size_t id)
     m_thread = boost::thread(boost::bind(&boost::asio::io_service::run, &m_service));
 }
 
-void Spawner::update() {
+void Spawner::update(float elapsedTime) {
     for (auto it = m_enemies.begin() ; it != m_enemies.end() ;) {
         if (it->second->getPosition().m_x < -30) {
             delete it->second;
             m_enemies.erase(it++);
         } else {
-            it->second->move(LEFT);
+            it->second->move(LEFT, elapsedTime);
             it++;
         }
     }
