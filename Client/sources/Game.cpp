@@ -25,8 +25,6 @@ Game::Game(int ac, char **av)
 
 Game::~Game()
 {
-    if (m_tcpHandler != nullptr)
-        m_tcpHandler->stop();
     while (!m_states.empty()) {
         delete m_states.top();
     }
@@ -58,8 +56,10 @@ void Game::handleTransition(Transition transition)
 {
     switch (transition) {
         case Transition::QUIT:
-            m_tcpHandler->stop();
-            m_udpHandler->stop();
+            if (m_tcpHandler != nullptr)
+                m_tcpHandler->stop();
+            if (m_udpHandler != nullptr)
+                m_udpHandler->stop();
             m_window->close();
             break;
         default:
