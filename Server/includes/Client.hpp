@@ -53,7 +53,8 @@ public:
     void sendPlayerState();
     void sendFriendState(size_t id, const Position& position, const Position& velocity);
     void sendEntityState(size_t id, const Position& position, const Position& velocity, EntityType type);
-    void triggerCollision(size_t firstEntity, size_t secondEntity, const Position& pos);
+    void triggerCollision(size_t firstEntity, EntityType firstType,
+            size_t secondEntity, EntityType secondType, const Position& pos);
     void startGame();
 
     ~Client();

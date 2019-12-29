@@ -250,7 +250,9 @@ const size_t SYNC_DIST_SIZE = sizeof(sync_dist_t);
 
 typedef struct {
     size_t first_entity;
+    EntityType first_type;
     size_t second_entity;
+    EntityType second_type;
     pos_t position;
 } collision_trigger_t;
 

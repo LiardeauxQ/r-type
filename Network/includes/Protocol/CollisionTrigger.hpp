@@ -13,10 +13,13 @@
 
 class CollisionTrigger : public Message {
 public:
-    CollisionTrigger(size_t firstEntity, size_t secondEntity, pos_t position)
+    CollisionTrigger(size_t firstEntity, EntityType firstType, size_t secondEntity,
+            EntityType secondType, pos_t position)
             : Message(UDP_COMMUNICATION::COLLISION_TRIGGER)
             , m_firstEntity(firstEntity)
+            , m_firstType(firstType)
             , m_secondEntity(secondEntity)
+            , m_secondType(secondType)
             , m_position(position) {}
     ~CollisionTrigger() override = default;
 
@@ -26,11 +29,15 @@ public:
     size_t getSize() const final { return PACKET_HDR_SIZE + COLLISION_TRIGGER_SIZE; }
 
     size_t getFirstEntityId() const { return m_firstEntity; }
+    EntityType getFirstType() const { return m_firstType; }
     size_t getSecondEntityId() const { return m_secondEntity; }
+    EntityType getSecondType() const { return m_secondType; }
     pos_t getPosition() const { return m_position; }
 private:
     size_t m_firstEntity;
+    EntityType m_firstType;
     size_t m_secondEntity;
+    EntityType m_secondType;
     pos_t m_position;
 };
 

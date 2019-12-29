@@ -84,6 +84,7 @@ void GameRoom::checkCollision() {
                                 (*client)->getPosition());
             }
         }*/
+        std::cout << "coll before" << m_bullets.size() << std::endl;
         for (auto bullet = m_bullets.begin() ; bullet != m_bullets.end();) {
             auto collideStatus = spawner.isCollideWith(bullet->second->getPosition());
             if (std::get<0>(collideStatus)) {
@@ -95,12 +96,15 @@ void GameRoom::checkCollision() {
                 bullet++;
             }
         }
+        std::cout << "coll after" << m_bullets.size() << std::endl;
     }
     for (auto& collision : collisionsLog) {
         for (auto& client : m_clients) {
             client->triggerCollision(
                     std::get<0>(collision),
+                    EntityType::BULLET,
                     std::get<1>(collision),
+                    EntityType::ENEMY,
                     std::get<2>(collision));
         }
     }
@@ -117,11 +121,13 @@ void GameRoom::sendEntitiesState(Client& client) {
                                    enemy.second->getPosition(),
                                    enemy.second->getVelocity(),
                                    EntityType::ENEMY);
+    std::cout << "state before" << m_bullets.size() << std::endl;
     for (auto& bullet : m_bullets)
         client.sendEntityState(bullet.second->getId(),
                                bullet.second->getPosition(),
                                bullet.second->getVelocity(),
                                EntityType::BULLET);
+    std::cout << "state after" <<  m_bullets.size() << std::endl;
 }
 
 void GameRoom::stop() {

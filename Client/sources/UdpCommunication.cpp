@@ -153,16 +153,20 @@ void UdpCommunication::handleBulletState(const EntityState& msg) {
 
 void UdpCommunication::handleCollision(const CollisionTrigger &msg) {
     auto firstId = msg.getFirstEntityId();
-    auto secondId = msg.getFirstEntityId();
+    auto secondId = msg.getSecondEntityId();
 
     std::cout << "collide" << std::endl;
-    /*m_gameData->removeEnemy(secondId);
-    m_gameData->removeEnemy(firstId);
-    m_gameData->removeBullet(firstId);
-    m_gameData->removeBullet(secondId);
-    m_gameData->removePlayer(firstId);
-    m_gameData->removePlayer(secondId);*/
-    m_gameData->addExplosion(msg.getPosition());
+    if (msg.getFirstType() == EntityType::ENEMY)
+        m_gameData->removeEnemy(firstId);
+    if (msg.getSecondType() == EntityType::ENEMY)
+        m_gameData->removeEnemy(secondId);
+    if (msg.getFirstType() == EntityType::BULLET)
+        m_gameData->removeBullet(firstId);
+    if (msg.getSecondType() == EntityType::BULLET)
+        m_gameData->removeBullet(secondId);
+    //m_gameData->removePlayer(firstId);
+    //m_gameData->removePlayer(secondId);
+    //m_gameData->addExplosion(msg.getPosition());
 }
 
 void UdpCommunication::playerMove(float x, float y) {

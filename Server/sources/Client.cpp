@@ -174,10 +174,11 @@ void Client::sendEntityState(size_t id, const Position &position, const Position
     sendUdpMessage(EntityState(id, pos, vel, 0, type));
 }
 
-void Client::triggerCollision(size_t firstEntity, size_t secondEntity, const Position& pos) {
+void Client::triggerCollision(size_t firstEntity, EntityType firstType,
+        size_t secondEntity, EntityType secondType, const Position& pos) {
     pos_t updatePosition = {pos.m_x, pos.m_y};
 
-    sendUdpMessage(CollisionTrigger(firstEntity, secondEntity, updatePosition));
+    sendUdpMessage(CollisionTrigger(firstEntity, firstType, secondEntity, secondType, updatePosition));
 }
 
 void Client::startGame() {
