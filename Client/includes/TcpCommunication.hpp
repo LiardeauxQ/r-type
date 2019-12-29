@@ -47,7 +47,7 @@ private:
 
     void dispatch();
 
-    bool m_isRunning;
+    volatile bool m_isRunning;
     bool m_isCreateRoom;
     std::shared_ptr<GameData> m_gameData;
 

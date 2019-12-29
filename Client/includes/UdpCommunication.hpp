@@ -50,7 +50,7 @@ private:
 
     void dispatch();
 
-    bool m_isRunning;
+    volatile bool m_isRunning;
     std::shared_ptr<GameData> m_gameData;
 
     std::queue<std::unique_ptr<Message>> m_responses;

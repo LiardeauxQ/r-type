@@ -39,6 +39,7 @@ void UdpCommunication::update() {
 
 void UdpCommunication::dispatch() {
     while (m_isRunning) {
+        std::cout << m_isRunning << std::endl;
         try {
             auto msg = receiveMessage();
             m_mutex.lock();
