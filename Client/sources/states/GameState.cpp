@@ -52,8 +52,10 @@ Transition GameState::update()
 //    }
     for (auto &enemy : m_gameData->getEnemies())
         m_window->draw(*enemy.second);
-    for (auto &player : m_gameData->getPlayers())
+    for (auto &player : m_gameData->getPlayers()) {
+        player.second->move(player.second->getPosition());
         m_window->draw(*player.second);
+    }
     return Transition::NONE;
 }
 
@@ -92,6 +94,5 @@ Transition GameState::handleEvent(sf::Event &event)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         offset += sf::Vector2f(200 * (*m_deltaTime), 0.0);
     m_udpHandler->playerMove(offset.x, offset.y);
-//    m_players.front()->move(offset);
     return Transition::NONE;
 }

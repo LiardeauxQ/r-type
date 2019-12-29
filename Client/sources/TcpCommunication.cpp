@@ -127,6 +127,7 @@ void TcpCommunication::roomInfo(const RoomInfo& msg) {
     std::cout << "Room info " << msg.getIdPlayer() << " " << m_gameData->getUserId() << std::endl;
     if (msg.getIdPlayer() != m_gameData->getUserId())
         return;
+    m_gameData->addPlayer(msg.getIdPlayer());
     m_gameData->updateRoomInfo(msg.getIdGame(), msg.getMaxPlayers());
 }
 

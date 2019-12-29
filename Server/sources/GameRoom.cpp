@@ -35,7 +35,11 @@ void GameRoom::run() {
         for (auto& client : m_clients)
             client->update();
         for (auto& client : m_clients) {
-            client->sendPlayerState();
+            client->sendPlayerState(client->getId(), client->getPosition(), client->getVelocity());
+            for (auto& other : m_clients) {
+                if (client->getId() != other->getId())
+                    client->sendPlayerState(other->getId(), other->getPosition(), other->getVelocity());
+            }
         }
     }
 }

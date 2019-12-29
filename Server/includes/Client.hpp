@@ -30,12 +30,12 @@ class GameRoom;
 class Lobby;
 
 struct Position {
-    Position(uint32_t x, uint32_t y)
+    Position(int x, int y)
     : m_x(x)
     , m_y(y) {}
 
-    uint32_t m_x;
-    uint32_t m_y;
+    int m_x;
+    int m_y;
 };
 
 class Client : public boost::enable_shared_from_this<Client> {
@@ -53,9 +53,12 @@ public:
     void setHandler(boost::shared_ptr<ClientHandler> handler) { m_handler = handler; }
     void setUdpSocket(uint16_t port) { m_udpPort = port; }
 
+    const Position& getPosition() const { return m_position; }
+    const Position& getVelocity() const { return m_velocity; }
+
     void sendPlayerJoinGame(size_t playerId, std::string nickname);
     void sendPlayerQuitGame(size_t playerId);
-    void sendPlayerState();
+    void sendPlayerState(size_t id, const Position& position, const Position& velocity);
     void startGame();
 
     ~Client();

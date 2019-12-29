@@ -78,8 +78,8 @@ typedef struct {
 const size_t ERROR_SIZE = sizeof(server_error_t);
 
 typedef struct {
-    uint32_t x;
-    uint32_t y;
+    int x;
+    int y;
 } pos_t;
 
 typedef struct {
