@@ -11,6 +11,7 @@
 #include "protocol.hpp"
 #include "entities/Ship.hpp"
 #include "entities/Enemy.hpp"
+#include "entities/Explosion.hpp"
 #include "TextureBuilder.hpp"
 
 class EntityBuilder {
@@ -22,6 +23,7 @@ class EntityBuilder {
         Ship *createShip();
         Enemy *createEnemy();
         Bullet *createBullet();
+        Explosion *createExplosion();
         void initializeTexture();
         TextureBuilder m_textureBuilder;
 };

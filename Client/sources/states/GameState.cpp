@@ -43,9 +43,13 @@ Transition GameState::update()
 {
     if (m_isPaused)
         return Transition::NONE;
+    for (auto &explosion : m_gameData->getExplosions()) {
+        m_window->draw(*explosion);
+        explosion->update();
+    }
+    m_gameData->removeExplosions();
     for (auto &bullet : m_gameData->getBullets()) {
         m_window->draw(*bullet.second);
-        bullet.second->update(*m_deltaTime);
     }
     for (auto &enemy : m_gameData->getEnemies()) {
         enemy.second->move(enemy.second->getPosition());

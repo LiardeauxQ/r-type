@@ -33,8 +33,9 @@ void GameData::addPlayer(size_t playerId) {
 
 void GameData::removePlayer(size_t playerId) {
     auto it = m_players.find(playerId);
-    if (it != m_players.end())
+    if (it != m_players.end()) {
         m_players.erase(it);
+    }
 }
 
 void GameData::addEnemy(size_t enemyId) {
@@ -45,8 +46,9 @@ void GameData::addEnemy(size_t enemyId) {
 
 void GameData::removeEnemy(size_t enemyId) {
     auto it = m_enemies.find(enemyId);
-    if (it != m_enemies.end())
+    if (it != m_enemies.end()) {
         m_enemies.erase(it);
+    }
 }
 
 void GameData::addBullet(size_t bulletId) {
@@ -61,6 +63,38 @@ void GameData::removeBullet(size_t bulletId) {
     auto it = m_bullets.find(bulletId);
     if (it != m_bullets.end())
         m_bullets.erase(it);
+}
+
+void GameData::addExplosion(size_t entityId) {
+    auto it1 = m_enemies.find(entityId);
+    auto it2 = m_players.find(entityId);
+
+    if (!(it1 == m_enemies.end())) {
+        m_explosions.push_back(
+            dynamic_cast<Explosion *>(m_entityBuilder.create(EntityType::EXPLOSION))
+        );
+        m_explosions.back()->setPosition(m_enemies[entityId]->getPosition());
+        return;
+    }
+    if (!(it2 == m_players.end())) {
+        m_explosions.push_back(
+            dynamic_cast<Explosion *>(m_entityBuilder.create(EntityType::EXPLOSION))
+        );
+        m_explosions.back()->setPosition(m_players[entityId]->getPosition());
+        return;
+    }
+}
+
+void GameData::removeExplosions() {
+    auto it = m_explosions.begin();
+    while (it != m_explosions.end()) {
+        if ((*it)->isAnimationFinished()) {
+            delete *it;
+            m_explosions.erase(it);
+        }
+        else
+            it++;
+    }
 }
 
 void GameData::updateRoomInfo(size_t idGame, uint8_t maxPlayers) {

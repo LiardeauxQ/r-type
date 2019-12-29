@@ -22,6 +22,8 @@ Entity *EntityBuilder::create(const EntityType &type)
             return this->createEnemy();
         case EntityType::BULLET:
             return this->createBullet();
+        case EntityType::EXPLOSION:
+            return this->createExplosion();
         default:
             return nullptr;
     }
@@ -40,6 +42,11 @@ Enemy *EntityBuilder::createEnemy()
 Bullet *EntityBuilder::createBullet()
 {
     return new Bullet(m_textureBuilder.getTexture("SHIP"));
+}
+
+Explosion *EntityBuilder::createExplosion()
+{
+    return new Explosion(m_textureBuilder.getTexture("SHIP"));
 }
 
 void EntityBuilder::initializeTexture()
