@@ -60,6 +60,7 @@ enum UDP_COMMUNICATION {
     STATE_ENTITY = 0x0E,
     MOVE = 0x0F,
     SYNC_DIST = 0x10,
+    COLLISION_TRIGGER = 0x14,
 };
 
 typedef struct {
@@ -245,6 +246,14 @@ typedef struct {
 } sync_dist_t;
 
 const size_t SYNC_DIST_SIZE = sizeof(sync_dist_t);
+
+typedef struct {
+    size_t first_entity;
+    size_t second_entity;
+    pos_t position;
+} collision_trigger_t;
+
+const size_t COLLISION_TRIGGER_SIZE = sizeof(collision_trigger_t);
 
 #ifdef __cplusplus
 }

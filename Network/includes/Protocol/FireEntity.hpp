@@ -31,5 +31,4 @@ private:
     FireType m_type;
 };
 
-
 #endif //R_TYPE_FIREENTITY_HPP

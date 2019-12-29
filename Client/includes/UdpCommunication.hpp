@@ -45,6 +45,7 @@ private:
     void handlePlayerState(const EntityState& msg);
     void handleEnemyState(const EntityState& msg);
     void handleBulletState(const EntityState& msg);
+    void handleCollision(const CollisionTrigger& msg);
 
     void sendMessage(const Message& msg);
 

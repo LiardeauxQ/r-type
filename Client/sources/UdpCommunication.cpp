@@ -149,6 +149,8 @@ void UdpCommunication::handleBulletState(const EntityState& msg) {
     }
 }
 
+void UdpCommunication::handleCollision(const CollisionTrigger &msg) {}
+
 void UdpCommunication::playerMove(float x, float y) {
     Direction dir = RIGHT;
 
@@ -206,6 +208,9 @@ std::unique_ptr<Message> UdpCommunication::createMessage() {
             break;
         case SYNC_DIST:
             msg = SyncDistance::from(data);
+            break;
+        case COLLISION_TRIGGER:
+            msg = CollisionTrigger::from(data);
             break;
         default:
             break;

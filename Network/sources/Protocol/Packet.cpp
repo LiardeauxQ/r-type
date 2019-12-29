@@ -23,4 +23,5 @@ const std::vector<std::tuple<uint8_t, std::unique_ptr<Message> (*)(void *)>> pac
         std::make_tuple(MOVE, &DirectionState::from),
         std::make_tuple(STATE_ENTITY, &EntityState::from),
         std::make_tuple(SYNC_DIST, &SyncDistance::from),
+        std::make_tuple(COLLISION_TRIGGER, &CollisionTrigger::from),
 };

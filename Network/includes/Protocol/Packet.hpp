@@ -23,6 +23,7 @@
 #include "EntityState.hpp"
 #include "FireEntity.hpp"
 #include "SyncDistance.hpp"
+#include "CollisionTrigger.hpp"
 
 #include <vector>
 #include <tuple>

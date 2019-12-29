@@ -29,6 +29,7 @@ set(NETWORK
     ${NETWORK_SOURCES}/Protocol/EntityState.cpp
     ${NETWORK_SOURCES}/Protocol/FireEntity.cpp
     ${NETWORK_SOURCES}/Protocol/SyncDistance.cpp
+    ${NETWORK_SOURCES}/Protocol/CollisionTrigger.cpp
 )
 
 add_library(network STATIC
