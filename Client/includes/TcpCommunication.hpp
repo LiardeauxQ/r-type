@@ -36,6 +36,7 @@ private:
 
     void checkServerPackets();
     void handlePacket(const Message& msg);
+    void handleError(const ErrorPacket& msg);
     void roomInfo(const RoomInfo& msg);
     void successConnection(const SuccessConnect& msg);
     void playerHasJoin(const RoomPlayerJoin& msg);

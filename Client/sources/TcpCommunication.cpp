@@ -109,13 +109,14 @@ void TcpCommunication::checkServerPackets()
 void TcpCommunication::handlePacket(const Message& msg)
 {
     switch (msg.getId()) {
+        case ERROR:
+            handleError(dynamic_cast<const ErrorPacket&>(msg));
+            break;
         case ROOM_INFO:
             roomInfo(dynamic_cast<const RoomInfo&>(msg));
             break;
         case SUCCESS_CONNECT:
             successConnection(dynamic_cast<const SuccessConnect&>(msg));
-            break;
-        case ERROR:
             break;
         case ROOM_PLAYER_JOIN:
             playerHasJoin(dynamic_cast<const RoomPlayerJoin&>(msg));
@@ -128,6 +129,17 @@ void TcpCommunication::handlePacket(const Message& msg)
             break;
         case GAME_START:
             startGame(dynamic_cast<const GameStart&>(msg));
+            break;
+        default:
+            break;
+    }
+}
+
+void TcpCommunication::handleError(const ErrorPacket &msg) {
+    std::cerr << "Receive an error from the server." << std::endl;
+    switch (msg.getErrorCode()) {
+        case UNKNOWN_ROOM:
+            std::cerr << "\tInvalid room name." << std::endl;
             break;
         default:
             break;

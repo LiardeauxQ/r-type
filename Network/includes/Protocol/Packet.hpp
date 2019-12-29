@@ -24,6 +24,7 @@
 #include "FireEntity.hpp"
 #include "SyncDistance.hpp"
 #include "CollisionTrigger.hpp"
+#include "ErrorPacket.hpp"
 
 #include <vector>
 #include <tuple>

@@ -145,7 +145,7 @@ void Client::joinGame(const JoinGame *msg) {
         sendTcpMessage(lobby->getRoomInfo(msg->getName(), msg->getPlayerId()));
         lobby->joinGameRoom(msg->getPlayerId(), roomId);
     } catch (const char *str) {
-        std::cerr << str << std::endl; //TODO
+        sendTcpMessage(ErrorPacket(ERROR_CODE::UNKNOWN_ROOM));
     }
 }
 
