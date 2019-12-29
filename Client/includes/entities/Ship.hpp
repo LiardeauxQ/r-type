@@ -24,6 +24,7 @@ class Ship : public Entity {
         Ship(const sf::Texture *texture);
         ~Ship() = default;
         void setTexture(const sf::Texture *texture);
+        bool isShotReady();
         void shot(std::vector<Bullet> &bullets);
         void setShotPatern(const ShotPatern &patern) { m_patern = patern; };
     private:
