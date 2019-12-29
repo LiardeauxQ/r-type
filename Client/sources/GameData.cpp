@@ -49,12 +49,11 @@ void GameData::removeEnemy(size_t enemyId) {
         m_enemies.erase(it);
 }
 
-void GameData::addBullet(size_t playerId, size_t bulletId) {
+void GameData::addBullet(size_t bulletId) {
     auto it = m_bullets.find(bulletId);
     if (it == m_bullets.end()) {
         m_bullets[bulletId] = dynamic_cast<Bullet *>(m_entityBuilder.create(EntityType::BULLET));
-        m_bullets[bulletId]->setPosition(m_players[playerId]->getPosition());
-        m_bullets[bulletId]->setMovement(400, 0);
+//        m_bullets[bulletId]->setPosition(m_players[playerId]->getPosition());
     }
 }
 

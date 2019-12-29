@@ -137,16 +137,16 @@ void UdpCommunication::handleEnemyState(const EntityState& msg) {
 }
 
 void UdpCommunication::handleBulletState(const EntityState& msg) {
-    //auto pos = msg.getPosition();
+    auto pos = msg.getPosition();
 
-    //try {
-    //    auto player = m_gameData->getPlayers().at(msg.getEntityId());
+    try {
+        auto bullet = m_gameData->getBullets().at(msg.getEntityId());
 
-    //    player->m_position.x = static_cast<float>(pos.x);
-    //    player->m_position.y = static_cast<float>(pos.y);
-    //} catch (const std::out_of_range& e) {
-    //    std::cerr << "Cannot find player with id " << msg.getEntityId() << std::endl;
-    //}
+        bullet->m_position.x = static_cast<float>(pos.x);
+        bullet->m_position.y = static_cast<float>(pos.y);
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Cannot find bullet with id " << msg.getEntityId() << std::endl;
+    }
 }
 
 void UdpCommunication::playerMove(float x, float y) {
@@ -166,9 +166,11 @@ void UdpCommunication::playerMove(float x, float y) {
 
 void UdpCommunication::playerShot() {
     std::cout << "shot" << std::endl;
+    auto bulletId = m_gameData->getUserId() * 1000 + IdProvider::instance()->getNextId();
     sendMessage(FireEntity(
-            m_gameData->getUserId() * 1000 + IdProvider::instance()->getNextId(),
+            bulletId,
             FireType::NORMAL));
+    m_gameData->addBullet(bulletId);
 }
 
 void UdpCommunication::sendMessage(const Message& msg) {

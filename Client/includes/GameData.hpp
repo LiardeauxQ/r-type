@@ -27,7 +27,7 @@ public:
     void removeEnemy(size_t enemyId);
     std::map<size_t, Enemy *> &getEnemies() { return m_enemies; };
 
-    void addBullet(size_t playerId, size_t bulletId);
+    void addBullet(size_t bulletId);
     void removeBullet(size_t bulletId);
     std::map<size_t, Bullet *> &getBullets() { return m_bullets; };
 
