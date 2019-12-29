@@ -30,7 +30,11 @@ void TcpCommunication::start() {
 
 void TcpCommunication::stop() {
     m_isRunning = false;
-    m_socket.shutdown(m_socket.shutdown_both);
+    try {
+        m_socket.shutdown(m_socket.shutdown_both);
+    } catch (const boost::exception& e) {
+        m_socket.close();
+    }
     m_responsesThread.join();
 }
 
