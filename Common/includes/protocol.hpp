@@ -216,6 +216,7 @@ enum EntityType {
     SHIP,
     ENEMY,
     BULLET,
+    EXPLOSION,
 };
 
 typedef struct {

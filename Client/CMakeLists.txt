@@ -21,6 +21,7 @@ set(RTYPE_CLIENT
     ${RTYPE_CLIENT_SOURCES}/entities/Ship.cpp
     ${RTYPE_CLIENT_SOURCES}/entities/Enemy.cpp
     ${RTYPE_CLIENT_SOURCES}/entities/Bullet.cpp
+    ${RTYPE_CLIENT_SOURCES}/entities/Explosion.cpp
 	${RTYPE_CLIENT_SOURCES}/InputOptionsHandler.cpp
 	${RTYPE_CLIENT_SOURCES}/TcpCommunication.cpp
 	${RTYPE_CLIENT_SOURCES}/UdpCommunication.cpp

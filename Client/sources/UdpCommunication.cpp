@@ -144,6 +144,7 @@ void UdpCommunication::handleBulletState(const EntityState& msg) {
 
         bullet->m_position.x = static_cast<float>(pos.x);
         bullet->m_position.y = static_cast<float>(pos.y);
+        bullet->setPosition(bullet->m_position);
     } catch (const std::out_of_range& e) {
         std::cerr << "Cannot find bullet with id " << msg.getEntityId() << std::endl;
     }
