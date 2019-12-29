@@ -29,7 +29,7 @@ void UdpCommunication::start() {
 
 void UdpCommunication::stop() {
     m_isRunning = false;
-    m_socket.shutdown(m_socket.shutdown_both);
+    m_socket.close();
     m_responsesThread.join();
 }
 
