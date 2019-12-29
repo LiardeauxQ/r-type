@@ -126,7 +126,6 @@ void UdpCommunication::handlePlayerState(const EntityState& msg) {
 void UdpCommunication::handleEnemyState(const EntityState& msg) {
     auto pos = msg.getPosition();
 
-    std::cout << "receive enemy " << pos.x << " " << pos.y << std::endl;
     try {
         auto enemy = m_gameData->getEnemies().at(msg.getEntityId());
 
@@ -156,12 +155,13 @@ void UdpCommunication::handleCollision(const CollisionTrigger &msg) {
     auto firstId = msg.getFirstEntityId();
     auto secondId = msg.getFirstEntityId();
 
-    m_gameData->removeEnemy(secondId);
+    std::cout << "collide" << std::endl;
+    /*m_gameData->removeEnemy(secondId);
     m_gameData->removeEnemy(firstId);
     m_gameData->removeBullet(firstId);
     m_gameData->removeBullet(secondId);
     m_gameData->removePlayer(firstId);
-    m_gameData->removePlayer(secondId);
+    m_gameData->removePlayer(secondId);*/
     m_gameData->addExplosion(msg.getPosition());
 }
 

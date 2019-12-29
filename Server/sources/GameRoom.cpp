@@ -76,14 +76,14 @@ void GameRoom::checkCollision() {
     std::list<std::tuple<size_t, size_t, Position>> collisionsLog;
 
     for (auto& spawner : m_spawners) {
-        for (auto client = m_clients.begin() ; client != m_clients.end(); client++) {
+        /*for (auto client = m_clients.begin() ; client != m_clients.end(); client++) {
             auto collideStatus = spawner.isCollideWith((*client)->getPosition());
             if (std::get<0>(collideStatus)) {
                 collisionsLog.emplace_back((*client)->getId(),
                         std::get<1>(collideStatus),
                                 (*client)->getPosition());
             }
-        }
+        }*/
         for (auto bullet = m_bullets.begin() ; bullet != m_bullets.end();) {
             auto collideStatus = spawner.isCollideWith(bullet->second->getPosition());
             if (std::get<0>(collideStatus)) {
