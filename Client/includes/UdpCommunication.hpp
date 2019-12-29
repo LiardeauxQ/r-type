@@ -42,19 +42,16 @@ private:
 
     void receiveSyncDistance(const SyncDistance& msg);
     void receiveEntityState(const EntityState& msg);
+    void handlePlayerState(const EntityState& msg);
+    void handleEnemyState(const EntityState& msg);
+    void handleBulletState(const EntityState& msg);
 
     void sendMessage(const Message& msg);
-
-    void waitHeader(const boost::system::error_code& ec);
-    void receiveUdpPackets(const boost::system::error_code& ec);
-    void receiveBody(const boost::system::error_code& ec);
 
     void dispatch();
 
     bool m_isRunning;
     std::shared_ptr<GameData> m_gameData;
-    packet_header_t m_packetHeader;
-    uint8_t *m_packetData;
 
     std::queue<std::unique_ptr<Message>> m_responses;
 

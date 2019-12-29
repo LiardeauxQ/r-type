@@ -29,8 +29,8 @@ void UdpCommunication::start() {
 
 void UdpCommunication::stop() {
     m_isRunning = false;
-    m_responsesThread.join();
     m_socket.close();
+    m_responsesThread.join();
 }
 
 void UdpCommunication::update() {
@@ -39,10 +39,14 @@ void UdpCommunication::update() {
 
 void UdpCommunication::dispatch() {
     while (m_isRunning) {
-        auto msg = receiveMessage();
-        m_mutex.lock();
-        m_responses.push(std::move(msg));
-        m_mutex.unlock();
+        try {
+            auto msg = receiveMessage();
+            m_mutex.lock();
+            m_responses.push(std::move(msg));
+            m_mutex.unlock();
+        } catch (const boost::exception& e) {
+            std::cerr << "Error while receiving udp packet." << std::endl;
+        }
     }
 }
 
@@ -87,6 +91,22 @@ void UdpCommunication::receiveSyncDistance(const SyncDistance& msg) {
 }
 
 void UdpCommunication::receiveEntityState(const EntityState &msg) {
+    switch (msg.getType()) {
+        case SHIP:
+            handlePlayerState(msg);
+            break;
+        case ENEMY:
+            handleEnemyState(msg);
+            break;
+        case BULLET:
+            handleBulletState(msg);
+            break;
+        default:
+            break;
+    }
+}
+
+void UdpCommunication::handlePlayerState(const EntityState& msg) {
     auto pos = msg.getPosition();
 
     try {
@@ -97,6 +117,34 @@ void UdpCommunication::receiveEntityState(const EntityState &msg) {
     } catch (const std::out_of_range& e) {
         std::cerr << "Cannot find player with id " << msg.getEntityId() << std::endl;
     }
+}
+
+void UdpCommunication::handleEnemyState(const EntityState& msg) {
+    auto pos = msg.getPosition();
+
+    std::cout << "receive enemy " << pos.x << " " << pos.y << std::endl;
+    try {
+        auto enemy = m_gameData->getEnemies().at(msg.getEntityId());
+
+        enemy->m_position.x = static_cast<float>(pos.x);
+        enemy->m_position.y = static_cast<float>(pos.y);
+    } catch (const std::out_of_range& e) {
+        m_gameData->addEnemy(msg.getEntityId());
+        handleEnemyState(msg);
+    }
+}
+
+void UdpCommunication::handleBulletState(const EntityState& msg) {
+    //auto pos = msg.getPosition();
+
+    //try {
+    //    auto player = m_gameData->getPlayers().at(msg.getEntityId());
+
+    //    player->m_position.x = static_cast<float>(pos.x);
+    //    player->m_position.y = static_cast<float>(pos.y);
+    //} catch (const std::out_of_range& e) {
+    //    std::cerr << "Cannot find player with id " << msg.getEntityId() << std::endl;
+    //}
 }
 
 void UdpCommunication::playerMove(float x, float y) {
@@ -111,7 +159,6 @@ void UdpCommunication::playerMove(float x, float y) {
     } else if (y > 0) {
         dir = TOP;
     }
-    std::cout << "move" << std::endl;
     sendMessage(DirectionState(dir));
 }
 
@@ -129,8 +176,12 @@ void UdpCommunication::sendMessage(const Message& msg) {
 
         for (size_t i = 0; i < msg.getSize(); i++)
             data[i] = serializedData[i];
-        m_socket.send_to(boost::asio::buffer(data, PACKET_HDR_SIZE), *endpoint);
-        m_socket.send_to(boost::asio::buffer(data + PACKET_HDR_SIZE, msg.getSize() - PACKET_HDR_SIZE), *endpoint);
+        try {
+            m_socket.send_to(boost::asio::buffer(data, PACKET_HDR_SIZE), *endpoint);
+            m_socket.send_to(boost::asio::buffer(data + PACKET_HDR_SIZE, msg.getSize() - PACKET_HDR_SIZE), *endpoint);
+        } catch (const boost::exception& e) {
+            std::cerr << "Error while sending udp packet." << std::endl;
+        }
         delete[] data;
     }
 }

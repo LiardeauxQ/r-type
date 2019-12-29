@@ -47,8 +47,10 @@ Transition GameState::update()
         m_window->draw(*bullet.second);
         bullet.second->update(*m_deltaTime);
     }
-    for (auto &enemy : m_gameData->getEnemies())
+    for (auto &enemy : m_gameData->getEnemies()) {
+        enemy.second->move(enemy.second->getPosition());
         m_window->draw(*enemy.second);
+    }
     for (auto &player : m_gameData->getPlayers()) {
         player.second->move(player.second->getPosition());
         m_window->draw(*player.second);

@@ -27,8 +27,6 @@ public:
 
     size_t createGameRoom(std::string name, uint8_t maxPlayers);
 
-    void runGameRoom(size_t id);
-
     void joinGameRoom(size_t idPlayer, size_t idRoom);
 
     void quitGameRoom(size_t idPlayer, size_t idRoom);

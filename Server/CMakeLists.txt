@@ -10,6 +10,8 @@ set(RTYPE_SERVER
     ${RTYPE_SERVER_SOURCES}/Lobby.cpp
     ${RTYPE_SERVER_SOURCES}/GameRoom.cpp
     ${RTYPE_SERVER_SOURCES}/Client.cpp
+    ${RTYPE_SERVER_SOURCES}/Entity.cpp
+    ${RTYPE_SERVER_SOURCES}/Spawner.cpp
 )
 
 add_executable(r-type_server

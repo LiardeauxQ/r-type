@@ -16,15 +16,6 @@ size_t Lobby::createGameRoom(std::string name, uint8_t maxPlayers) {
     return id;
 }
 
-void Lobby::runGameRoom(size_t id) {
-    for (auto& room : m_rooms) {
-        if (room->getId() == id) {
-            room->run();
-            break;
-        }
-    }
-}
-
 void Lobby::joinGameRoom(size_t idPlayer, size_t idRoom) {
     for (auto& room : m_rooms) {
         std::cout << "name:" << room->getName() << std::endl;

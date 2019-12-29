@@ -211,11 +211,18 @@ typedef struct {
 
 const size_t FIRE_ENTITY_SIZE = sizeof(fire_entity_t);
 
+enum EntityType {
+    SHIP,
+    ENEMY,
+    BULLET,
+};
+
 typedef struct {
     size_t id_entity;
     pos_t position;
     pos_t velocity;
     uint16_t angle;
+    EntityType type;
 } state_entity_t;
 
 const size_t STATE_ENTITY_SIZE = sizeof(state_entity_t);

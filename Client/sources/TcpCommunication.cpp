@@ -22,7 +22,7 @@ TcpCommunication::TcpCommunication(std::shared_ptr<GameData> gameData)
 void TcpCommunication::start() {
     m_socket.connect(BoostTcp::endpoint(
             boost::asio::ip::address::from_string(
-                    m_gameData->getUserData().getIpAddress()),
+                    m_gameData->getUserData().getRemoteIpAddress()),
                     m_gameData->getUserData().getServerPort()));
     m_isRunning = true;
     m_responsesThread = boost::thread(&TcpCommunication::dispatch, this);
@@ -30,8 +30,8 @@ void TcpCommunication::start() {
 
 void TcpCommunication::stop() {
     m_isRunning = false;
-    m_responsesThread.join();
     m_socket.close();
+    m_responsesThread.join();
 }
 
 void TcpCommunication::update() {
@@ -41,7 +41,8 @@ void TcpCommunication::update() {
 void TcpCommunication::askServerConnection(bool isCreateRoom) {
     std::cout << "is create " << isCreateRoom << std::endl;
     m_isCreateRoom = isCreateRoom;
-    connectToServer(m_gameData->getUserData().getUserPort(), "0.0.0.0");
+    connectToServer(m_gameData->getUserData().getUserPort(),
+            m_gameData->getUserData().getLocalIpAddress());
 }
 
 void TcpCommunication::sendCreateGame(size_t id, const std::string& name, const std::string& password, const std::string& nickname) {
@@ -66,10 +67,14 @@ void TcpCommunication::connectToServer(uint16_t port, const std::string &addr) {
 
 void TcpCommunication::dispatch() {
     while (m_isRunning) {
-        auto msg = m_handler.receiveMessage();
-        m_mutex.lock();
-        m_responses.push(std::move(msg));
-        m_mutex.unlock();
+        try {
+            auto msg = m_handler.receiveMessage();
+            m_mutex.lock();
+            m_responses.push(std::move(msg));
+            m_mutex.unlock();
+        } catch (const boost::exception& e) {
+            std::cerr << "Error while receiving message." << std::endl;
+        }
     }
 }
 

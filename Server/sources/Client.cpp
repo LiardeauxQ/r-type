@@ -159,11 +159,20 @@ void Client::sendPlayerQuitGame(size_t playerId) {
     sendTcpMessage(RoomPlayerQuit(playerId, "unknown", true));
 }
 
-void Client::sendPlayerState(size_t id, const Position& position, const Position& velocity) {
+void Client::sendPlayerState() {
+    sendFriendState(m_id, m_position, m_velocity);
+}
+
+void Client::sendFriendState(size_t id, const Position& position, const Position& velocity) {
+    sendEntityState(id, position, velocity, EntityType::SHIP);
+}
+
+void Client::sendEntityState(size_t id, const Position &position, const Position &velocity, EntityType type) {
     pos_t pos = {position.m_x, position.m_y};
     pos_t vel = {velocity.m_x, velocity.m_y};
 
-    sendUdpMessage(EntityState(id, pos, vel, 0));
+    std::cout << "update entity " << id << std::endl;
+    sendUdpMessage(EntityState(id, pos, vel, 0, type));
 }
 
 void Client::startGame() {

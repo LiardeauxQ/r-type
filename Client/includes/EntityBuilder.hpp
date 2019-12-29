@@ -8,15 +8,10 @@
 #ifndef ENTITYBUILDER_HPP
 	#define ENTITYBUILDER_HPP
 
+#include "protocol.hpp"
 #include "entities/Ship.hpp"
 #include "entities/Enemy.hpp"
 #include "TextureBuilder.hpp"
-
-enum EntityType {
-    SHIP,
-    ENEMY,
-    BULLET
-};
 
 class EntityBuilder {
     public:

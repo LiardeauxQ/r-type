@@ -16,6 +16,7 @@
 #include "GameRoom.hpp"
 #include "Lobby.hpp"
 #include "IdProvider.hpp"
+#include "Position.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -28,15 +29,6 @@ typedef boost::asio::ip::udp BoostUdp;
 class ClientHandler;
 class GameRoom;
 class Lobby;
-
-struct Position {
-    Position(int x, int y)
-    : m_x(x)
-    , m_y(y) {}
-
-    int m_x;
-    int m_y;
-};
 
 class Client : public boost::enable_shared_from_this<Client> {
 public:
@@ -58,7 +50,9 @@ public:
 
     void sendPlayerJoinGame(size_t playerId, std::string nickname);
     void sendPlayerQuitGame(size_t playerId);
-    void sendPlayerState(size_t id, const Position& position, const Position& velocity);
+    void sendPlayerState();
+    void sendFriendState(size_t id, const Position& position, const Position& velocity);
+    void sendEntityState(size_t id, const Position& position, const Position& velocity, EntityType type);
     void startGame();
 
     ~Client();

@@ -30,12 +30,12 @@ public:
 
         for (size_t i = 0 ; i < msg.getSize() ; i++)
             data[i] = serializedMsg[i];
-        for (size_t i = 0 ; i < msg.getSize() ; i++) {
-            printf("%d ", data[i]);
+        try {
+            boost::asio::write(m_socket,
+                               boost::asio::buffer(data, msg.getSize()));
+        } catch (const boost::exception& e) {
+            std::cerr << "Unable to send data with tcp." << std::endl;
         }
-        printf("\n");
-        boost::asio::write(m_socket,
-                           boost::asio::buffer(data, msg.getSize()));
         delete[] data;
     }
 
@@ -53,10 +53,6 @@ private:
         std::unique_ptr<Message> msg;
 
         boost::asio::read(m_socket, boost::asio::buffer(data, hdr.packet_size));
-        std::cout << "will read" << hdr.packet_size << std::endl;
-        for (int i = 0 ; i < hdr.packet_size ; i++)
-            printf("%d ", data[i]);
-        printf("\n");
         for (auto &initialize : packetInitializers) {
             if (std::get<0>(initialize) == hdr.packet_id) {
                 msg = std::get<1>(initialize)(data);
